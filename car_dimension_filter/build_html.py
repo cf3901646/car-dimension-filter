@@ -119,6 +119,17 @@ stopped_series_count = len(series_data) - active_series_count
 
 print(f"Loaded {cover_count} covers, {enriched_count} enriched series from cache.")
 
+# 285 个车系抓取时没拿到品牌，品牌名被填成了车系名，显示名又多了“车系”两个字（如“钧天勇猛者车系”）。
+# 真实品牌要重新抓取才能补；这里先去掉多余的“车系”，页面在品牌与车系同名时只显示一次。
+no_brand = 0
+for s in series_data:
+    if s.get("brand_name") and s.get("brand_name") == s.get("series_name"):
+        no_brand += 1
+        d = s.get("display_series_name") or ""
+        if d.endswith("车系"):
+            s["display_series_name"] = s["series_name"]
+print(f"{no_brand} series have no real brand (brand_name == series_name)")
+
 # 同一品牌下车系重名（清洗名字时出错，例如方程S 被写成了豹5）：改用配置数据里的车系名。
 # 必须放在封面注入之后，因为那一步会用原始字段重写 series_name。
 from collections import Counter

@@ -933,7 +933,7 @@
   </script>
 
   <!-- 车型数据：单独文件、延迟加载（DOMContentLoaded 之前执行完），页面骨架先显示 -->
-  <script defer src="series-data.js?v=e295798fb7" onerror="window.__SERIES_LOAD_FAILED__ = true"></script>
+  <script defer src="series-data.js?v=99aaa28a40" onerror="window.__SERIES_LOAD_FAILED__ = true"></script>
 
   <!-- 核心逻辑脚本 -->
   <script>
@@ -1840,7 +1840,8 @@
 
       // 1. 更新桌面端置顶看板
       const displayTitle = s.display_series_name || s.series_name || s.series;
-      document.getElementById('boardBrand').textContent = s.brand_name || s.brand || '品牌';
+      // 品牌与车系同名（数据里缺品牌）时不重复显示品牌标签
+      document.getElementById('boardBrand').textContent = (s.brand_name && s.brand_name !== s.series_name) ? s.brand_name : '';
       document.getElementById('boardSeriesName').textContent = displayTitle;
       document.getElementById('boardLevel').textContent = s.level || '乘用车';
       document.getElementById('boardPrice').textContent = s.price_str || (s.price_min ? `${s.price_min}～${s.price_max}万` : '暂无报价');
@@ -2063,7 +2064,7 @@
     // 手机端滑出底部抽屉
     function openMobileDrawerWithData(s, svg, pwr, pwrMeta, drv, hp) {
       const displayTitle = s.display_series_name || s.series_name || s.series;
-      document.getElementById('mDrawerBrand').textContent = s.brand_name || s.brand || '品牌';
+      document.getElementById('mDrawerBrand').textContent = (s.brand_name && s.brand_name !== s.series_name) ? s.brand_name : '';
       document.getElementById('mDrawerSeriesName').textContent = displayTitle;
       document.getElementById('mDrawerPrice').textContent = s.price_str || '暂无报价';
       document.getElementById('mDrawerScore').textContent = s.score ? s.score.toFixed(2) : '暂无口碑';
