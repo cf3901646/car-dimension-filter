@@ -854,6 +854,7 @@
       searchQuery: '',
       priceRange: 'all',
       pwrMin: 0,
+      minRange: 0, // 最低纯电续航 (km)，0 表示不限
       dimRange: {
         lengthMin: 2800,
         lengthMax: 5500,
@@ -1291,54 +1292,40 @@
         applyFilters();
       });
 
-      // 滑块绑定
-      const lMin = document.getElementById('filterLengthMin');
-      const lMax = document.getElementById('filterLengthMax');
-      const wbMin = document.getElementById('filterWbMin');
-      const wbMax = document.getElementById('filterWbMax');
-
-      function updateDimLabels() {
-        state.dimRange.lengthMin = parseInt(lMin.value);
-        state.dimRange.lengthMax = parseInt(lMax.value);
-        state.dimRange.wbMin = parseInt(wbMin.value);
-        state.dimRange.wbMax = parseInt(wbMax.value);
-
-        document.getElementById('lengthDisplay').textContent = `${(state.dimRange.lengthMin/1000).toFixed(1)}～${(state.dimRange.lengthMax/1000).toFixed(1)}m`;
-        document.getElementById('wbDisplay').textContent = `${(state.dimRange.wbMin/1000).toFixed(2)}～${(state.dimRange.wbMax/1000).toFixed(2)}m`;
-      }
-
-      [lMin, lMax, wbMin, wbMax].forEach(el => {
-        el.addEventListener('input', () => {
-          updateDimLabels();
-          applyFilters();
-        });
+      // 尺寸滑块绑定（车长、轴距、车宽、车高）：最小值拖过最大值时推动另一端
+      Object.keys(DIM_FIELDS).forEach(key => {
+        const f = DIM_FIELDS[key];
+        const minEl = document.getElementById(f.minId);
+        const maxEl = document.getElementById(f.maxId);
+        const onInput = (e) => {
+          let min = Number(minEl.value);
+          let max = Number(maxEl.value);
+          if (min > max) {
+            if (e.target === minEl) max = min; else min = max;
+          }
+          setDimRange(key, min, max);
+          markScenario('');
+          scheduleFilters();
+        };
+        minEl.addEventListener('input', onInput);
+        maxEl.addEventListener('input', onInput);
       });
+      resetDimRanges();
 
       // 高级选项展开折叠
-      const toggleBtn = document.getElementById('toggleAdvancedBtn');
-      const advPanel = document.getElementById('advancedFilterPanel');
-      const advIcon = document.getElementById('toggleAdvancedIcon');
-      toggleBtn.addEventListener('click', () => {
-        const isHidden = advPanel.classList.contains('hidden');
-        if (isHidden) {
-          advPanel.classList.remove('hidden');
-          advIcon.classList.add('rotate-180');
-          toggleBtn.classList.add('bg-slate-200');
-        } else {
-          advPanel.classList.add('hidden');
-          advIcon.classList.remove('rotate-180');
-          toggleBtn.classList.remove('bg-slate-200');
-        }
+      document.getElementById('toggleAdvancedBtn').addEventListener('click', () => {
+        setAdvancedOpen(document.getElementById('advancedFilterPanel').classList.contains('hidden'));
       });
 
       // 高级滑块与价格
       document.getElementById('filterPwrMin').addEventListener('input', (e) => {
-        state.pwrMin = parseInt(e.target.value);
-        document.getElementById('pwrDisplay').textContent = state.pwrMin > 0 ? `≥${state.pwrMin} Ps/吨` : '不限';
-        applyFilters();
+        setPwrMin(parseInt(e.target.value, 10));
+        markScenario('');
+        scheduleFilters();
       });
       document.getElementById('priceSelect').addEventListener('change', (e) => {
         state.priceRange = e.target.value;
+        markScenario('');
         applyFilters();
       });
 
@@ -1399,125 +1386,137 @@
 
     // 初始化胶囊按钮
 
-    // 初始化一键场景化快捷预设胶囊
+    // ---- 筛选辅助：尺寸滑块（拉到两端即“不限”）、胶囊样式、排序、合帧调度 ----
+    const DIM_FIELDS = {
+      length: { minId: 'filterLengthMin', maxId: 'filterLengthMax', labelId: 'lengthDisplay', lo: 'length_min', hi: 'length_max' },
+      wb:     { minId: 'filterWbMin',     maxId: 'filterWbMax',     labelId: 'wbDisplay',     lo: 'wheelbase_min', hi: 'wheelbase_max' },
+      width:  { minId: 'filterWidthMin',  maxId: 'filterWidthMax',  labelId: 'widthDisplay',  lo: 'width_min', hi: 'width_max' },
+      height: { minId: 'filterHeightMin', maxId: 'filterHeightMax', labelId: 'heightDisplay', lo: 'height_min', hi: 'height_max' }
+    };
+
+    function dimLimits(key) {
+      const el = document.getElementById(DIM_FIELDS[key].minId);
+      return { lo: Number(el.min), hi: Number(el.max) };
+    }
+
+    function formatDimLabel(key) {
+      const { lo, hi } = dimLimits(key);
+      const min = state.dimRange[key + 'Min'];
+      const max = state.dimRange[key + 'Max'];
+      const fmt = v => (v / 1000).toFixed(2) + 'm';
+      if (min <= lo && max >= hi) return '不限';
+      if (min === max) return fmt(min);
+      if (min <= lo) return '≤' + fmt(max);
+      if (max >= hi) return '≥' + fmt(min);
+      return fmt(min) + '～' + fmt(max);
+    }
+
+    // 写入一个尺寸维度的区间（null 表示该端不限），同步滑块与标签
+    function setDimRange(key, min, max) {
+      const f = DIM_FIELDS[key];
+      const { lo, hi } = dimLimits(key);
+      const a = Math.max(lo, Math.min(hi, min ?? lo));
+      const b = Math.max(lo, Math.min(hi, max ?? hi));
+      state.dimRange[key + 'Min'] = Math.min(a, b);
+      state.dimRange[key + 'Max'] = Math.max(a, b);
+      document.getElementById(f.minId).value = state.dimRange[key + 'Min'];
+      document.getElementById(f.maxId).value = state.dimRange[key + 'Max'];
+      document.getElementById(f.labelId).textContent = formatDimLabel(key);
+    }
+
+    function resetDimRanges() {
+      Object.keys(DIM_FIELDS).forEach(key => setDimRange(key, null, null));
+    }
+
+    function setPwrMin(v) {
+      state.pwrMin = v;
+      document.getElementById('filterPwrMin').value = v;
+      document.getElementById('pwrDisplay').textContent = v > 0 ? `≥${v} Ps/吨` : '不限';
+    }
+
+    function setSort(value) {
+      state.currentSort = value;
+      const sel = document.getElementById('sortSelect');
+      sel.value = value;
+      const text = sel.options[sel.selectedIndex].text.split(' ')[1] || '排序';
+      document.getElementById('sortIndicator').textContent = value === 'score_desc' ? '口碑排序' : text;
+    }
+
+    const CAPSULE_ON = ['bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs'];
+    const CAPSULE_OFF = ['text-slate-600', 'font-medium'];
+    function setCapsule(selector, attr, value) {
+      document.querySelectorAll(selector).forEach(b => {
+        const on = b.dataset[attr] === value;
+        b.classList.toggle('active', on);
+        CAPSULE_ON.forEach(c => b.classList.toggle(c, on));
+        CAPSULE_OFF.forEach(c => b.classList.toggle(c, !on));
+      });
+    }
+
+    function setAdvancedOpen(open) {
+      document.getElementById('advancedFilterPanel').classList.toggle('hidden', !open);
+      document.getElementById('toggleAdvancedIcon').classList.toggle('rotate-180', open);
+      document.getElementById('toggleAdvancedBtn').classList.toggle('bg-slate-200', open);
+    }
+
+    // 高亮场景胶囊；传空字符串表示用户已手动调整，不再对应任何场景
+    function markScenario(name) {
+      document.querySelectorAll('.scenario-pill').forEach(b => b.classList.toggle('active', b.dataset.scenario === name));
+    }
+
+    // 滑块与输入框连续触发时，合并到下一帧只筛选一次
+    let filterFrame = 0;
+    function scheduleFilters() {
+      if (filterFrame) return;
+      filterFrame = requestAnimationFrame(() => {
+        filterFrame = 0;
+        applyFilters();
+      });
+    }
+
+    // 初始化一键场景化快捷预设胶囊：每个场景都从干净状态开始，不残留上一个场景的条件
     function initScenarios() {
       document.querySelectorAll('.scenario-pill').forEach(btn => {
         btn.addEventListener('click', () => {
-          document.querySelectorAll('.scenario-pill').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const scenario = btn.getAttribute('data-scenario');
-          
-          if (scenario === 'all') {
-            resetAllFilters();
-            return;
-          }
-
-          // 先重置基础滑块至标准范围
-          document.getElementById('filterLengthMin').value = 2800;
-          document.getElementById('filterLengthMax').value = 5500;
-          document.getElementById('filterWbMin').value = 1600;
-          document.getElementById('filterWbMax').value = 3600;
-          state.dimRange.lengthMin = 2800;
-          state.dimRange.lengthMax = 5500;
-          state.dimRange.wbMin = 1600;
-          state.dimRange.wbMax = 3600;
-          state.pwrMin = 0;
-          document.getElementById('filterPwrMin').value = 0;
-          document.getElementById('pwrDisplay').textContent = '不限';
+          const scenario = btn.dataset.scenario;
+          resetAllFilters({ silent: true });
+          markScenario(scenario);
 
           if (scenario === 'large_sedan') {
-            // 5米C级大车：车长 >= 4950mm
-            state.dimRange.lengthMin = 4950;
-            document.getElementById('filterLengthMin').value = 4950;
-            document.getElementById('lengthDisplay').textContent = '4.95～5.50m';
+            setDimRange('length', 4950, null); // 车长 ≥ 4.95m
           } else if (scenario === 'super_pwr') {
-            // 超跑级推重比：>= 200 Ps/t
-            state.pwrMin = 200;
-            document.getElementById('filterPwrMin').value = 200;
-            document.getElementById('pwrDisplay').textContent = '≥200 Ps/吨';
-            // 打开高级折叠面板以便直观看到
-            document.getElementById('advancedFilterPanel').classList.remove('hidden');
-            document.getElementById('toggleAdvancedIcon').classList.add('rotate-180');
+            setPwrMin(200); // 推重比 ≥ 200 Ps/吨
+            setAdvancedOpen(true);
           } else if (scenario === 'long_range') {
-            // 700km+超长续航：纯电，排序默认续航
             state.currentEnergy = 'bev';
-            document.querySelectorAll('.energy-capsule').forEach(b => {
-              b.classList.toggle('active', b.dataset.energy === 'bev');
-              if (b.dataset.energy === 'bev') {
-                b.classList.add('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-                b.classList.remove('text-slate-600', 'font-medium');
-              } else {
-                b.classList.remove('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-                b.classList.add('text-slate-600', 'font-medium');
-              }
-            });
-            state.currentSort = 'ev_range_desc';
-            document.getElementById('sortSelect').value = 'ev_range_desc';
-            document.getElementById('sortIndicator').textContent = '纯电续航最长优先';
+            setCapsule('.energy-capsule', 'energy', 'bev');
+            state.minRange = 700; // 纯电续航 ≥ 700km
+            setSort('ev_range_desc');
           } else if (scenario === 'rwd_fun') {
-            // 性能后驱操控
             state.currentDrive = '后驱';
-            document.querySelectorAll('.drive-capsule').forEach(b => {
-              b.classList.toggle('active', b.dataset.drive === '后驱');
-              if (b.dataset.drive === '后驱') {
-                b.classList.add('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-                b.classList.remove('text-slate-600', 'font-medium');
-              } else {
-                b.classList.remove('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-                b.classList.add('text-slate-600', 'font-medium');
-              }
-            });
+            setCapsule('.drive-capsule', 'drive', '后驱');
           } else if (scenario === 'city_small') {
-            // 城市代步：车长 <= 4400mm
-            state.dimRange.lengthMax = 4400;
-            document.getElementById('filterLengthMax').value = 4400;
-            document.getElementById('lengthDisplay').textContent = '2.80～4.40m';
+            setDimRange('length', null, 4400); // 车长 ≤ 4.40m
           }
 
           applyFilters();
         });
       });
     }
+
     function initCapsules() {
-      // 车型
-      document.querySelectorAll('.type-capsule').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.type-capsule').forEach(b => {
-            b.classList.remove('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-            b.classList.add('text-slate-600', 'font-medium');
+      [
+        ['.type-capsule', 'type', 'currentType'],
+        ['.energy-capsule', 'energy', 'currentEnergy'],
+        ['.drive-capsule', 'drive', 'currentDrive']
+      ].forEach(([selector, attr, field]) => {
+        document.querySelectorAll(selector).forEach(btn => {
+          btn.addEventListener('click', () => {
+            state[field] = btn.dataset[attr];
+            setCapsule(selector, attr, state[field]);
+            markScenario('');
+            applyFilters();
           });
-          btn.classList.add('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-          btn.classList.remove('text-slate-600', 'font-medium');
-          state.currentType = btn.getAttribute('data-type');
-          applyFilters();
-        });
-      });
-
-      // 能源动力
-      document.querySelectorAll('.energy-capsule').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.energy-capsule').forEach(b => {
-            b.classList.remove('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-            b.classList.add('text-slate-600', 'font-medium');
-          });
-          btn.classList.add('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-          btn.classList.remove('text-slate-600', 'font-medium');
-          state.currentEnergy = btn.getAttribute('data-energy');
-          applyFilters();
-        });
-      });
-
-      // 驱动形式
-      document.querySelectorAll('.drive-capsule').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.drive-capsule').forEach(b => {
-            b.classList.remove('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-            b.classList.add('text-slate-600', 'font-medium');
-          });
-          btn.classList.add('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
-          btn.classList.remove('text-slate-600', 'font-medium');
-          state.currentDrive = btn.getAttribute('data-drive');
-          applyFilters();
         });
       });
     }
@@ -1529,7 +1528,7 @@
       sInput.addEventListener('input', () => {
         state.searchQuery = sInput.value.trim().toLowerCase();
         sClear.classList.toggle('hidden', state.searchQuery === '');
-        applyFilters();
+        scheduleFilters();
       });
       sClear.addEventListener('click', () => {
         sInput.value = '';
@@ -1540,9 +1539,7 @@
 
       const sSelect = document.getElementById('sortSelect');
       sSelect.addEventListener('change', (e) => {
-        state.currentSort = e.target.value;
-        const text = e.target.options[e.target.selectedIndex].text.split(' ')[1] || '排序';
-        document.getElementById('sortIndicator').textContent = text;
+        setSort(e.target.value);
         applyFilters();
       });
     }
@@ -1562,6 +1559,15 @@
       const activeOnly = state.activeStatusOnly;
       const dim = state.dimRange;
       const pr = state.priceRange;
+      const minRange = state.minRange;
+
+      // 尺寸条件：滑块拉到两端视为“不限”，只保留真正生效的维度
+      const dimChecks = Object.keys(DIM_FIELDS).map(key => {
+        const { lo, hi } = dimLimits(key);
+        const min = dim[key + 'Min'];
+        const max = dim[key + 'Max'];
+        return { f: DIM_FIELDS[key], min: min > lo ? min : -Infinity, max: max < hi ? max : Infinity };
+      }).filter(c => c.min !== -Infinity || c.max !== Infinity);
 
       state.filtered = state.series.filter(s => {
         // 1. 销售状态
@@ -1577,7 +1583,7 @@
         // 3. 车型大类过滤
         if (type !== 'all') {
           const lvl = (s.level || '') + (s.body_type || '');
-          if (type === 'sedan' && !lvl.includes('轿车') && !lvl.includes('微型车') && !lvl.includes('紧凑型车') && !lvl.includes('中型车') && !lvl.includes('中大型车') && !lvl.includes('大型车')) return false;
+          if (type === 'sedan' && !lvl.includes('轿车') && !lvl.includes('微型车') && !lvl.includes('小型车') && !lvl.includes('紧凑型车') && !lvl.includes('中型车') && !lvl.includes('中大型车') && !lvl.includes('大型车')) return false;
           if (type === 'suv' && !lvl.includes('SUV')) return false;
           if (type === 'mpv' && !lvl.includes('MPV')) return false;
           if (type === 'sports' && !lvl.includes('跑车')) return false;
@@ -1597,14 +1603,15 @@
           if (!drives.some(d => d.includes(drive))) return false;
         }
 
-        // 6. 尺寸范围过滤 (长、轴距)
-        const lMax = s.length_max || s.length_min || 0;
-        const lMinVal = s.length_min || s.length_max || 0;
-        if (lMax < dim.lengthMin || lMinVal > dim.lengthMax) return false;
+        // 6. 尺寸范围过滤 (长、轴距、宽、高)：车系尺寸区间与筛选区间有交集即保留
+        for (const c of dimChecks) {
+          const sHi = s[c.f.hi] || s[c.f.lo] || 0;
+          const sLo = s[c.f.lo] || s[c.f.hi] || 0;
+          if (sHi < c.min || sLo > c.max) return false;
+        }
 
-        const wbMax = s.wheelbase_max || s.wheelbase_min || 0;
-        const wbMinVal = s.wheelbase_min || s.wheelbase_max || 0;
-        if (wbMax < dim.wbMin || wbMinVal > dim.wbMax) return false;
+        // 6b. 最低纯电续航（长续航场景）
+        if (minRange > 0 && !((s.range_max || 0) >= minRange)) return false;
 
         // 7. 最低推重比
         if (pwrMin > 0) {
@@ -1615,9 +1622,9 @@
         // 8. 价格区间
         if (pr !== 'all') {
           const [minP, maxP] = pr.split('-').map(Number);
-          const pMin = s.price_min || 0;
-          const pMax = s.price_max || pMin;
-          if (pMax < minP || pMin > maxP) return false;
+          if (!s.price_min) return false; // 暂无报价的车型不参与价格筛选
+          const pMax = s.price_max || s.price_min;
+          if (pMax < minP || s.price_min > maxP) return false;
         }
 
         return true;
@@ -1644,7 +1651,7 @@
           return (b.range_max || 0) - (a.range_max || 0);
         }
         if (state.currentSort === 'price_asc') {
-          return (a.price_min || 0) - (b.price_min || 0);
+          return (a.price_min || 1e9) - (b.price_min || 1e9); // 暂无报价排在最后
         }
         if (state.currentSort === 'price_desc') {
           return (b.price_max || 0) - (a.price_max || 0);
@@ -2081,47 +2088,28 @@
     }
 
     // 重置所有条件
-    function resetAllFilters() {
+    // 重置所有条件（销售状态除外）；silent 为 true 时只改状态不重新筛选，供场景预设复用
+    function resetAllFilters(opts = {}) {
       state.searchQuery = '';
       document.getElementById('searchInput').value = '';
       document.getElementById('searchClearBtn').classList.add('hidden');
-      
+
       state.currentType = 'all';
       state.currentEnergy = 'all';
       state.currentDrive = 'all';
-      state.currentSort = 'score_desc';
-      document.getElementById('sortSelect').value = 'score_desc';
-      document.getElementById('sortIndicator').textContent = '口碑排序';
+      setCapsule('.type-capsule', 'type', 'all');
+      setCapsule('.energy-capsule', 'energy', 'all');
+      setCapsule('.drive-capsule', 'drive', 'all');
+      setSort('score_desc');
 
-      // 胶囊重置
-      document.querySelectorAll('.type-capsule').forEach(b => b.classList.toggle('active', b.dataset.type === 'all'));
-      document.querySelectorAll('.energy-capsule').forEach(b => b.classList.toggle('active', b.dataset.energy === 'all'));
-      document.querySelectorAll('.drive-capsule').forEach(b => b.classList.toggle('active', b.dataset.drive === 'all'));
-
-      // 滑块重置
-      document.getElementById('filterLengthMin').value = 2800;
-      document.getElementById('filterLengthMax').value = 5500;
-      document.getElementById('filterWbMin').value = 1600;
-      document.getElementById('filterWbMax').value = 3600;
-      document.getElementById('lengthDisplay').textContent = '全范围';
-      document.getElementById('wbDisplay').textContent = '全范围';
-
-      state.dimRange.lengthMin = 2800;
-      state.dimRange.lengthMax = 5500;
-      state.dimRange.wbMin = 1600;
-      state.dimRange.wbMax = 3600;
-
-      state.pwrMin = 0;
-      document.getElementById('filterPwrMin').value = 0;
-      document.getElementById('pwrDisplay').textContent = '不限';
+      resetDimRanges();
+      setPwrMin(0);
+      state.minRange = 0;
+      state.priceRange = 'all';
       document.getElementById('priceSelect').value = 'all';
 
-      // 场景胶囊重置为全部
-      document.querySelectorAll('.scenario-pill').forEach(b => {
-        b.classList.toggle('active', b.dataset.scenario === 'all');
-      });
-
-      applyFilters();
+      markScenario('all');
+      if (!opts.silent) applyFilters();
     }
 
     // 对比功能实现

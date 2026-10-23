@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sys
 
 if sys.platform == "win32":
@@ -11,6 +12,17 @@ OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "index.html")
 
 with open(DATA_PATH, "r", encoding="utf-8") as f:
     series_data = json.load(f)
+
+# 从 price_str（如 "21.59～29.99万"、"118.0万"）解析出数值价格区间，供价格筛选与排序使用
+price_filled = 0
+for s in series_data:
+    if s.get("price_min") is None:
+        nums = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", s.get("price_str") or "")]
+        if nums:
+            s["price_min"] = min(nums)
+            s["price_max"] = max(nums)
+            price_filled += 1
+print(f"Parsed price range for {price_filled} series from price_str.")
 
 # 注入官方封面图片链接
 COVERS_PATH = os.path.join(os.path.dirname(__file__), "data", "series_covers.json")
