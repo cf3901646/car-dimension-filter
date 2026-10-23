@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="referrer" content="no-referrer">
+  <title>车规标尺选车 - 乘用车多维参数与底盘透视工程系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* ============================================================
+       1. 顶级无衬线排印规范（严禁任何中易宋体/Serif衬线字体回退）
+       ============================================================ */
+    *, *::before, *::after, html, body, button, input, select, textarea {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 汽车工程参数与等宽数字：使用纯净等宽字体栈，严禁衬线 */
+    .font-mono, [data-mono], .mono-num {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, "Liberation Mono", monospace !important;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+
+    :root {
+      --bg-slate: #090D16;
+      --card-bg: #111827;
+      --accent-cyan: #00e5ff;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+    }
+
+    /* ============================================================
+       2. 现代极简微质感滑块（Custom Minimalist Precision Sliders）
+       ============================================================ */
+    input[type=range].modern-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #E2E8F0;
+      border-radius: 9999px;
+      outline: none;
+      transition: background 0.15s ease;
+    }
+    input[type=range].modern-slider:hover {
+      background: #CBD5E1;
+    }
+    /* Webkit 拇指手柄 */
+    input[type=range].modern-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 2.5px solid #0284C7;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 2px 5px rgba(2, 132, 199, 0.25);
+      cursor: pointer;
+      transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s ease, border-color 0.12s ease;
+    }
+    input[type=range].modern-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+      border-color: #0369A1;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+    }
+    input[type=range].modern-slider::-webkit-slider-thumb:active {
+      transform: scale(1.08);
+      background: #F0F9FF;
+    }
+    /* Firefox 拇指手柄 */
+    input[type=range].modern-slider::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 2.5px solid #0284C7;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+    }
+    /* 琥珀色推重比专用滑块 */
+    input[type=range].modern-slider-amber {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #E2E8F0;
+      border-radius: 9999px;
+      outline: none;
+    }
+    input[type=range].modern-slider-amber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 2.5px solid #F59E0B;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 2px 5px rgba(245, 158, 11, 0.25);
+      cursor: pointer;
+    }
+    input[type=range].modern-slider-amber::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+      border-color: #D97706;
+    }
+
+    /* 滚动条美化 */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* 激活卡片光影 */
+    .active-card {
+      border-color: #0284c7 !important;
+      background-color: #f0f9ff !important;
+      box-shadow: 0 4px 14px -2px rgba(2, 132, 199, 0.15) !important;
+    }
+
+    /* 车轮发光与动画 */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+    .wheel-glow-cyan {
+      filter: drop-shadow(0 0 6px rgba(14, 165, 233, 0.9));
+    }
+    .wheel-glow-amber {
+      filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.9));
+    }
+    .wheel-glow-awd {
+      filter: drop-shadow(0 0 7px rgba(0, 229, 255, 0.95));
+    }
+    .drawer-open {
+      transform: translateY(0%) !important;
+    }
+    .drawer-closed {
+      transform: translateY(100%) !important;
+    }
+
+    /* 场景化胶囊按钮样式 */
+    .scenario-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #475569;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 9999px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .scenario-pill:hover {
+      color: #0284C7;
+      border-color: #BAE6FD;
+      background: #F0F9FF;
+    }
+    .scenario-pill.active {
+      color: #FFFFFF;
+      background: #0284C7;
+      border-color: #0284C7;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.28);
+    }
+  </style>
+</head>
+<body class="bg-[#F4F6F9] text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-sky-100 selection:text-sky-900 pb-20 lg:pb-10">
+
+  <!-- 顶部主导航栏（纯白微阴影，彻底防止按钮文字挤压折行） -->
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
+      
+      <!-- 品牌标识 -->
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm sm:text-base shadow-xs shrink-0">
+          <i class="fa-solid fa-car-side"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <h1 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight whitespace-nowrap">车规标尺选车</h1>
+            <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">底盘工程版</span>
+          </div>
+          <p class="text-[11px] text-slate-500 hidden sm:block truncate">
+            全量收录 <strong class="text-slate-800 font-semibold font-mono">__TOTAL_SERIES__</strong> 个车系（在售 __ACTIVE_SERIES__ / 历史 __STOPPED_SERIES__）、口碑评分与推重比底盘看板
+          </p>
+        </div>
+      </div>
+
+      <!-- 右侧快捷控制区 (全部增加 whitespace-nowrap shrink-0，彻底杜绝竖排折行) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        
+        <!-- 销售状态直接切换 (桌面端) -->
+        <div class="hidden md:flex items-center bg-slate-100/90 p-0.5 rounded-lg text-xs font-medium border border-slate-200/80 shrink-0">
+          <button id="navStatusActiveBtn" class="py-1 px-2.5 rounded-md bg-white text-slate-900 font-bold shadow-xs transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+            <span class="whitespace-nowrap">仅看在售 (__ACTIVE_SERIES__)</span>
+          </button>
+          <button id="navStatusAllBtn" class="py-1 px-2.5 rounded-md text-slate-600 hover:text-slate-900 transition-all whitespace-nowrap shrink-0">
+            <span class="whitespace-nowrap">全部车型 (__TOTAL_SERIES__)</span>
+          </button>
+        </div>
+
+        <!-- 尺寸对比 PK 按钮 (严禁折行) -->
+        <button id="compareTopBtn" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200/90 rounded-lg transition-colors whitespace-nowrap shrink-0">
+          <i class="fa-solid fa-code-compare shrink-0"></i>
+          <span class="whitespace-nowrap">对比</span>
+          <span id="compareCountTop" class="w-4 h-4 rounded-full bg-sky-600 text-white text-[10px] flex items-center justify-center font-mono font-bold shrink-0">0</span>
+        </button>
+
+        <!-- 导出 CSV (严禁折行) -->
+        <button id="exportCsvBtn" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-lg transition-colors whitespace-nowrap shrink-0" title="导出当前检索结果">
+          <i class="fa-solid fa-file-csv text-emerald-600 shrink-0"></i>
+          <span class="whitespace-nowrap">导出</span>
+        </button>
+
+        <!-- 重置全部筛选 (严禁折行) -->
+        <button id="resetAllBtn" class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-lg transition-colors whitespace-nowrap shrink-0" title="重置全部筛选条件">
+          <i class="fa-solid fa-rotate-left shrink-0"></i>
+          <span class="hidden lg:inline whitespace-nowrap">重置</span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- 核心筛选区（最新现代设计语言：一键场景胶囊 + 精致微滑块 + 极细工程卡片） -->
+  <section class="bg-white border-b border-slate-200 shadow-2xs">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 space-y-2.5">
+
+      <!-- 第零行：一键场景化快捷预设胶囊（小白零门槛一键直达，老司机极速切换） -->
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+        <span class="text-xs font-bold text-slate-400 mr-1 shrink-0 flex items-center gap-1">
+          <i class="fa-solid fa-wand-magic-sparkles text-sky-500"></i>
+          <span>场景:</span>
+        </span>
+        <button class="scenario-pill active" data-scenario="all">全部车型</button>
+        <button class="scenario-pill" data-scenario="large_sedan">👑 5米C级大车</button>
+        <button class="scenario-pill" data-scenario="super_pwr">⚡ 超跑推重比(≥200)</button>
+        <button class="scenario-pill" data-scenario="long_range">🔋 700km+长续航</button>
+        <button class="scenario-pill" data-scenario="rwd_fun">🏎️ 后驱操控派</button>
+        <button class="scenario-pill" data-scenario="city_small">🅿️ 城市灵巧代步</button>
+      </div>
+
+      <!-- 第一行：车型、动力、驱动形式的分段控制器 + 排序方式 -->
+      <div class="flex flex-wrap items-center justify-between gap-2.5 pt-0.5">
+        
+        <!-- 车型单选胶囊 (无多余文字) -->
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-xs font-bold text-slate-500 mr-1 shrink-0">车型:</span>
+          <div id="typeCapsuleGroup" class="inline-flex bg-slate-100/90 p-0.5 rounded-lg border border-slate-200/80 shrink-0 text-xs">
+            <button class="type-capsule active py-1 px-2.5 rounded-md font-semibold bg-white text-slate-900 shadow-xs" data-type="all">全部</button>
+            <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="sedan">轿车</button>
+            <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="suv">SUV</button>
+            <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="mpv">MPV</button>
+            <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="sports">跑车</button>
+          </div>
+        </div>
+
+        <!-- 能源类型胶囊 -->
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-xs font-bold text-slate-500 mr-1 shrink-0">动力:</span>
+          <div id="energyCapsuleGroup" class="inline-flex bg-slate-100/90 p-0.5 rounded-lg border border-slate-200/80 shrink-0 text-xs">
+            <button class="energy-capsule active py-1 px-2.5 rounded-md font-semibold bg-white text-slate-900 shadow-xs" data-energy="all">全部</button>
+            <button class="energy-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-energy="bev">纯电</button>
+            <button class="energy-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-energy="phev">插混/增程</button>
+            <button class="energy-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-energy="ice">燃油</button>
+          </div>
+        </div>
+
+        <!-- 驱动形式胶囊 (重点特性) -->
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-xs font-bold text-slate-500 mr-1 shrink-0">驱动:</span>
+          <div id="driveCapsuleGroup" class="inline-flex bg-slate-100/90 p-0.5 rounded-lg border border-slate-200/80 shrink-0 text-xs">
+            <button class="drive-capsule active py-1 px-2 rounded-md font-semibold bg-white text-slate-900 shadow-xs" data-drive="all">全部</button>
+            <button class="drive-capsule py-1 px-2 rounded-md font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1" data-drive="四驱">
+              <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>四驱
+            </button>
+            <button class="drive-capsule py-1 px-2 rounded-md font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1" data-drive="后驱">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>后驱
+            </button>
+            <button class="drive-capsule py-1 px-2 rounded-md font-medium text-slate-600 hover:text-slate-900" data-drive="前驱">前驱</button>
+          </div>
+        </div>
+
+        <!-- 排序方式（默认车主口碑评分从高到低） -->
+        <div class="flex items-center gap-1.5 ml-auto">
+          <span class="text-xs font-bold text-slate-500 shrink-0">排序:</span>
+          <select id="sortSelect" class="text-xs font-semibold bg-slate-100/90 hover:bg-slate-200 text-slate-900 py-1 px-2.5 rounded-lg border border-slate-200/90 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer">
+            <option value="score_desc" selected>★ 车主口碑评分最高 (默认)</option>
+            <option value="pwr_ratio_desc">⚡ 推重比最高 (推背感优先)</option>
+            <option value="wheelbase_desc">📏 轴距最大优先</option>
+            <option value="length_desc">🚘 车身最长优先</option>
+            <option value="ev_range_desc">🔋 纯电续航最长优先</option>
+            <option value="price_asc">💰 价格从低到高</option>
+            <option value="price_desc">💰 价格从高到低</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- 第二行：搜索框 + 现代车长双微滑块卡片 + 现代轴距双微滑块卡片 + 展开高级筛选 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 pt-1 items-center">
+        
+        <!-- 搜索框 (Spotlight 极简质感) -->
+        <div class="md:col-span-3 relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+          <input type="text" id="searchInput" placeholder="搜索品牌或车系，如 小米SU7、极氪、宝马..." class="w-full text-xs pl-8 pr-7 py-2 bg-slate-50/80 hover:bg-white focus:bg-white border border-slate-200/90 rounded-xl focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 transition-all shadow-2xs">
+          <button id="searchClearBtn" class="hidden absolute right-2.5 top-2 text-xs text-slate-400 hover:text-slate-600">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- 车长微卡片 (清晰两端指示，彻底消灭生硬贴合原生滑块) -->
+        <div class="md:col-span-4 bg-slate-50/80 px-3 py-1.5 rounded-xl border border-slate-200/90 space-y-1">
+          <div class="flex items-center justify-between text-[11px]">
+            <div class="flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+              <span class="font-bold text-slate-700">车长范围</span>
+            </div>
+            <span id="lengthDisplay" class="font-mono font-bold text-sky-700 text-xs">2.80～5.50m</span>
+          </div>
+          <div class="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
+            <span class="shrink-0 text-slate-400">起</span>
+            <input type="range" id="filterLengthMin" min="2800" max="5500" step="50" value="2800" class="modern-slider cursor-pointer" title="最小车长">
+            <span class="shrink-0 text-slate-400">止</span>
+            <input type="range" id="filterLengthMax" min="2800" max="5500" step="50" value="5500" class="modern-slider cursor-pointer" title="最大车长">
+          </div>
+        </div>
+
+        <!-- 轴距微卡片 (清晰两端指示) -->
+        <div class="md:col-span-4 bg-slate-50/80 px-3 py-1.5 rounded-xl border border-slate-200/90 space-y-1">
+          <div class="flex items-center justify-between text-[11px]">
+            <div class="flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span class="font-bold text-slate-700">轴距范围</span>
+            </div>
+            <span id="wbDisplay" class="font-mono font-bold text-sky-700 text-xs">1.60～3.60m</span>
+          </div>
+          <div class="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
+            <span class="shrink-0 text-slate-400">起</span>
+            <input type="range" id="filterWbMin" min="1600" max="3600" step="20" value="1600" class="modern-slider cursor-pointer" title="最小轴距">
+            <span class="shrink-0 text-slate-400">止</span>
+            <input type="range" id="filterWbMax" min="1600" max="3600" step="20" value="3600" class="modern-slider cursor-pointer" title="最大轴距">
+          </div>
+        </div>
+
+        <!-- 展开/折叠更多高级选项按钮 -->
+        <div class="md:col-span-1 flex justify-end">
+          <button id="toggleAdvancedBtn" class="w-full py-2 px-2 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100/90 hover:bg-slate-200/90 rounded-xl border border-slate-200/80 transition-all flex items-center justify-center gap-1 shadow-2xs">
+            <span class="whitespace-nowrap">更多</span>
+            <i id="toggleAdvancedIcon" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- 高级筛选折叠区（第二级渐进式暴露：微卡片设计语言） -->
+      <div id="advancedFilterPanel" class="hidden pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+        
+        <!-- 车宽范围 -->
+        <div class="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/90 space-y-1">
+          <div class="flex justify-between items-center text-[11px]">
+            <span class="font-bold text-slate-700">车身宽度</span>
+            <span id="widthDisplay" class="font-mono text-sky-700 font-bold">全范围</span>
+          </div>
+          <div class="flex items-center gap-2 pt-1 text-[10px] text-slate-400 font-mono">
+            <span class="shrink-0 text-slate-400">起</span>
+            <input type="range" id="filterWidthMin" min="1400" max="2200" step="20" value="1400" class="modern-slider">
+            <span class="shrink-0 text-slate-400">止</span>
+            <input type="range" id="filterWidthMax" min="1400" max="2200" step="20" value="2200" class="modern-slider">
+          </div>
+        </div>
+
+        <!-- 车高范围 -->
+        <div class="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/90 space-y-1">
+          <div class="flex justify-between items-center text-[11px]">
+            <span class="font-bold text-slate-700">车身高度</span>
+            <span id="heightDisplay" class="font-mono text-sky-700 font-bold">全范围</span>
+          </div>
+          <div class="flex items-center gap-2 pt-1 text-[10px] text-slate-400 font-mono">
+            <span class="shrink-0 text-slate-400">起</span>
+            <input type="range" id="filterHeightMin" min="1200" max="2200" step="20" value="1200" class="modern-slider">
+            <span class="shrink-0 text-slate-400">止</span>
+            <input type="range" id="filterHeightMax" min="1200" max="2200" step="20" value="2200" class="modern-slider">
+          </div>
+        </div>
+
+        <!-- 最低推重比 (强推背感) -->
+        <div class="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/90 space-y-1">
+          <div class="flex justify-between items-center text-[11px]">
+            <span class="font-bold text-slate-700">最低推重比指标</span>
+            <span id="pwrDisplay" class="font-mono text-amber-600 font-bold">不限</span>
+          </div>
+          <div class="pt-1">
+            <input type="range" id="filterPwrMin" min="0" max="260" step="10" value="0" class="modern-slider modern-slider-amber">
+          </div>
+        </div>
+
+        <!-- 价格预算区间 -->
+        <div class="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/90 space-y-1">
+          <div class="flex justify-between items-center text-[11px]">
+            <span class="font-bold text-slate-700">指导价格预算</span>
+          </div>
+          <div class="pt-0.5">
+            <select id="priceSelect" class="w-full py-1.5 px-2 bg-white border border-slate-200/90 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-sky-500">
+              <option value="all">不限价格区间</option>
+              <option value="0-10">10万以内 (经济代步)</option>
+              <option value="10-15">10至15万 (主力家用车)</option>
+              <option value="15-25">15至25万 (品质中级车)</option>
+              <option value="25-40">25至40万 (豪华高配车)</option>
+              <option value="40-70">40至70万 (高端豪华车)</option>
+              <option value="70-999">70万以上 (顶级旗舰/超跑)</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 主体工作区：电脑端非对称双栏系统 / 移动端纵向流 -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 py-4 flex-1 w-full">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      
+      <!-- 左侧栏：车辆卡片列表 (桌面端占 5 列 / 约 42%) -->
+      <section class="lg:col-span-5 space-y-3">
+        
+        <!-- 列表统计与状态信息 -->
+        <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+          <div>
+            已筛选出 <strong id="resultCount" class="text-slate-900 font-bold text-sm font-mono">0</strong> 款车系
+            <span id="sortIndicator" class="ml-1 text-[11px] text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100">口碑排序</span>
+          </div>
+          <div class="text-[11px] text-slate-400 hidden sm:block">
+            电脑端鼠标悬停即可切换右侧底盘
+          </div>
+        </div>
+
+        <!-- 卡片容器 -->
+        <div id="cardListContainer" class="space-y-2.5">
+          <!-- 动态渲染车辆卡片 -->
+        </div>
+
+        <!-- 分页与加载更多 -->
+        <div id="paginationControls" class="pt-2 text-center">
+          <button id="loadMoreBtn" class="w-full py-2.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-all shadow-2xs">
+            加载更多车型...
+          </button>
+        </div>
+
+      </section>
+
+      <!-- 右侧栏：底盘透视与性能工程看板 (桌面端占 7 列 / 约 58%，置顶吸附) -->
+      <section id="desktopBoardSection" class="hidden lg:block lg:col-span-7 sticky top-16">
+        <div class="bg-white text-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200/90 space-y-4">
+          
+          <!-- 看板头部：当前选中的车辆与操作 (汽车之家/懂车帝高对比度排版) -->
+          <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span id="boardBrand" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">品牌</span>
+                <h2 id="boardSeriesName" class="text-lg font-bold text-slate-900 tracking-tight">车系名称</h2>
+                <span id="boardLevel" class="text-[11px] text-slate-400">中大型车</span>
+              </div>
+              <div class="flex items-center gap-3 mt-1.5 text-xs">
+                <span id="boardPrice" class="font-mono font-bold text-[#FF6600] text-sm">20.99～29.99万</span>
+                <span class="text-slate-300">|</span>
+                <div class="flex items-center gap-1">
+                  <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                  <span id="boardScore" class="font-bold text-slate-800">4.65</span>
+                  <span class="text-slate-400 text-[10px]">车主口碑</span>
+                </div>
+                <span id="boardEvRangeBadge" class="hidden px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">纯电 620km</span>
+              </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="flex items-center gap-2">
+              <button id="boardCompareBtn" class="px-2.5 py-1 text-xs font-medium text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs">
+                <i class="fa-solid fa-plus text-sky-600"></i> 加入对比
+              </button>
+            </div>
+          </div>
+
+          <!-- 2D 底盘俯视透视蓝图容器 (SVG，清爽浅冰灰画板) -->
+          <div class="relative bg-[#F8FAFC] rounded-xl p-3 border border-slate-200/80 overflow-hidden flex items-center justify-center min-h-[260px]">
+            <div id="boardChassisSvgContainer" class="w-full flex items-center justify-center">
+              <!-- 动态注入底盘 SVG -->
+            </div>
+          </div>
+
+          <!-- 商业级动力总成与推重比遥测控制台 (Precision Powertrain Telemetry Deck) -->
+          <div class="telemetry-deck bg-[#F8FAFC] rounded-xl border border-slate-200/90 p-3.5 space-y-3">
+            
+            <!-- 顶栏：推重比精密刻度标尺 -->
+            <div class="space-y-1.5">
+              <div class="flex items-baseline justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] tracking-wider font-mono font-bold text-slate-400 uppercase">POWERTRAIN TELEMETRY</span>
+                  <span class="text-slate-300">/</span>
+                  <span class="text-xs font-semibold text-slate-700">推重比指标</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span id="boardPwrLevel" class="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-amber-50 text-amber-700 border border-amber-200">超跑性能级</span>
+                  <div class="flex items-baseline gap-1">
+                    <span id="boardPwrRatioVal" class="text-2xl sm:text-3xl font-bold font-mono text-amber-600 tracking-tight">--</span>
+                    <span class="text-[11px] font-mono font-semibold text-slate-500">Ps/t</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 机械激光标尺轨道 -->
+              <div class="pwr-rail-track relative pt-1 pb-2">
+                <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden border border-slate-300/80 relative">
+                  <!-- 色彩渐变刻度底带 -->
+                  <div class="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-emerald-500 via-sky-500 via-amber-500 to-rose-500 opacity-80"></div>
+                  <!-- 动态高光激光游标 -->
+                  <div id="boardPwrBar" class="pwr-cursor laser-cursor absolute top-0 bottom-0 left-0 bg-white shadow-[0_0_6px_rgba(0,0,0,0.3)] transition-all duration-300 w-1/2"></div>
+                </div>
+                <!-- 刻度分度值标注 -->
+                <div class="flex justify-between text-[9px] font-mono text-slate-400 pt-1 select-none">
+                  <span>0 Ps/t</span>
+                  <span>100 (家用)</span>
+                  <span>150 (充沛)</span>
+                  <span>220 (推背)</span>
+                  <span>300+ Ps/t (超跑)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 底栏：动力三联精密数据视窗 (等宽机加工数据带) -->
+            <div class="telemetry-metrics-bar grid grid-cols-3 divide-x divide-slate-200 border-t border-slate-200 pt-2.5">
+              
+              <!-- 1. 综合马力 -->
+              <div class="px-2 first:pl-0">
+                <div class="text-[10px] text-slate-500 font-medium">综合马力输出</div>
+                <div class="flex items-baseline gap-1 mt-0.5">
+                  <span id="boardHpVal" class="text-lg font-bold font-mono text-slate-900">--</span>
+                  <span class="text-[10px] text-slate-500 font-mono">Ps</span>
+                </div>
+                <div class="text-[9px] text-slate-400 mt-0.5 font-mono">额定峰值输出</div>
+              </div>
+
+              <!-- 2. 驱动总成 -->
+              <div class="px-2">
+                <div class="text-[10px] text-slate-500 font-medium">驱动总成架构</div>
+                <div id="boardDriveType" class="text-sm font-bold text-sky-600 mt-0.5 truncate">智能四驱</div>
+                <div id="boardDriveDesc" class="text-[9px] text-slate-400 mt-0.5 truncate font-mono">双电机动力协同</div>
+              </div>
+
+              <!-- 3. 整备质量 -->
+              <div class="px-2 last:pr-0">
+                <div class="text-[10px] text-slate-500 font-medium">整备质量规格</div>
+                <div class="flex items-baseline gap-1 mt-0.5">
+                  <span id="boardWeightVal" class="text-lg font-bold font-mono text-slate-900">--</span>
+                  <span class="text-[10px] text-slate-500 font-mono">kg</span>
+                </div>
+                <div class="text-[9px] text-slate-400 mt-0.5 font-mono">空载整备自重</div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- 空间得房率与商场泊车体检工程视窗 -->
+          <div class="bg-[#F8FAFC] rounded-xl border border-slate-200/90 p-3 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                <span class="font-bold text-slate-800">空间得房率与商场车位体检</span>
+              </div>
+              <span id="boardSpaceGrade" class="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">👑 高得房率座舱</span>
+            </div>
+            
+            <div class="grid grid-cols-3 divide-x divide-slate-200 pt-1 text-xs">
+              <!-- 得房率 (轴长比) -->
+              <div class="px-2 first:pl-0">
+                <div class="flex items-center gap-1">
+                  <span class="text-[10px] text-slate-500">空间得房率</span>
+                  <span class="text-[9px] text-indigo-500 cursor-help" title="汽车两头需预留碰撞吸能与动力总成公摊(约1.8至2.1米)，乘用车轴长比普遍集中在57%至63%之间。车长每1%比例差距≈约50mm(整整1拳后排腿部空间)！">ⓘ</span>
+                </div>
+                <div class="flex items-baseline gap-1 mt-0.5">
+                  <span id="boardSpaceRatioVal" class="text-base font-bold font-mono text-indigo-600">--%</span>
+                </div>
+                <div id="boardSpaceOverhang" class="text-[9px] text-slate-400 font-mono">公摊: --mm</div>
+              </div>
+
+              <!-- 商场车位开门余量 -->
+              <div class="px-2">
+                <div class="text-[10px] text-slate-500">商场标准位开门</div>
+                <div class="flex items-baseline gap-1 mt-0.5">
+                  <span id="boardDoorClearanceVal" class="text-base font-bold font-mono text-slate-800">-- mm</span>
+                </div>
+                <div id="boardDoorDesc" class="text-[9px] text-slate-400 font-mono">2.5m标准车位</div>
+              </div>
+
+              <!-- 机械立体车位适应度 -->
+              <div class="px-2 last:pr-0">
+                <div class="text-[10px] text-slate-500">机械车位体检</div>
+                <div class="mt-0.5">
+                  <span id="boardMechTag" class="text-[11px] font-bold text-emerald-600">🟢 通行无阻</span>
+                </div>
+                <div class="text-[9px] text-slate-400 font-mono">限宽1850mm标准</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 同级相近价位核心竞品雷达 (找替代与横评) -->
+          <div class="bg-[#F8FAFC] rounded-xl border border-slate-200/90 p-3 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-crosshairs text-sky-600"></i>
+                <span class="font-bold text-slate-800">同级热门竞品雷达 (相似价位与尺寸)</span>
+              </div>
+              <button id="compareWithCompsBtn" class="text-[10px] font-semibold px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white transition-colors flex items-center gap-1 shadow-2xs">
+                <i class="fa-solid fa-code-compare"></i> 一键并排对比
+              </button>
+            </div>
+            
+            <!-- 竞品微卡片网格 -->
+            <div id="boardCompetitorsList" class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-0.5">
+              <!-- 动态注入 3 款同级直接竞品 -->
+            </div>
+          </div>
+
+          <!-- 年款与具体配置规格切换列表 -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span class="font-semibold text-slate-700">具体配置与驱动联动切换</span>
+              <span id="boardVersionCount" class="text-[11px]">共 0 款在售配置</span>
+            </div>
+            <div id="boardVersionList" class="max-h-48 overflow-y-auto space-y-1 custom-scrollbar pr-1">
+              <!-- 动态配置单选 -->
+            </div>
+          </div>
+
+        </div>
+</section>
+
+    </div>
+
+  </main>
+
+  <!-- 手机移动端：底部弹性抽屉 (Bottom Sheet) 查看底盘透视 -->
+  <div id="mobileDrawerBackdrop" class="fixed inset-0 bg-black/60 z-50 hidden transition-opacity opacity-0"></div>
+  <div id="mobileDrawer" class="fixed inset-x-0 bottom-0 z-50 bg-white text-slate-800 rounded-t-3xl max-h-[85vh] flex flex-col drawer-closed drawer-transition lg:hidden border-t border-slate-200 shadow-2xl">
+    <!-- 抽屉顶部手柄与标题 -->
+    <div class="p-3 border-b border-slate-100 flex items-center justify-between shrink-0">
+      <div class="w-8"></div>
+      <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto"></div>
+      <button id="closeMobileDrawerBtn" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700">
+        <i class="fa-solid fa-xmark text-base"></i>
+      </button>
+    </div>
+
+    <!-- 抽屉内容区 (可滚动) -->
+    <div class="p-4 overflow-y-auto space-y-4 custom-scrollbar text-slate-800">
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="mDrawerBrand" class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">品牌</span>
+          <h3 id="mDrawerSeriesName" class="text-base font-bold text-slate-900">车系名称</h3>
+        </div>
+        <div class="flex items-center gap-2 mt-1.5 text-xs">
+          <span id="mDrawerPrice" class="font-mono font-bold text-[#FF6600]">价格</span>
+          <span class="text-slate-300">|</span>
+          <span class="text-amber-500 font-bold flex items-center gap-1">
+            <i class="fa-solid fa-star text-xs"></i>
+            <span id="mDrawerScore" class="text-slate-800">4.6</span>
+          </span>
+          <span id="mDrawerRangeBadge" class="hidden px-1.5 py-0.2 rounded text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200">续航</span>
+        </div>
+      </div>
+
+      <!-- 手机底盘透视 SVG 容器 (清爽浅灰底座) -->
+      <div class="bg-[#F8FAFC] rounded-xl p-2 border border-slate-200/80 flex items-center justify-center min-h-[220px]">
+        <div id="mDrawerChassisSvgContainer" class="w-full flex items-center justify-center"></div>
+      </div>
+
+      <!-- 手机端工程动力遥测仪表 -->
+      <div class="bg-[#F8FAFC] p-3 rounded-xl border border-slate-200/90 space-y-2">
+        <div class="flex items-baseline justify-between">
+          <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">POWER-TO-WEIGHT</span>
+          <div class="flex items-baseline gap-1.5">
+            <span id="mDrawerPwrLevel" class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 border border-amber-200 font-bold">性能级</span>
+            <span id="mDrawerPwrVal" class="text-2xl font-bold font-mono text-amber-600">--</span>
+            <span class="text-[10px] font-mono text-slate-500">Ps/t</span>
+          </div>
+        </div>
+        <!-- 刻度条 -->
+        <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden border border-slate-300 relative">
+          <div class="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-emerald-500 via-sky-500 via-amber-500 to-rose-500 opacity-80"></div>
+          <div id="mDrawerPwrBar" class="absolute top-0 bottom-0 left-0 bg-white shadow-[0_0_4px_rgba(0,0,0,0.3)] w-1/2"></div>
+        </div>
+        <div class="grid grid-cols-2 divide-x divide-slate-200 pt-1 text-[11px]">
+          <div class="pr-2">
+            <span class="text-slate-500 text-[10px]">驱动总成: </span>
+            <span id="mDrawerDriveType" class="font-bold text-sky-600">四驱</span>
+          </div>
+          <div class="pl-2">
+            <span class="text-slate-500 text-[10px]">马力输出: </span>
+            <span id="mDrawerHpVal" class="font-bold font-mono text-slate-900">-- Ps</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 手机端空间得房率与车位体检 -->
+      <div class="bg-[#F8FAFC] p-3 rounded-xl border border-slate-200/90 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-800">空间得房率与商场车位体检</span>
+          <span id="mDrawerSpaceGrade" class="text-[10px] font-mono px-1.5 py-0.2 rounded font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">高得房率</span>
+        </div>
+        <div class="grid grid-cols-3 divide-x divide-slate-200 text-center">
+          <div>
+            <div class="text-[10px] text-slate-500">空间得房率</div>
+            <div id="mDrawerSpaceRatioVal" class="font-mono font-bold text-indigo-600 mt-0.5">--%</div>
+            <div id="mDrawerSpaceOverhang" class="text-[9px] text-slate-400 font-mono mt-0.5">公摊 --mm</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-slate-500">商场位开门</div>
+            <div id="mDrawerDoorClearanceVal" class="font-mono font-bold text-slate-800 mt-0.5">-- mm</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-slate-500">机械车位</div>
+            <div id="mDrawerMechTag" class="font-bold text-emerald-600 mt-0.5">🟢 可停</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 手机端同级热门竞品推荐 -->
+      <div class="bg-[#F8FAFC] p-3 rounded-xl border border-slate-200/90 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-800">同级热门竞品雷达</span>
+          <button id="mCompareWithCompsBtn" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-sky-600 text-white">一键对比</button>
+        </div>
+        <div id="mDrawerCompetitorsList" class="space-y-1.5 pt-0.5"></div>
+      </div>
+
+      <!-- 年款配置列表 -->
+      <div class="space-y-1.5">
+        <div class="text-xs font-semibold text-slate-700">切换配置观察驱动轮变化:</div>
+        <div id="mDrawerVersionList" class="space-y-1 max-h-40 overflow-y-auto custom-scrollbar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 移动端常驻底部控制栏 (大拇指热区：当前筛选数量 + 呼出高级筛选 + 呼出对比) -->
+  <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-2 px-4 flex items-center justify-between z-30 lg:hidden shadow-lg">
+    <div class="flex items-center gap-1.5 text-xs text-slate-600">
+      <span>已筛选:</span>
+      <strong id="mobileBottomCount" class="text-sky-700 font-bold font-mono text-sm">0</strong>
+      <span>款</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="document.getElementById('toggleAdvancedBtn').click(); window.scrollTo({top: 0, behavior: 'smooth'});" 
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 flex items-center gap-1">
+        <i class="fa-solid fa-sliders text-sky-600"></i> 筛选
+      </button>
+      <button onclick="openCompareModal()" 
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 text-white hover:bg-sky-700 flex items-center gap-1 shadow-xs">
+        <i class="fa-solid fa-code-compare"></i> 对比 (<span id="mobileBottomCompareCount">0</span>)
+      </button>
+    </div>
+  </div>
+
+  <!-- 对比模态弹窗 (两车尺寸与底盘叠层透视 PK) -->
+  <div id="compareModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 sm:p-6">
+    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-code-compare text-sky-600"></i>
+          <h3 class="font-bold text-slate-900 text-sm sm:text-base">车型尺寸与机械规格对比</h3>
+        </div>
+        <button id="closeCompareModalBtn" class="text-slate-400 hover:text-slate-700 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div id="compareModalBody" class="p-4 overflow-y-auto space-y-4 custom-scrollbar text-xs">
+        <!-- 动态对比表格与底盘叠层 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 默认车辆矢量剪影底图 (SVG Data-URI，彻底杜绝无图片破版) -->
+  <script>
+    const DEFAULT_CAR_SVG = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="100%" height="100%">
+        <defs>
+          <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1e293b"/>
+            <stop offset="100%" stop-color="#0f172a"/>
+          </linearGradient>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="400" height="250" fill="url(#bg)"/>
+        <rect width="400" height="250" fill="url(#grid)"/>
+        <!-- Car Silhouette -->
+        <path d="M 60 165 C 60 165 75 140 105 135 C 135 130 160 110 200 105 C 255 100 295 115 315 135 C 335 145 345 165 345 165 L 340 175 L 320 175 C 315 160 295 160 290 175 L 140 175 C 135 160 115 160 110 175 L 60 175 Z" fill="rgba(148, 163, 184, 0.2)" stroke="#64748b" stroke-width="1.5"/>
+        <!-- Wheels -->
+        <circle cx="125" cy="175" r="18" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+        <circle cx="125" cy="175" r="8" fill="#0f172a"/>
+        <circle cx="305" cy="175" r="18" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+        <circle cx="305" cy="175" r="8" fill="#0f172a"/>
+        <text x="200" y="215" fill="#94a3b8" font-size="11" font-family="sans-serif" text-anchor="middle">汽车之家实车图采集收录中</text>
+      </svg>
+    `);
+  </script>
+
+  <!-- 数据源注入点 -->
+  <script>
+    const ALL_SERIES = /* __ALL_SERIES_JSON__ */ [];
+  </script>
+
+  <!-- 核心逻辑脚本 -->
+  <script>
+    // 全局状态管理
+    const state = {
+      series: ALL_SERIES,
+      filtered: [],
+      selectedSeriesId: null,
+      selectedVersionKey: null,
+      activeStatusOnly: true,
+      currentType: 'all',
+      currentEnergy: 'all',
+      currentDrive: 'all',
+      currentSort: 'score_desc', // 默认按车主口碑评分从高到低
+      searchQuery: '',
+      priceRange: 'all',
+      pwrMin: 0,
+      dimRange: {
+        lengthMin: 2800,
+        lengthMax: 5500,
+        widthMin: 1400,
+        widthMax: 2200,
+        heightMin: 1200,
+        heightMax: 2200,
+        wbMin: 1600,
+        wbMax: 3600
+      },
+      page: 1,
+      pageSize: 25,
+      compareList: []
+    };
+
+    // 辅助函数：格式化推重比等级与游标百分比
+    // 辅助函数：解析价格均值与区间
+    function parseCarPrice(s) {
+      const pStr = s.price_str || '';
+      const nums = pStr.match(/\d+(?:\.\d+)?/g);
+      if (nums && nums.length > 0) {
+        const pMin = parseFloat(nums[0]);
+        const pMax = nums.length > 1 ? parseFloat(nums[1]) : pMin;
+        return { min: pMin, max: pMax, avg: (pMin + pMax) / 2 };
+      }
+      return { min: 0, max: 0, avg: 0 };
+    }
+
+    // 辅助函数：计算空间得房率 (轴长比) 与评级
+    function getSpaceMeta(wheelbase, length) {
+      const wb = wheelbase || 2800;
+      const l = length || 4800;
+      const overhang = Math.max(0, l - wb);
+      const ratio = ((wb / l) * 100).toFixed(1);
+      const numRatio = parseFloat(ratio);
+      if (numRatio >= 61.5) {
+        return {
+          ratio: ratio,
+          overhang: overhang,
+          level: "👑 超高得房率",
+          desc: "短前后悬大座舱",
+          badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-200"
+        };
+      } else if (numRatio >= 59.0) {
+        return {
+          ratio: ratio,
+          overhang: overhang,
+          level: "💎 黄金均衡座舱",
+          desc: "家用黄金平衡比例",
+          badgeClass: "bg-sky-50 text-sky-700 border-sky-200"
+        };
+      }
+      return {
+        ratio: ratio,
+        overhang: overhang,
+        level: "🏎️ 运动操控取向",
+        desc: "长车头运动配重",
+        badgeClass: "bg-amber-50 text-amber-700 border-amber-200"
+      };
+    }
+
+    // 辅助函数：计算商场标准车位 (2.5m×5.3m) 开门余量与机械车位兼容度
+    function getParkingFitMeta(width, length) {
+      const w = width || 1900;
+      const l = length || 4800;
+      const doorClearance = Math.round((2500 - w) / 2);
+      const lengthClearance = Math.max(0, 5300 - l);
+      
+      let doorTag = "开门充裕";
+      let doorColor = "text-emerald-600";
+      if (doorClearance < 280) {
+        doorTag = "开门狭窄易碰";
+        doorColor = "text-rose-600 font-bold";
+      } else if (doorClearance < 320) {
+        doorTag = "正常开门";
+        doorColor = "text-slate-800";
+      }
+
+      let mechText = "🟢 通行无阻";
+      let mechColor = "text-emerald-600";
+      if (l > 5000 || w > 1900) {
+        mechText = "🔴 超标慎选";
+        mechColor = "text-rose-600";
+      } else if (w > 1850) {
+        mechText = "🟡 需1.9m宽位";
+        mechColor = "text-amber-600";
+      }
+
+      return {
+        doorClearance: doorClearance,
+        lengthClearance: lengthClearance,
+        doorTag: doorTag,
+        doorColor: doorColor,
+        mechText: mechText,
+        mechColor: mechColor
+      };
+    }
+
+    // 辅助函数：寻找同级别相近价位与尺寸的核心竞品 (找替代横评)
+    function findSimilarCompetitors(targetSeries) {
+      if (!targetSeries) return [];
+      const tPrice = parseCarPrice(targetSeries);
+      const tWb = targetSeries.wheelbase_max || targetSeries.wheelbase_min || 2800;
+      const tLvl = (targetSeries.level || targetSeries.clean_level || '').toLowerCase();
+      const isSuv = tLvl.includes('suv');
+      const isMpv = tLvl.includes('mpv');
+
+      const candidates = state.series.filter(s => {
+        if (s.is_stopped) return false;
+        if (s.series_id === targetSeries.series_id) return false;
+
+        const sLvl = (s.level || s.clean_level || '').toLowerCase();
+        if (isSuv && !sLvl.includes('suv')) return false;
+        if (isMpv && !sLvl.includes('mpv')) return false;
+        if (!isSuv && !isMpv && (sLvl.includes('suv') || sLvl.includes('mpv'))) return false;
+
+        const sPrice = parseCarPrice(s);
+        if (tPrice.avg > 0 && sPrice.avg > 0) {
+          const diff = Math.abs(sPrice.avg - tPrice.avg);
+          if (diff > Math.max(tPrice.avg * 0.35, 6)) return false;
+        }
+
+        const sWb = s.wheelbase_max || s.wheelbase_min || 0;
+        if (Math.abs(sWb - tWb) > 150) return false;
+
+        return true;
+      });
+
+      // 按口碑评分与轴距相近度综合排序
+      candidates.sort((a, b) => {
+        const scoreDiff = (b.score || 0) - (a.score || 0);
+        if (Math.abs(scoreDiff) > 0.05) return scoreDiff;
+        const diffA = Math.abs((a.wheelbase_max || 0) - tWb);
+        const diffB = Math.abs((b.wheelbase_max || 0) - tWb);
+        return diffA - diffB;
+      });
+
+      return candidates.slice(0, 3);
+    }
+
+    function getPwrRatioMeta(pwr) {
+      if (!pwr || isNaN(pwr)) return { text: "待完善", color: "text-slate-400", level: "规格待测", pct: 0 };
+      const pct = Math.min(Math.max((pwr / 300) * 100, 4), 100);
+      if (pwr < 100) return { text: `${pwr} Ps/t`, color: "text-emerald-400", level: "家用经济 (<100)", pct: pct };
+      if (pwr < 150) return { text: `${pwr} Ps/t`, color: "text-sky-400", level: "充沛超车 (100～150)", pct: pct };
+      if (pwr < 220) return { text: `${pwr} Ps/t`, color: "text-amber-400", level: "强劲推背 (150～220)", pct: pct };
+      return { text: `${pwr} Ps/t`, color: "text-rose-400", level: "狂暴超跑 (>220)", pct: pct };
+    }
+
+    // 辅助函数：智能格式化车系标题 (彻底杜绝 "易至EV3 易至EV3" 或 "奥迪 奥迪A6L" 重复叠词)
+    function formatCarTitle(b, s) {
+      b = (b || '').trim();
+      s = (s || '').trim();
+      if (!b && !s) return '未命名车型';
+      if (!b) return `<span class="font-bold text-slate-900">${s}</span>`;
+      if (!s) return `<span class="font-bold text-slate-900">${b}</span>`;
+      if (b.toLowerCase() === s.toLowerCase()) {
+        return `<span class="font-bold text-slate-900">${s}</span>`;
+      }
+      if (s.toLowerCase().startsWith(b.toLowerCase())) {
+        const rest = s.slice(b.length).replace(/^[\s·\-_]+/, '');
+        if (rest.length >= 1) {
+          return `<span class="text-slate-500 font-medium mr-1.5">${b}</span><span class="font-bold text-slate-900">${rest}</span>`;
+        }
+      }
+      return `<span class="text-slate-500 font-medium mr-1.5">${b}</span><span class="font-bold text-slate-900">${s}</span>`;
+    }
+
+    // 辅助函数：绘制高精 2D 底盘俯视透视 SVG (汽车之家/懂车帝同款现代商业级白底工程线框图)
+    // 辅助函数：绘制高精 2D 底盘俯视透视 SVG（集成真实主流商场 2.5m×5.3m 标准车位线框与开门余量体检）
+    function renderChassisSvg(length_mm, width_mm, wheelbase_mm, drive_type, pwr_ratio, max_hp, weight_kg) {
+      const l = length_mm || 4800;
+      const w = width_mm || 1900;
+      const wb = wheelbase_mm || 2900;
+      const drv = drive_type || "四驱";
+      
+      const svg_w = 480;
+      const svg_h = 260;
+      
+      const scale = 0.056; // 1mm = 0.056px
+      const body_l = l * scale; // 约 240～310px
+      const body_w = w * scale; // 约 95～125px
+      const wb_l = wb * scale;   // 约 150～200px
+      
+      const center_x = svg_w / 2 - 10;
+      const center_y = svg_h / 2;
+      
+      // 主流商场标准垂直车位：长 5300mm，宽 2500mm (国标 JGJ 100-2015 商业车位规范)
+      const slot_l = 5300 * scale; // ~296.8px
+      const slot_w = 2500 * scale; // ~140.0px
+      const slot_x = center_x - slot_l / 2;
+      const slot_y = center_y - slot_w / 2;
+      
+      // 车身框位置（居中停入车位）
+      const box_x = center_x - body_l / 2;
+      const box_y = center_y - body_w / 2;
+      
+      // 单侧车门开启余量（mm）
+      const door_clearance = Math.round((2500 - w) / 2);
+      // 前后总余量（mm）
+      const length_clearance = Math.max(0, 5300 - l);
+      
+      // 空间得房率 (轴长比)
+      const space_ratio = ((wb / l) * 100).toFixed(1);
+      
+      // 机械车位体检结论 (国标限长5000mm, 限宽1850mm/宽体1900mm)
+      let mech_badge_text = "机械车位通行";
+      let mech_badge_color = "#10b981"; // 绿
+      let mech_bg = "rgba(16, 185, 129, 0.1)";
+      if (l > 5000 || w > 1900) {
+        mech_badge_text = "机械位超长/超宽慎选";
+        mech_badge_color = "#f43f5e"; // 红
+        mech_bg = "rgba(244, 63, 94, 0.1)";
+      } else if (w > 1850) {
+        mech_badge_text = "需1.9m宽体机械位";
+        mech_badge_color = "#f59e0b"; // 黄
+        mech_bg = "rgba(245, 158, 11, 0.1)";
+      }
+      
+      // 开门舒适度评级
+      let door_badge_color = "#10b981";
+      let door_desc = "开门充裕";
+      if (door_clearance < 280) {
+        door_badge_color = "#f43f5e";
+        door_desc = "开门极窄易磕";
+      } else if (door_clearance < 320) {
+        door_badge_color = "#0284c7";
+        door_desc = "正常开门";
+      }
+
+      const front_overhang = (body_l - wb_l) * 0.45;
+      const front_axle_x = box_x + front_overhang;
+      const rear_axle_x = front_axle_x + wb_l;
+      
+      const wheel_l = 28;
+      const wheel_w = 12;
+      
+      const fl_x = front_axle_x - wheel_l / 2;
+      const fl_y = box_y - wheel_w / 2;
+      const fr_x = front_axle_x - wheel_l / 2;
+      const fr_y = box_y + body_w - wheel_w / 2;
+      
+      const rl_x = rear_axle_x - wheel_l / 2;
+      const rl_y = box_y - wheel_w / 2;
+      const rr_x = rear_axle_x - wheel_l / 2;
+      const rr_y = box_y + body_w - wheel_w / 2;
+      
+      const is_fwd = drv.includes("前驱");
+      const is_rwd = drv.includes("后驱");
+      const is_awd = drv.includes("四驱") || (!is_fwd && !is_rwd);
+      
+      const front_glow = is_fwd || is_awd;
+      const rear_glow = is_rwd || is_awd;
+      
+      const fw_style = front_glow 
+        ? 'fill="#0284c7" stroke="#0369a1" stroke-width="2" class="wheel-glow-awd"' 
+        : 'fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"';
+      const rw_style = rear_glow 
+        ? 'fill="#f59e0b" stroke="#d97706" stroke-width="2" class="wheel-glow-amber"' 
+        : 'fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"';
+      
+      return `
+        <svg viewBox="0 0 ${svg_w} ${svg_h}" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto max-h-[250px] select-none">
+          <defs>
+            <pattern id="svg-grid-light" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(0,0,0,0.03)" stroke-width="1"/>
+            </pattern>
+            <linearGradient id="frontPowerLight" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#0284c7"/>
+              <stop offset="100%" stop-color="#38bdf8"/>
+            </linearGradient>
+            <linearGradient id="rearPowerLight" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#d97706"/>
+              <stop offset="100%" stop-color="#fbbf24"/>
+            </linearGradient>
+            <pattern id="curbStripe" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="4" height="8" fill="#F59E0B"/>
+              <rect x="4" width="4" height="8" fill="#1E293B"/>
+            </pattern>
+          </defs>
+
+          <!-- 背景工程微网格 -->
+          <rect width="${svg_w}" height="${svg_h}" fill="transparent" />
+          <rect width="${svg_w}" height="${svg_h}" fill="url(#svg-grid-light)" />
+
+          <!-- ========================================== -->
+          <!-- 1. 主流商场标准地下车位标尺框 (2.5m × 5.3m) -->
+          <!-- ========================================== -->
+          <!-- 车位底坪微阴影与高亮区域 -->
+          <rect x="${slot_x}" y="${slot_y}" width="${slot_l}" height="${slot_w}" rx="2" fill="rgba(241, 245, 249, 0.75)" stroke="#E2E8F0" stroke-width="1" />
+          
+          <!-- 车位黄色边界实线（标准商业地下车库反光线） -->
+          <!-- 上侧边线 -->
+          <line x1="${slot_x}" y1="${slot_y}" x2="${slot_x + slot_l}" y2="${slot_y}" stroke="#EAB308" stroke-width="2.5" stroke-linecap="round" />
+          <!-- 下侧边线 -->
+          <line x1="${slot_x}" y1="${slot_y + slot_w}" x2="${slot_x + slot_l}" y2="${slot_y + slot_w}" stroke="#EAB308" stroke-width="2.5" stroke-linecap="round" />
+          <!-- 车位底端挡墙封口实线 -->
+          <line x1="${slot_x}" y1="${slot_y}" x2="${slot_x}" y2="${slot_y + slot_w}" stroke="#EAB308" stroke-width="2.5" stroke-dasharray="8 4" opacity="0.6" />
+
+          <!-- 车位末端防撞倒车橡胶挡车杆 (Wheel Stopper) -->
+          <rect x="${slot_x + 12}" y="${center_y - 28}" width="6" height="56" rx="2" fill="url(#curbStripe)" stroke="#475569" stroke-width="0.8" />
+          
+          <!-- 车位标牌文字：标准商场车位与泊车体检 -->
+          <text x="${slot_x + 8}" y="${slot_y + 12}" fill="#94A3B8" font-size="8" font-family="monospace" font-weight="bold">🅿️ 商场标准车位 2.5m×5.3m</text>
+
+          <!-- ========================================== -->
+          <!-- 2. 车身两侧开门富余量（Door Clearance）尺寸引线 -->
+          <!-- ========================================== -->
+          <!-- 上侧车门开门间距引线 -->
+          <line x1="${center_x - 10}" y1="${slot_y + 2}" x2="${center_x - 10}" y2="${box_y - 2}" stroke="${door_badge_color}" stroke-width="1.2" stroke-dasharray="3 2" />
+          <polygon points="${center_x - 10},${slot_y + 2} ${center_x - 12},${slot_y + 6} ${center_x - 8},${slot_y + 6}" fill="${door_badge_color}" />
+          <polygon points="${center_x - 10},${box_y - 2} ${center_x - 12},${box_y - 6} ${center_x - 8},${box_y - 6}" fill="${door_badge_color}" />
+          
+          <!-- 开门富余量气泡标签 -->
+          <g transform="translate(${center_x - 5}, ${slot_y - 12})">
+            <rect x="0" y="0" width="138" height="16" rx="4" fill="#FFFFFF" stroke="${door_badge_color}" stroke-width="1" />
+            <text x="69" y="11" fill="${door_badge_color}" font-size="9" font-family="monospace" font-weight="bold" text-anchor="middle">开门余量 ${door_clearance}mm (${door_desc})</text>
+          </g>
+
+          <!-- 前后进深富余量引线 (车头侧) -->
+          <line x1="${box_x + body_l + 2}" y1="${center_y}" x2="${slot_x + slot_l - 2}" y2="${center_y}" stroke="#64748B" stroke-width="1" stroke-dasharray="2 2" />
+          <rect x="${box_x + body_l + 4}" y="${center_y - 7}" width="48" height="14" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="0.8" />
+          <text x="${box_x + body_l + 28}" y="${center_y + 3}" fill="#64748B" font-size="8" font-family="monospace" text-anchor="middle">余${length_clearance}mm</text>
+
+          <!-- ========================================== -->
+          <!-- 3. 底盘机械结构与车身投影 -->
+          <!-- ========================================== -->
+          <!-- 中轴线 -->
+          <line x1="${box_x - 15}" y1="${center_y}" x2="${box_x + body_l + 15}" y2="${center_y}" stroke="rgba(100,116,139,0.25)" stroke-dasharray="4 4" stroke-width="1" />
+
+          <!-- 前后车轴 -->
+          <line x1="${front_axle_x}" y1="${box_y - 8}" x2="${front_axle_x}" y2="${box_y + body_w + 8}" stroke="${front_glow ? 'rgba(2,132,199,0.6)' : 'rgba(148,163,184,0.4)'}" stroke-width="${front_glow ? '2' : '1.5'}" />
+          <line x1="${rear_axle_x}" y1="${box_y - 8}" x2="${rear_axle_x}" y2="${box_y + body_w + 8}" stroke="${rear_glow ? 'rgba(217,119,6,0.6)' : 'rgba(148,163,184,0.4)'}" stroke-width="${rear_glow ? '2' : '1.5'}" />
+
+          <!-- 中央传动/动力连接轴 (四驱全贯通) -->
+          ${is_awd ? `
+            <line x1="${front_axle_x}" y1="${center_y}" x2="${rear_axle_x}" y2="${center_y}" stroke="#0284c7" stroke-width="3" stroke-dasharray="6 3" opacity="0.9" />
+          ` : ''}
+
+          <!-- 车身外壳工程透视投影 -->
+          <rect x="${box_x}" y="${box_y}" width="${body_l}" height="${body_w}" rx="14" fill="#FFFFFF" stroke="#334155" stroke-width="1.8" />
+          
+          <!-- 座舱透明投影 (乘员舱) -->
+          <rect x="${box_x + body_l * 0.22}" y="${box_y + 10}" width="${body_l * 0.52}" height="${body_w - 20}" rx="8" fill="rgba(241, 245, 249, 0.85)" stroke="#cbd5e1" stroke-width="1.2" />
+
+          <!-- 前动力总成图标 -->
+          ${front_glow ? `
+            <rect x="${front_axle_x - 14}" y="${center_y - 10}" width="28" height="20" rx="4" fill="url(#frontPowerLight)" stroke="#0284c7" stroke-width="1.5" />
+            <text x="${front_axle_x}" y="${center_y + 3}" fill="#ffffff" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">⚡ 前驱</text>
+          ` : `
+            <rect x="${front_axle_x - 10}" y="${center_y - 8}" width="20" height="16" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" />
+          `}
+
+          <!-- 后动力总成图标 -->
+          ${rear_glow ? `
+            <rect x="${rear_axle_x - 14}" y="${center_y - 10}" width="28" height="20" rx="4" fill="url(#rearPowerLight)" stroke="#d97706" stroke-width="1.5" />
+            <text x="${rear_axle_x}" y="${center_y + 3}" fill="#ffffff" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">⚡ 后驱</text>
+          ` : `
+            <rect x="${rear_axle_x - 10}" y="${center_y - 8}" width="20" height="16" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" />
+          `}
+
+          <!-- 四个车轮渲染 -->
+          <rect x="${fl_x}" y="${fl_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${fw_style} />
+          <rect x="${fr_x}" y="${fr_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${fw_style} />
+          <rect x="${rl_x}" y="${rl_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${rw_style} />
+          <rect x="${rr_x}" y="${rr_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${rw_style} />
+
+          <!-- ========================================== -->
+          <!-- 4. 尺寸与空间得房率引线 -->
+          <!-- ========================================== -->
+          <!-- 轴距标尺 (上方，科技蓝标尺) -->
+          <g transform="translate(0, ${box_y - 10})">
+            <line x1="${front_axle_x}" y1="0" x2="${rear_axle_x}" y2="0" stroke="#0284c7" stroke-width="1.5" />
+            <line x1="${front_axle_x}" y1="-4" x2="${front_axle_x}" y2="4" stroke="#0284c7" stroke-width="1.2" />
+            <line x1="${rear_axle_x}" y1="-4" x2="${rear_axle_x}" y2="4" stroke="#0284c7" stroke-width="1.2" />
+            <!-- 轴距与得房率气泡 -->
+            <rect x="${(front_axle_x + rear_axle_x)/2 - 58}" y="-9" width="116" height="18" rx="4" fill="#ffffff" stroke="#0284c7" stroke-width="1" />
+            <text x="${(front_axle_x + rear_axle_x)/2}" y="3" fill="#0284c7" font-size="9" font-family="monospace" font-weight="bold" text-anchor="middle">轴距 ${wb}mm · 得房率 ${space_ratio}%</text>
+          </g>
+
+          <!-- 车长标尺 (下方) -->
+          <g transform="translate(0, ${box_y + body_w + 14})">
+            <line x1="${box_x}" y1="0" x2="${box_x + body_l}" y2="0" stroke="#64748b" stroke-width="1.2" />
+            <line x1="${box_x}" y1="-3" x2="${box_x}" y2="3" stroke="#64748b" stroke-width="1" />
+            <line x1="${box_x + body_l}" y1="-3" x2="${box_x + body_l}" y2="3" stroke="#64748b" stroke-width="1" />
+            <rect x="${box_x + body_l/2 - 40}" y="-8" width="80" height="16" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1" />
+            <text x="${box_x + body_l/2}" y="3" fill="#334155" font-size="9" font-family="monospace" font-weight="semibold" text-anchor="middle">长 ${l}mm</text>
+          </g>
+
+          <!-- 车宽标尺 (左侧) -->
+          <g transform="translate(${box_x - 18}, 0)">
+            <line x1="0" y1="${box_y}" x2="0" y2="${box_y + body_w}" stroke="#64748b" stroke-width="1.2" />
+            <line x1="-3" y1="${box_y}" x2="3" y2="${box_y}" stroke="#64748b" stroke-width="1" />
+            <line x1="-3" y1="${box_y + body_w}" x2="3" y2="${box_y + body_w}" stroke="#64748b" stroke-width="1" />
+            <text x="-5" y="${center_y + 3}" fill="#334155" font-size="9" font-family="monospace" font-weight="semibold" text-anchor="end">宽 ${w}mm</text>
+          </g>
+
+          <!-- 右下角：机械立体车位体检徽章 -->
+          <g transform="translate(${svg_w - 145}, ${svg_h - 24})">
+            <rect x="0" y="0" width="135" height="18" rx="4" fill="${mech_bg}" stroke="${mech_badge_color}" stroke-width="1" />
+            <text x="67" y="12" fill="${mech_badge_color}" font-size="9" font-family="monospace" font-weight="bold" text-anchor="middle">${mech_badge_text}</text>
+          </g>
+
+        </svg>
+      `;
+    }
+
+    // 初始化应用程序
+    function initApp() {
+      initFilterListeners();
+      initCapsules();
+      initScenarios();
+      initSortAndSearch();
+      applyFilters();
+      
+      // 默认选中第一项 (静默更新桌面端右栏，绝不主动弹出移动端抽屉)
+      if (state.filtered.length > 0) {
+        selectSeries(state.filtered[0].series_id, false);
+      }
+    }
+
+    // 绑定筛选事件
+    function initFilterListeners() {
+      // 状态切换按钮
+      document.getElementById('navStatusActiveBtn').addEventListener('click', () => {
+        state.activeStatusOnly = true;
+        document.getElementById('navStatusActiveBtn').className = "py-1 px-2.5 rounded-md bg-white text-slate-900 font-bold shadow-xs transition-all flex items-center gap-1.5";
+        document.getElementById('navStatusAllBtn').className = "py-1 px-2.5 rounded-md text-slate-600 hover:text-slate-900 transition-all";
+        applyFilters();
+      });
+      document.getElementById('navStatusAllBtn').addEventListener('click', () => {
+        state.activeStatusOnly = false;
+        document.getElementById('navStatusAllBtn').className = "py-1 px-2.5 rounded-md bg-white text-slate-900 font-bold shadow-xs transition-all flex items-center gap-1.5";
+        document.getElementById('navStatusActiveBtn').className = "py-1 px-2.5 rounded-md text-slate-600 hover:text-slate-900 transition-all";
+        applyFilters();
+      });
+
+      // 滑块绑定
+      const lMin = document.getElementById('filterLengthMin');
+      const lMax = document.getElementById('filterLengthMax');
+      const wbMin = document.getElementById('filterWbMin');
+      const wbMax = document.getElementById('filterWbMax');
+
+      function updateDimLabels() {
+        state.dimRange.lengthMin = parseInt(lMin.value);
+        state.dimRange.lengthMax = parseInt(lMax.value);
+        state.dimRange.wbMin = parseInt(wbMin.value);
+        state.dimRange.wbMax = parseInt(wbMax.value);
+
+        document.getElementById('lengthDisplay').textContent = `${(state.dimRange.lengthMin/1000).toFixed(1)}～${(state.dimRange.lengthMax/1000).toFixed(1)}m`;
+        document.getElementById('wbDisplay').textContent = `${(state.dimRange.wbMin/1000).toFixed(2)}～${(state.dimRange.wbMax/1000).toFixed(2)}m`;
+      }
+
+      [lMin, lMax, wbMin, wbMax].forEach(el => {
+        el.addEventListener('input', () => {
+          updateDimLabels();
+          applyFilters();
+        });
+      });
+
+      // 高级选项展开折叠
+      const toggleBtn = document.getElementById('toggleAdvancedBtn');
+      const advPanel = document.getElementById('advancedFilterPanel');
+      const advIcon = document.getElementById('toggleAdvancedIcon');
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = advPanel.classList.contains('hidden');
+        if (isHidden) {
+          advPanel.classList.remove('hidden');
+          advIcon.classList.add('rotate-180');
+          toggleBtn.classList.add('bg-slate-200');
+        } else {
+          advPanel.classList.add('hidden');
+          advIcon.classList.remove('rotate-180');
+          toggleBtn.classList.remove('bg-slate-200');
+        }
+      });
+
+      // 高级滑块与价格
+      document.getElementById('filterPwrMin').addEventListener('input', (e) => {
+        state.pwrMin = parseInt(e.target.value);
+        document.getElementById('pwrDisplay').textContent = state.pwrMin > 0 ? `≥${state.pwrMin} Ps/吨` : '不限';
+        applyFilters();
+      });
+      document.getElementById('priceSelect').addEventListener('change', (e) => {
+        state.priceRange = e.target.value;
+        applyFilters();
+      });
+
+      // 重置全部
+      document.getElementById('resetAllBtn').addEventListener('click', resetAllFilters);
+      
+      // 加载更多
+      document.getElementById('loadMoreBtn').addEventListener('click', () => {
+        state.page += 1;
+        renderCards(true);
+      });
+
+      // 对比弹窗
+      document.getElementById('compareTopBtn').addEventListener('click', openCompareModal);
+      document.getElementById('closeCompareModalBtn').addEventListener('click', closeCompareModal);
+      document.getElementById('closeMobileDrawerBtn').addEventListener('click', closeMobileDrawer);
+      document.getElementById('mobileDrawerBackdrop').addEventListener('click', closeMobileDrawer);
+
+      // 导出当前筛选结果为 CSV
+      const exportBtn = document.getElementById('exportCsvBtn');
+      if (exportBtn) {
+        exportBtn.addEventListener('click', exportCSV);
+      }
+    }
+
+    function exportCSV() {
+      if (!state.filtered || state.filtered.length === 0) {
+        alert("当前无筛选结果可导出");
+        return;
+      }
+      const headers = ["品牌", "车系名称", "级别", "指导价区间", "车主综合评分", "驱动形式", "推重比(Ps/吨)", "车长(mm)", "车宽(mm)", "车高(mm)", "轴距(mm)", "纯电续航(km)", "销售状态"];
+      const rows = state.filtered.map(s => [
+        `"${(s.brand_name || '').replace(/"/g, '""')}"`,
+        `"${(s.series_name || '').replace(/"/g, '""')}"`,
+        `"${(s.level || '').replace(/"/g, '""')}"`,
+        `"${(s.price_str || '').replace(/"/g, '""')}"`,
+        s.score ? s.score.toFixed(2) : '',
+        `"${(s.drive_types || [s.main_drive_type || '']).join('/')}"`,
+        s.pwr_ratio_str || '',
+        s.length_min || s.length_max || '',
+        s.width_min || s.width_max || '',
+        s.height_min || s.height_max || '',
+        s.wheelbase_min || s.wheelbase_max || '',
+        s.range_str || '',
+        s.is_stopped ? '停售' : '在售'
+      ]);
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\r\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `汽车多维规格选车导出_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // 初始化胶囊按钮
+
+    // 初始化一键场景化快捷预设胶囊
+    function initScenarios() {
+      document.querySelectorAll('.scenario-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.scenario-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const scenario = btn.getAttribute('data-scenario');
+          
+          if (scenario === 'all') {
+            resetAllFilters();
+            return;
+          }
+
+          // 先重置基础滑块至标准范围
+          document.getElementById('filterLengthMin').value = 2800;
+          document.getElementById('filterLengthMax').value = 5500;
+          document.getElementById('filterWbMin').value = 1600;
+          document.getElementById('filterWbMax').value = 3600;
+          state.dimRange.lengthMin = 2800;
+          state.dimRange.lengthMax = 5500;
+          state.dimRange.wbMin = 1600;
+          state.dimRange.wbMax = 3600;
+          state.pwrMin = 0;
+          document.getElementById('filterPwrMin').value = 0;
+          document.getElementById('pwrDisplay').textContent = '不限';
+
+          if (scenario === 'large_sedan') {
+            // 5米C级大车：车长 >= 4950mm
+            state.dimRange.lengthMin = 4950;
+            document.getElementById('filterLengthMin').value = 4950;
+            document.getElementById('lengthDisplay').textContent = '4.95～5.50m';
+          } else if (scenario === 'super_pwr') {
+            // 超跑级推重比：>= 200 Ps/t
+            state.pwrMin = 200;
+            document.getElementById('filterPwrMin').value = 200;
+            document.getElementById('pwrDisplay').textContent = '≥200 Ps/吨';
+            // 打开高级折叠面板以便直观看到
+            document.getElementById('advancedFilterPanel').classList.remove('hidden');
+            document.getElementById('toggleAdvancedIcon').classList.add('rotate-180');
+          } else if (scenario === 'long_range') {
+            // 700km+超长续航：纯电，排序默认续航
+            state.currentEnergy = 'bev';
+            document.querySelectorAll('.energy-capsule').forEach(b => {
+              b.classList.toggle('active', b.dataset.energy === 'bev');
+              if (b.dataset.energy === 'bev') {
+                b.classList.add('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+                b.classList.remove('text-slate-600', 'font-medium');
+              } else {
+                b.classList.remove('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+                b.classList.add('text-slate-600', 'font-medium');
+              }
+            });
+            state.currentSort = 'ev_range_desc';
+            document.getElementById('sortSelect').value = 'ev_range_desc';
+            document.getElementById('sortIndicator').textContent = '纯电续航最长优先';
+          } else if (scenario === 'rwd_fun') {
+            // 性能后驱操控
+            state.currentDrive = '后驱';
+            document.querySelectorAll('.drive-capsule').forEach(b => {
+              b.classList.toggle('active', b.dataset.drive === '后驱');
+              if (b.dataset.drive === '后驱') {
+                b.classList.add('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+                b.classList.remove('text-slate-600', 'font-medium');
+              } else {
+                b.classList.remove('bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+                b.classList.add('text-slate-600', 'font-medium');
+              }
+            });
+          } else if (scenario === 'city_small') {
+            // 城市代步：车长 <= 4400mm
+            state.dimRange.lengthMax = 4400;
+            document.getElementById('filterLengthMax').value = 4400;
+            document.getElementById('lengthDisplay').textContent = '2.80～4.40m';
+          }
+
+          applyFilters();
+        });
+      });
+    }
+    function initCapsules() {
+      // 车型
+      document.querySelectorAll('.type-capsule').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.type-capsule').forEach(b => {
+            b.classList.remove('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+            b.classList.add('text-slate-600', 'font-medium');
+          });
+          btn.classList.add('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+          btn.classList.remove('text-slate-600', 'font-medium');
+          state.currentType = btn.getAttribute('data-type');
+          applyFilters();
+        });
+      });
+
+      // 能源动力
+      document.querySelectorAll('.energy-capsule').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.energy-capsule').forEach(b => {
+            b.classList.remove('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+            b.classList.add('text-slate-600', 'font-medium');
+          });
+          btn.classList.add('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+          btn.classList.remove('text-slate-600', 'font-medium');
+          state.currentEnergy = btn.getAttribute('data-energy');
+          applyFilters();
+        });
+      });
+
+      // 驱动形式
+      document.querySelectorAll('.drive-capsule').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.drive-capsule').forEach(b => {
+            b.classList.remove('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+            b.classList.add('text-slate-600', 'font-medium');
+          });
+          btn.classList.add('active', 'bg-white', 'text-slate-900', 'font-semibold', 'shadow-xs');
+          btn.classList.remove('text-slate-600', 'font-medium');
+          state.currentDrive = btn.getAttribute('data-drive');
+          applyFilters();
+        });
+      });
+    }
+
+    // 搜索与排序
+    function initSortAndSearch() {
+      const sInput = document.getElementById('searchInput');
+      const sClear = document.getElementById('searchClearBtn');
+      sInput.addEventListener('input', () => {
+        state.searchQuery = sInput.value.trim().toLowerCase();
+        sClear.classList.toggle('hidden', state.searchQuery === '');
+        applyFilters();
+      });
+      sClear.addEventListener('click', () => {
+        sInput.value = '';
+        state.searchQuery = '';
+        sClear.classList.add('hidden');
+        applyFilters();
+      });
+
+      const sSelect = document.getElementById('sortSelect');
+      sSelect.addEventListener('change', (e) => {
+        state.currentSort = e.target.value;
+        const text = e.target.options[e.target.selectedIndex].text.split(' ')[1] || '排序';
+        document.getElementById('sortIndicator').textContent = text;
+        applyFilters();
+      });
+    }
+
+    // 核心过滤算法
+    function applyFilters() {
+      // 若当前在小屏下抽屉弹窗开着，当用户主动调整筛选条件时，自动关闭抽屉以免遮挡筛选结果
+      if (typeof closeMobileDrawer === 'function' && window.innerWidth < 1024) {
+        closeMobileDrawer();
+      }
+
+      const q = state.searchQuery;
+      const type = state.currentType;
+      const energy = state.currentEnergy;
+      const drive = state.currentDrive;
+      const pwrMin = state.pwrMin;
+      const activeOnly = state.activeStatusOnly;
+      const dim = state.dimRange;
+      const pr = state.priceRange;
+
+      state.filtered = state.series.filter(s => {
+        // 1. 销售状态
+        if (activeOnly && s.is_stopped) return false;
+
+        // 2. 搜索关键字
+        if (q) {
+          const matchName = s.series_name && s.series_name.toLowerCase().includes(q);
+          const matchBrand = s.brand_name && s.brand_name.toLowerCase().includes(q);
+          if (!matchName && !matchBrand) return false;
+        }
+
+        // 3. 车型大类过滤
+        if (type !== 'all') {
+          const lvl = (s.level || '') + (s.body_type || '');
+          if (type === 'sedan' && !lvl.includes('轿车') && !lvl.includes('微型车') && !lvl.includes('紧凑型车') && !lvl.includes('中型车') && !lvl.includes('中大型车') && !lvl.includes('大型车')) return false;
+          if (type === 'suv' && !lvl.includes('SUV')) return false;
+          if (type === 'mpv' && !lvl.includes('MPV')) return false;
+          if (type === 'sports' && !lvl.includes('跑车')) return false;
+        }
+
+        // 4. 动力能源过滤
+        if (energy !== 'all') {
+          const engs = s.energy_types || [];
+          if (energy === 'bev' && !engs.some(e => e.includes('纯电'))) return false;
+          if (energy === 'phev' && !engs.some(e => e.includes('插电') || e.includes('增程'))) return false;
+          if (energy === 'ice' && !engs.some(e => e.includes('汽油') || e.includes('柴油') || e.includes('油电混合'))) return false;
+        }
+
+        // 5. 驱动形式过滤
+        if (drive !== 'all') {
+          const drives = s.drive_types || [s.main_drive_type || '前驱'];
+          if (!drives.some(d => d.includes(drive))) return false;
+        }
+
+        // 6. 尺寸范围过滤 (长、轴距)
+        const lMax = s.length_max || s.length_min || 0;
+        const lMinVal = s.length_min || s.length_max || 0;
+        if (lMax < dim.lengthMin || lMinVal > dim.lengthMax) return false;
+
+        const wbMax = s.wheelbase_max || s.wheelbase_min || 0;
+        const wbMinVal = s.wheelbase_min || s.wheelbase_max || 0;
+        if (wbMax < dim.wbMin || wbMinVal > dim.wbMax) return false;
+
+        // 7. 最低推重比
+        if (pwrMin > 0) {
+          const maxPwr = s.pwr_ratio_max || s.pwr_ratio_min || 0;
+          if (maxPwr < pwrMin) return false;
+        }
+
+        // 8. 价格区间
+        if (pr !== 'all') {
+          const [minP, maxP] = pr.split('-').map(Number);
+          const pMin = s.price_min || 0;
+          const pMax = s.price_max || pMin;
+          if (pMax < minP || pMin > maxP) return false;
+        }
+
+        return true;
+      });
+
+      // 排序算法：默认根据汽车之家真实车主口碑评分从高到低排序！
+      state.filtered.sort((a, b) => {
+        if (state.currentSort === 'score_desc') {
+          const sA = a.score || 0;
+          const sB = b.score || 0;
+          if (sB !== sA) return sB - sA;
+          return (b.wheelbase_max || 0) - (a.wheelbase_max || 0);
+        }
+        if (state.currentSort === 'pwr_ratio_desc') {
+          return (b.pwr_ratio_max || 0) - (a.pwr_ratio_max || 0);
+        }
+        if (state.currentSort === 'wheelbase_desc') {
+          return (b.wheelbase_max || 0) - (a.wheelbase_max || 0);
+        }
+        if (state.currentSort === 'length_desc') {
+          return (b.length_max || 0) - (a.length_max || 0);
+        }
+        if (state.currentSort === 'ev_range_desc') {
+          return (b.range_max || 0) - (a.range_max || 0);
+        }
+        if (state.currentSort === 'price_asc') {
+          return (a.price_min || 0) - (b.price_min || 0);
+        }
+        if (state.currentSort === 'price_desc') {
+          return (b.price_max || 0) - (a.price_max || 0);
+        }
+        return 0;
+      });
+
+      // 渲染卡片
+      state.page = 1;
+      const countEl = document.getElementById('resultCount');
+      if (countEl) countEl.textContent = state.filtered.length;
+      const mCountEl = document.getElementById('mobileBottomCount');
+      if (mCountEl) mCountEl.textContent = state.filtered.length;
+      renderCards(false);
+
+      // 若之前选中的车还在筛选结果中则保持，否则自动选中第一项 (静默切换，严禁在调整参数时主动弹出详情弹窗)
+      if (state.filtered.length > 0) {
+        const stillIn = state.filtered.find(s => s.series_id === state.selectedSeriesId);
+        if (!stillIn) {
+          selectSeries(state.filtered[0].series_id, false);
+        } else {
+          highlightCard(state.selectedSeriesId);
+        }
+      } else {
+        document.getElementById('cardListContainer').innerHTML = `
+          <div class="bg-white rounded-xl p-8 text-center border border-slate-200 text-slate-400">
+            <i class="fa-solid fa-car-tunnel text-3xl mb-2 text-slate-300"></i>
+            <p class="text-xs">未找到符合当前条件的车型，请调整或重置筛选条件</p>
+          </div>
+        `;
+      }
+    }
+
+    // 渲染卡片列表 (第一层浏览)
+    function renderCards(append = false) {
+      const container = document.getElementById('cardListContainer');
+      const start = 0;
+      const end = state.page * state.pageSize;
+      const slice = state.filtered.slice(start, end);
+
+      const html = slice.map(s => {
+        const isActive = s.series_id === state.selectedSeriesId;
+        const cover = s.cover_url || DEFAULT_CAR_SVG;
+        const driveStr = (s.drive_types || [s.main_drive_type || '前驱']).join(' / ');
+        const isEv = s.range_str && s.range_str.trim() !== '';
+        const pwrMeta = getPwrRatioMeta(s.pwr_ratio_max || s.pwr_ratio_min);
+        const scoreStr = s.score ? s.score.toFixed(2) : '暂无口碑';
+        const priceStr = s.price_str || (s.price_min ? `${s.price_min}～${s.price_max}万` : '暂无报价');
+        
+        return `
+          <div class="car-card cursor-pointer bg-white hover:bg-slate-50 border ${isActive ? 'active-card' : 'border-slate-200'} rounded-xl p-3 transition-all relative group shadow-2xs" 
+               data-id="${s.series_id}"
+               onclick="selectSeries(${s.series_id}, true)"
+               onmouseenter="onCardHover(${s.series_id})">
+            
+            <div class="flex gap-3 items-center">
+              
+              <!-- 车辆官方外观图 (固定 16:10 比例，带默认底图优雅兜底) -->
+              <div class="w-24 sm:w-28 h-16 sm:h-18 rounded-lg overflow-hidden bg-slate-900 border border-slate-200 shrink-0 relative">
+                <img src="${cover}" 
+                     alt="${s.series_name}" 
+                     class="w-full h-full object-cover" 
+                     loading="lazy" 
+                     onerror="this.onerror=null; this.src=DEFAULT_CAR_SVG;" />
+                ${s.is_stopped ? `
+                  <span class="absolute top-1 left-1 bg-black/70 text-slate-300 text-[9px] px-1 rounded">停售</span>
+                ` : ''}
+              </div>
+
+              <!-- 核心规格信息排版 (精炼去噪) -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1">
+                  <div class="flex items-center gap-1.5 truncate">
+                    <div class="text-xs truncate">${formatCarTitle(s.brand_name || s.brand, s.display_series_name || s.series_name || s.series)}</div>
+                    <span class="text-[10px] text-slate-500 font-medium shrink-0 bg-slate-100 px-1 py-0.2 rounded border border-slate-200">${s.level || '乘用车'}</span>
+                  </div>
+                  <span class="text-xs font-mono font-bold text-sky-700 shrink-0">${priceStr}</span>
+                </div>
+
+                <!-- 评分与纯电续航 -->
+                <div class="flex items-center gap-2 mt-1 text-[11px]">
+                  <span class="text-amber-500 font-bold flex items-center gap-0.5">
+                    <i class="fa-solid fa-star text-[10px]"></i>
+                    <span>${scoreStr}</span>
+                  </span>
+                  ${isEv ? `
+                    <span class="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      ⚡ 纯电 ${s.range_str}
+                    </span>
+                  ` : ''}
+                  <span class="text-slate-500 text-[10px] truncate">${driveStr}</span>
+                </div>
+
+                <!-- 机械参数与尺寸 -->
+                <div class="flex items-center justify-between gap-1 mt-1 text-[11px] text-slate-500 font-mono">
+                  <div class="flex items-center gap-2">
+                    <span class="${pwrMeta.color} font-bold text-[10px]">${s.pwr_ratio_str ? `推重比 ${s.pwr_ratio_str}` : ''}</span>
+                    <span class="text-slate-400">|</span>
+                    <span class="text-slate-600 text-[10px]">${s.length_min || s.length_max}×${s.width_min || s.width_max}×${s.height_min || s.height_max}</span>
+                    <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-100">得房率 ${(( (s.wheelbase_max||s.wheelbase_min)/(s.length_max||s.length_min) )*100).toFixed(1)}%</span>
+                  </div>
+                  <div class="flex items-center gap-2 shrink-0">
+                    <div class="text-right">
+                      <span class="text-xs font-bold font-mono text-slate-900">${s.wheelbase_min || s.wheelbase_max}</span>
+                      <span class="text-[9px] text-slate-400">mm轴距</span>
+                    </div>
+                    <button onclick="toggleCompare(${s.series_id}, event)" 
+                            class="px-1.5 py-0.5 rounded text-[10px] font-semibold border ${state.compareList.includes(s.series_id) ? 'bg-sky-600 text-white border-sky-600' : 'bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-700 border-slate-200'} transition-colors">
+                      ${state.compareList.includes(s.series_id) ? '已加' : '+对比'}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = html;
+      
+      // 控制“加载更多”显示隐藏
+      document.getElementById('loadMoreBtn').classList.toggle('hidden', end >= state.filtered.length);
+    }
+
+    // 鼠标在桌面端卡片悬停即刻无缝刷新底盘
+    let hoverTimer = null;
+    function onCardHover(seriesId) {
+      if (window.innerWidth < 1024) return;
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(() => {
+        selectSeries(seriesId, false);
+      }, 50);
+    }
+
+    // 选中车系并更新看板 (电脑右栏 / 手机抽屉)
+    function selectSeries(seriesId, openMobile = false) {
+      state.selectedSeriesId = seriesId;
+      highlightCard(seriesId);
+
+      const s = state.series.find(item => item.series_id === seriesId);
+      if (!s) return;
+
+      const l = s.length_max || s.length_min || 4800;
+      const w = s.width_max || s.width_min || 1900;
+      const wb = s.wheelbase_max || s.wheelbase_min || 2900;
+      const drv = s.main_drive_type || (s.drive_types && s.drive_types[0]) || "前驱";
+      const pwr = s.pwr_ratio_max || s.pwr_ratio_min || null;
+      const hp = s.max_horsepower || null;
+      const pwrMeta = getPwrRatioMeta(pwr);
+
+      // 1. 更新桌面端置顶看板
+      const displayTitle = s.display_series_name || s.series_name || s.series;
+      document.getElementById('boardBrand').textContent = s.brand_name || s.brand || '品牌';
+      document.getElementById('boardSeriesName').textContent = displayTitle;
+      document.getElementById('boardLevel').textContent = s.level || '乘用车';
+      document.getElementById('boardPrice').textContent = s.price_str || (s.price_min ? `${s.price_min}～${s.price_max}万` : '暂无报价');
+      document.getElementById('boardScore').textContent = s.score ? s.score.toFixed(2) : '暂无口碑';
+      
+      const evBadge = document.getElementById('boardEvRangeBadge');
+      if (s.range_str && s.range_str.trim() !== '') {
+        evBadge.textContent = `纯电 ${s.range_str}`;
+        evBadge.classList.remove('hidden');
+      } else {
+        evBadge.classList.add('hidden');
+      }
+
+      document.getElementById('boardPwrRatioVal').textContent = pwr ? pwr.toFixed(1) : '--';
+      document.getElementById('boardPwrLevel').textContent = pwrMeta.level;
+      const pwrBar = document.getElementById('boardPwrBar');
+      if (pwrBar) pwrBar.style.width = `${pwrMeta.pct}%`;
+
+      document.getElementById('boardDriveType').textContent = drv;
+      document.getElementById('boardDriveDesc').textContent = drv === '四驱' ? '双电机动力协同' : (drv === '后驱' ? '后轴主驱动/精准操控' : '前轴经济动力驱动');
+      document.getElementById('boardHpVal').textContent = hp || '--';
+      
+      // 整备质量
+      const v0 = (s.versions && s.versions[0]) || {};
+      document.getElementById('boardWeightVal').textContent = v0.weight || (s.weight_min ? s.weight_min : '--');
+
+      // 渲染底盘 SVG
+      const chassisSvg = renderChassisSvg(l, w, wb, drv, pwr, hp, v0.weight);
+      document.getElementById('boardChassisSvgContainer').innerHTML = chassisSvg;
+
+      // 更新空间得房率与泊车体检看板
+      const spaceMeta = getSpaceMeta(wb, l);
+      const parkMeta = getParkingFitMeta(w, l);
+
+      const sGradeEl = document.getElementById('boardSpaceGrade');
+      if (sGradeEl) {
+        sGradeEl.textContent = spaceMeta.level;
+        sGradeEl.className = `text-[10px] font-mono px-2 py-0.5 rounded font-bold ${spaceMeta.badgeClass}`;
+      }
+      const sRatioEl = document.getElementById('boardSpaceRatioVal');
+      if (sRatioEl) sRatioEl.textContent = `${spaceMeta.ratio}%`;
+      const sOverhangEl = document.getElementById('boardSpaceOverhang');
+      if (sOverhangEl) sOverhangEl.textContent = `公摊 ${spaceMeta.overhang}mm`;
+
+      const dClearEl = document.getElementById('boardDoorClearanceVal');
+      if (dClearEl) {
+        dClearEl.textContent = `${parkMeta.doorClearance}mm`;
+        dClearEl.className = `text-base font-bold font-mono ${parkMeta.doorColor}`;
+      }
+      const dDescEl = document.getElementById('boardDoorDesc');
+      if (dDescEl) dDescEl.textContent = `${parkMeta.doorTag} · 2.5m车位`;
+
+      const mTagEl = document.getElementById('boardMechTag');
+      if (mTagEl) {
+        mTagEl.textContent = parkMeta.mechText;
+        mTagEl.className = `text-[11px] font-bold ${parkMeta.mechColor}`;
+      }
+
+      // 渲染同级热门竞品雷达
+      renderCompetitorsRadar(s);
+
+      // 渲染年款配置列表
+      renderBoardVersions(s);
+
+      // 2. 手机端适配：若是点击则在小屏滑出抽屉
+      if (openMobile && window.innerWidth < 1024) {
+        openMobileDrawerWithData(s, chassisSvg, pwr, pwrMeta, drv, hp);
+      }
+    }
+
+    // 渲染桌面端具体配置年款列表
+    function renderBoardVersions(s) {
+      const vList = document.getElementById('boardVersionList');
+      const countEl = document.getElementById('boardVersionCount');
+      const versions = s.versions || [];
+      countEl.textContent = `共 ${versions.length} 款配置`;
+
+      if (versions.length === 0) {
+        vList.innerHTML = '<div class="text-[11px] text-slate-500 py-2">暂无详细年款配置参数</div>';
+        return;
+      }
+
+      vList.innerHTML = versions.slice(0, 8).map((v, idx) => {
+        const vDrv = v.drive_type || s.main_drive_type || '前驱';
+        const vPwr = v.pwr_ratio || s.pwr_ratio_min || '--';
+        const isAwd = vDrv.includes('四驱');
+        const isRwd = vDrv.includes('后驱');
+        const badgeColor = isAwd ? 'bg-sky-50 text-sky-700 border-sky-200' : (isRwd ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-slate-100 text-slate-600 border-slate-200');
+
+        return `
+          <div class="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200/90 cursor-pointer text-xs transition-all shadow-2xs hover:border-sky-300"
+               onclick="switchSpecificVersion(${s.series_id}, ${idx})">
+            <div class="truncate mr-2">
+              <span class="text-slate-900 font-semibold truncate block">${v.model_name || `配置款 ${idx+1}`}</span>
+              <div class="text-[10px] text-slate-500 mt-0.5 font-mono">
+                ${v.horsepower ? `${v.horsepower}Ps` : ''} ${v.weight ? `· ${v.weight}kg` : ''} ${v.ev_range ? `· 纯电${v.ev_range}km` : ''}
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <span class="text-[10px] px-1.5 py-0.2 rounded border font-semibold ${badgeColor}">${vDrv}</span>
+              <span class="font-mono text-amber-600 text-[11px] font-bold">${vPwr} <span class="text-[9px] text-slate-400">Ps/t</span></span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 点击某具体配置时切换底盘发光轮与推重比
+
+    // 渲染同级热门竞品雷达
+    function renderCompetitorsRadar(s) {
+      const comps = findSimilarCompetitors(s);
+      const deskList = document.getElementById('boardCompetitorsList');
+      const mobileList = document.getElementById('mDrawerCompetitorsList');
+
+      if (!comps || comps.length === 0) {
+        const emptyHtml = '<div class="text-[11px] text-slate-400 py-1 col-span-3 text-center">暂无同级极近竞品</div>';
+        if (deskList) deskList.innerHTML = emptyHtml;
+        if (mobileList) mobileList.innerHTML = emptyHtml;
+        return;
+      }
+
+      const deskHtml = comps.map(c => {
+        const cCover = c.cover_url || DEFAULT_CAR_SVG;
+        const cScore = c.score ? `${c.score.toFixed(2)}★` : '暂无分';
+        return `
+          <div class="bg-white p-2 rounded-lg border border-slate-200/90 hover:border-sky-300 transition-all cursor-pointer shadow-2xs group"
+               onclick="selectSeries(${c.series_id}, true)">
+            <div class="w-full h-14 rounded-md overflow-hidden bg-slate-900 border border-slate-100 relative mb-1.5">
+              <img src="${cCover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" onerror="this.onerror=null; this.src=DEFAULT_CAR_SVG;" loading="lazy">
+              <span class="absolute top-0.5 right-0.5 bg-black/60 text-amber-400 font-mono text-[9px] px-1 rounded">${cScore}</span>
+            </div>
+            <div class="text-xs font-bold text-slate-900 truncate">${c.display_series_name || c.series_name || c.series}</div>
+            <div class="flex items-center justify-between mt-1 text-[10px]">
+              <span class="font-mono font-bold text-sky-700">${c.price_str || '详询'}</span>
+              <span class="font-mono text-slate-500">${c.wheelbase_max || c.wheelbase_min}mm</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (deskList) deskList.innerHTML = deskHtml;
+      if (mobileList) mobileList.innerHTML = deskHtml;
+
+      // 绑定【一键并排对比】按钮
+      const compBtn = document.getElementById('compareWithCompsBtn');
+      const mCompBtn = document.getElementById('mCompareWithCompsBtn');
+      const doBatchCompare = () => {
+        // 将当前车与推荐竞品一起加入对比
+        const allIds = [s.series_id, ...comps.map(c => c.series_id)].slice(0, 4);
+        state.compareList = allIds;
+        updateCompareCountUI();
+        renderCards(false);
+        openCompareModal();
+      };
+      if (compBtn) compBtn.onclick = doBatchCompare;
+      if (mCompBtn) mCompBtn.onclick = doBatchCompare;
+    }
+
+    function switchSpecificVersion(seriesId, versionIndex) {
+      const s = state.series.find(item => item.series_id === seriesId);
+      if (!s || !s.versions || !s.versions[versionIndex]) return;
+      const v = s.versions[versionIndex];
+
+      const l = v.length || s.length_min || 4800;
+      const w = v.width || s.width_min || 1900;
+      const wb = v.wheelbase || s.wheelbase_min || 2900;
+      const drv = v.drive_type || s.main_drive_type || "前驱";
+      const pwr = v.pwr_ratio || s.pwr_ratio_min;
+      const hp = v.horsepower || s.max_horsepower;
+      const wt = v.weight || s.weight_min;
+      const pwrMeta = getPwrRatioMeta(pwr);
+
+      document.getElementById('boardDriveType').textContent = drv;
+      document.getElementById('boardPwrRatioVal').textContent = pwr ? pwr.toFixed(1) : '--';
+      document.getElementById('boardPwrLevel').textContent = pwrMeta.level;
+      const pwrBar = document.getElementById('boardPwrBar');
+      if (pwrBar) pwrBar.style.width = `${pwrMeta.pct}%`;
+
+      document.getElementById('boardHpVal').textContent = hp || '--';
+      document.getElementById('boardWeightVal').textContent = wt || '--';
+
+      document.getElementById('boardChassisSvgContainer').innerHTML = renderChassisSvg(l, w, wb, drv, pwr, hp, wt);
+    }
+
+    // 高亮当前选中的卡片
+    function highlightCard(seriesId) {
+      document.querySelectorAll('.car-card').forEach(card => {
+        const id = parseInt(card.getAttribute('data-id'));
+        if (id === seriesId) {
+          card.classList.add('active-card');
+          card.classList.remove('border-slate-200');
+        } else {
+          card.classList.remove('active-card');
+          card.classList.add('border-slate-200');
+        }
+      });
+    }
+
+    // 手机端滑出底部抽屉
+    function openMobileDrawerWithData(s, svg, pwr, pwrMeta, drv, hp) {
+      const displayTitle = s.display_series_name || s.series_name || s.series;
+      document.getElementById('mDrawerBrand').textContent = s.brand_name || s.brand || '品牌';
+      document.getElementById('mDrawerSeriesName').textContent = displayTitle;
+      document.getElementById('mDrawerPrice').textContent = s.price_str || '暂无报价';
+      document.getElementById('mDrawerScore').textContent = s.score ? s.score.toFixed(2) : '暂无口碑';
+
+      const sL = s.length_max || s.length_min || 4800;
+      const sW = s.width_max || s.width_min || 1900;
+      const sWb = s.wheelbase_max || s.wheelbase_min || 2900;
+      const mSpaceMeta = getSpaceMeta(sWb, sL);
+      const mParkMeta = getParkingFitMeta(sW, sL);
+
+      const mSGrade = document.getElementById('mDrawerSpaceGrade');
+      if (mSGrade) {
+        mSGrade.textContent = mSpaceMeta.level;
+        mSGrade.className = `text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${mSpaceMeta.badgeClass}`;
+      }
+      const mSRatio = document.getElementById('mDrawerSpaceRatioVal');
+      if (mSRatio) mSRatio.textContent = `${mSpaceMeta.ratio}%`;
+      const mSOverhang = document.getElementById('mDrawerSpaceOverhang');
+      if (mSOverhang) mSOverhang.textContent = `公摊 ${mSpaceMeta.overhang}mm`;
+
+      const mDClear = document.getElementById('mDrawerDoorClearanceVal');
+      if (mDClear) {
+        mDClear.textContent = `${mParkMeta.doorClearance}mm`;
+        mDClear.className = `font-mono font-bold mt-0.5 ${mParkMeta.doorColor}`;
+      }
+      const mMTag = document.getElementById('mDrawerMechTag');
+      if (mMTag) {
+        mMTag.textContent = mParkMeta.mechText;
+        mMTag.className = `font-bold mt-0.5 ${mParkMeta.mechColor}`;
+      }
+      
+      const rBadge = document.getElementById('mDrawerRangeBadge');
+      if (s.range_str && s.range_str.trim() !== '') {
+        rBadge.textContent = `纯电 ${s.range_str}`;
+        rBadge.classList.remove('hidden');
+      } else {
+        rBadge.classList.add('hidden');
+      }
+
+      document.getElementById('mDrawerChassisSvgContainer').innerHTML = svg;
+      document.getElementById('mDrawerPwrVal').textContent = pwr ? pwr.toFixed(1) : '--';
+      document.getElementById('mDrawerPwrLevel').textContent = pwrMeta.level;
+      const mBar = document.getElementById('mDrawerPwrBar');
+      if (mBar) mBar.style.width = `${pwrMeta.pct}%`;
+
+      document.getElementById('mDrawerDriveType').textContent = drv;
+      const mHp = document.getElementById('mDrawerHpVal');
+      if (mHp) mHp.textContent = hp ? `${hp} Ps` : '--';
+
+      // 手机配置列表
+      const mList = document.getElementById('mDrawerVersionList');
+      mList.innerHTML = (s.versions || []).slice(0, 6).map((v, i) => `
+        <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-[11px] border border-slate-200/90 text-slate-800"
+             onclick="switchSpecificVersion(${s.series_id}, ${i})">
+          <span class="truncate font-medium text-slate-900">${v.model_name}</span>
+          <span class="text-amber-600 font-mono font-bold shrink-0 ml-2">${v.pwr_ratio || '--'} Ps/t</span>
+        </div>
+      `).join('');
+
+      const drawer = document.getElementById('mobileDrawer');
+      const backdrop = document.getElementById('mobileDrawerBackdrop');
+      backdrop.classList.remove('hidden');
+      setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+      drawer.classList.remove('drawer-closed');
+      drawer.classList.add('drawer-open');
+    }
+
+    function closeMobileDrawer() {
+      const drawer = document.getElementById('mobileDrawer');
+      const backdrop = document.getElementById('mobileDrawerBackdrop');
+      drawer.classList.remove('drawer-open');
+      drawer.classList.add('drawer-closed');
+      backdrop.classList.add('opacity-0');
+      setTimeout(() => backdrop.classList.add('hidden'), 280);
+    }
+
+    // 重置所有条件
+    function resetAllFilters() {
+      state.searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchClearBtn').classList.add('hidden');
+      
+      state.currentType = 'all';
+      state.currentEnergy = 'all';
+      state.currentDrive = 'all';
+      state.currentSort = 'score_desc';
+      document.getElementById('sortSelect').value = 'score_desc';
+      document.getElementById('sortIndicator').textContent = '口碑排序';
+
+      // 胶囊重置
+      document.querySelectorAll('.type-capsule').forEach(b => b.classList.toggle('active', b.dataset.type === 'all'));
+      document.querySelectorAll('.energy-capsule').forEach(b => b.classList.toggle('active', b.dataset.energy === 'all'));
+      document.querySelectorAll('.drive-capsule').forEach(b => b.classList.toggle('active', b.dataset.drive === 'all'));
+
+      // 滑块重置
+      document.getElementById('filterLengthMin').value = 2800;
+      document.getElementById('filterLengthMax').value = 5500;
+      document.getElementById('filterWbMin').value = 1600;
+      document.getElementById('filterWbMax').value = 3600;
+      document.getElementById('lengthDisplay').textContent = '全范围';
+      document.getElementById('wbDisplay').textContent = '全范围';
+
+      state.dimRange.lengthMin = 2800;
+      state.dimRange.lengthMax = 5500;
+      state.dimRange.wbMin = 1600;
+      state.dimRange.wbMax = 3600;
+
+      state.pwrMin = 0;
+      document.getElementById('filterPwrMin').value = 0;
+      document.getElementById('pwrDisplay').textContent = '不限';
+      document.getElementById('priceSelect').value = 'all';
+
+      // 场景胶囊重置为全部
+      document.querySelectorAll('.scenario-pill').forEach(b => {
+        b.classList.toggle('active', b.dataset.scenario === 'all');
+      });
+
+      applyFilters();
+    }
+
+    // 对比功能实现
+    function toggleCompare(seriesId, event) {
+      if (event) event.stopPropagation();
+      const idx = state.compareList.indexOf(seriesId);
+      if (idx > -1) {
+        state.compareList.splice(idx, 1);
+      } else {
+        if (state.compareList.length >= 4) {
+          alert("最多同时对比 4 款车型");
+          return;
+        }
+        state.compareList.push(seriesId);
+      }
+      updateCompareCountUI();
+      renderCards(false);
+    }
+
+    function updateCompareCountUI() {
+      const el = document.getElementById('compareCountTop');
+      if (el) el.textContent = state.compareList.length;
+      const mCompEl = document.getElementById('mobileBottomCompareCount');
+      if (mCompEl) mCompEl.textContent = state.compareList.length;
+      
+      const boardBtn = document.getElementById('boardCompareBtn');
+      if (boardBtn && state.selectedSeriesId) {
+        const inComp = state.compareList.includes(state.selectedSeriesId);
+        boardBtn.innerHTML = inComp 
+          ? '<i class="fa-solid fa-check text-emerald-400"></i> 已在对比中' 
+          : '<i class="fa-solid fa-plus text-sky-400"></i> 加入对比';
+      }
+    }
+
+    // 绑定右侧看板对比按钮
+    document.getElementById('boardCompareBtn').addEventListener('click', () => {
+      if (state.selectedSeriesId) {
+        toggleCompare(state.selectedSeriesId);
+      }
+    });
+
+    // 对比弹窗逻辑
+    function openCompareModal() {
+      document.getElementById('compareModal').classList.remove('hidden');
+      renderCompareModal();
+    }
+    function closeCompareModal() {
+      document.getElementById('compareModal').classList.add('hidden');
+    }
+    function renderCompareModal() {
+      const body = document.getElementById('compareModalBody');
+      const list = state.compareList;
+      if (list.length === 0) {
+        body.innerHTML = `
+          <div class="text-center py-12 text-slate-400">
+            <i class="fa-solid fa-code-compare text-4xl mb-3 text-slate-300"></i>
+            <p class="text-sm font-medium text-slate-600">暂无对比车型</p>
+            <p class="text-xs text-slate-400 mt-1">请在车型卡片中点击【+对比】或在右侧看板中加入对比</p>
+          </div>
+        `;
+        return;
+      }
+
+      const cars = list.map(id => state.series.find(s => s.series_id === id)).filter(Boolean);
+
+      body.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex justify-between items-center text-xs text-slate-500 pb-2 border-b border-slate-100">
+            <span>正在对比 <strong class="text-slate-800 font-bold">${cars.length}</strong> 款车型</span>
+            <button onclick="state.compareList=[]; updateCompareCountUI(); renderCompareModal(); renderCards(false);" class="text-red-500 hover:text-red-700">清空全部对比</button>
+          </div>
+
+          <!-- 横向对比表格 -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200">
+                  <th class="p-2 bg-slate-50 w-24 text-slate-500">对比维度</th>
+                  ${cars.map(c => `
+                    <th class="p-2 min-w-[200px] bg-slate-50">
+                      <div class="flex items-center justify-between">
+                        <div class="truncate mr-1">${formatCarTitle(c.brand_name || c.brand, c.display_series_name || c.series_name || c.series)}</div>
+                        <button onclick="toggleCompare(${c.series_id})" class="text-slate-400 hover:text-red-500 p-0.5"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                      <div class="text-[11px] text-sky-700 font-mono font-bold mt-0.5">${c.price_str || '暂无报价'}</div>
+                    </th>
+                  `).join('')}
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <!-- 2D 底盘透视图行 -->
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">底盘俯视透视</td>
+                  ${cars.map(c => `
+                    <td class="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                      <div class="w-full flex items-center justify-center p-1">
+                        ${renderChassisSvg(c.length_max || c.length_min, c.width_max || c.width_min, c.wheelbase_max || c.wheelbase_min, c.main_drive_type || '四驱', c.pwr_ratio_max || c.pwr_ratio_min, c.max_horsepower, c.weight_min)}
+                      </div>
+                    </td>
+                  `).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">口碑评分</td>
+                  ${cars.map(c => `
+                    <td class="p-2 font-bold text-amber-500 font-mono">
+                      <i class="fa-solid fa-star text-xs"></i> ${c.score ? c.score.toFixed(2) : '暂无'}
+                    </td>
+                  `).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">驱动形式</td>
+                  ${cars.map(c => `
+                    <td class="p-2 font-bold text-slate-800">
+                      ${(c.drive_types || [c.main_drive_type || '前驱']).join(' / ')}
+                    </td>
+                  `).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">推重比</td>
+                  ${cars.map(c => `
+                    <td class="p-2 font-mono font-bold text-amber-600">
+                      ${c.pwr_ratio_str || '待完善'}
+                    </td>
+                  `).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">轴距 (mm)</td>
+                  ${cars.map(c => `
+                    <td class="p-2 font-mono font-bold text-sky-700 text-sm">
+                      ${c.wheelbase_min || c.wheelbase_max} mm
+                    </td>
+                  `).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">空间得房率 (轴长比)</td>
+                  ${cars.map(c => {
+                    const l = c.length_max || c.length_min || 4800;
+                    const wb = c.wheelbase_max || c.wheelbase_min || 2800;
+                    const r = ((wb / l) * 100).toFixed(1);
+                    return `
+                      <td class="p-2 font-mono font-bold text-indigo-600">
+                        ${r}% <span class="text-[10px] font-normal text-slate-500">${r >= 61.5 ? '(短悬大座舱)' : (r >= 59 ? '(均衡)' : '(运动长机舱)')}</span>
+                        <div class="text-[10px] font-normal text-slate-400 font-mono">公摊 ${l - wb}mm · 1%≈1拳</div>
+                      </td>
+                    `;
+                  }).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">商场标准车位开门余量</td>
+                  ${cars.map(c => {
+                    const w = c.width_max || c.width_min || 1900;
+                    const gap = Math.round((2500 - w) / 2);
+                    const color = gap < 280 ? 'text-rose-600 font-bold' : (gap < 320 ? 'text-slate-800' : 'text-emerald-600 font-bold');
+                    return `
+                      <td class="p-2 font-mono ${color}">
+                        ${gap} mm ${gap < 280 ? '(偏窄易磕门)' : (gap < 320 ? '(正常)' : '(充裕)')}
+                      </td>
+                    `;
+                  }).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">机械立体车位兼容度</td>
+                  ${cars.map(c => {
+                    const l = c.length_max || c.length_min || 4800;
+                    const w = c.width_max || c.width_min || 1900;
+                    let tag = '🟢 机械位通行';
+                    if (l > 5000 || w > 1900) tag = '🔴 超标慎选(超长/超宽)';
+                    else if (w > 1850) tag = '🟡 需1.9m宽体机械位';
+                    return `
+                      <td class="p-2 font-bold text-xs">
+                        ${tag}
+                      </td>
+                    `;
+                  }).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">长宽高 (mm)</td>
+                  ${cars.map(c => `
+                    <td class="p-2 font-mono text-slate-700">
+                      ${c.length_min || c.length_max} × ${c.width_min || c.width_max} × ${c.height_min || c.height_max}
+                    </td>
+                  `).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">纯电续航</td>
+                  ${cars.map(c => `
+                    <td class="p-2 font-mono text-emerald-600 font-bold">
+                      ${c.range_str || '非纯电 / 暂无'}
+                    </td>
+                  `).join('')}
+                </tr>
+                <tr>
+                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">最大马力</td>
+                  ${cars.map(c => `
+                    <td class="p-2 font-mono text-slate-800">
+                      ${c.max_horsepower ? `${c.max_horsepower} Ps` : '待完善'}
+                    </td>
+                  `).join('')}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // 页面加载完毕自启动
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
