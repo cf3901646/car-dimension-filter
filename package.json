@@ -1,0 +1,12 @@
+{
+  "name": "footprint",
+  "private": true,
+  "description": "一车之地 · Footprint：构建期编译 Tailwind CSS，供 build_html.py 内嵌",
+  "scripts": {
+    "build:css": "tailwindcss -c car_dimension_filter/tailwind.config.js -i car_dimension_filter/tailwind.input.css -o car_dimension_filter/tailwind.generated.css --minify",
+    "build": "npm run build:css && python car_dimension_filter/build_html.py"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}

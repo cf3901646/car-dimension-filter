@@ -121,6 +121,16 @@ print(f"Loaded {cover_count} covers, {enriched_count} enriched series from cache
 with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
     template_content = f.read()
 
+# 内嵌构建期编译的 Tailwind CSS（不再依赖 cdn.tailwindcss.com）
+# 生成方式：在仓库根目录执行 npm install && npm run build:css
+CSS_PATH = os.path.join(os.path.dirname(__file__), "tailwind.generated.css")
+CSS_PLACEHOLDER = "<!-- __INLINE_TAILWIND_CSS__ -->"
+if CSS_PLACEHOLDER in template_content:
+    if not os.path.exists(CSS_PATH):
+        sys.exit("缺少 tailwind.generated.css，请先在仓库根目录执行 npm install && npm run build:css")
+    with open(CSS_PATH, "r", encoding="utf-8") as f:
+        template_content = template_content.replace(CSS_PLACEHOLDER, "<style>" + f.read() + "</style>")
+
 # 注入数据与统计
 html_content = template_content
 html_content = html_content.replace("__TOTAL_SERIES__", str(len(series_data)))

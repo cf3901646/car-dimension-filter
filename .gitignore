@@ -17,3 +17,5 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+# Node（仅用于构建期编译 Tailwind CSS）
+node_modules/
