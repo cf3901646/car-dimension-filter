@@ -67,7 +67,7 @@ if os.path.exists(ENRICH_PATH):
                         v_key = v.get("model_name")
                     
                     v_info = v_cache.get(v_key, {})
-                    drv = v_info.get("drive_type") or "前驱"
+                    drv = v_info.get("drive_type") or None  # 缓存里没有就留空，页面显示“未知”，不再默认成前驱
                     v["drive_type"] = drv
                     v["horsepower"] = v_info.get("horsepower")
                     if v_info.get("weight"):
@@ -80,8 +80,8 @@ if os.path.exists(ENRICH_PATH):
                     if v.get("ev_range"): ranges_list.append(v["ev_range"])
                     if v.get("horsepower"): hp_list.append(v["horsepower"])
                 
-                s["drive_types"] = sorted(list(drives_set)) if drives_set else ["前驱"]
-                s["main_drive_type"] = "四驱" if "四驱" in s["drive_types"] else (s["drive_types"][0] if s["drive_types"] else "前驱")
+                s["drive_types"] = sorted(list(drives_set))
+                s["main_drive_type"] = "四驱" if "四驱" in s["drive_types"] else (s["drive_types"][0] if s["drive_types"] else None)
                 
                 if ratios_list:
                     s["pwr_ratio_min"] = min(ratios_list)

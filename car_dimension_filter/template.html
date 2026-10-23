@@ -316,7 +316,7 @@
       <!-- 右侧快捷控制区 (全部增加 whitespace-nowrap shrink-0，彻底杜绝竖排折行) -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
         
-        <!-- 销售状态直接切换 (桌面端) -->
+        <!-- 销售状态切换（桌面在顶栏；手机端在场景栏最前面，见 #mobileStatusGroup） -->
         <div class="hidden md:flex items-center bg-slate-100/90 p-0.5 rounded-lg text-xs font-medium border border-slate-200/80 shrink-0">
           <button id="navStatusActiveBtn" class="py-1 px-2.5 rounded-md bg-white text-slate-900 font-bold shadow-xs transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
@@ -356,6 +356,10 @@
 
       <!-- 第零行：一键场景化快捷预设胶囊（小白零门槛一键直达，老司机极速切换） -->
       <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+        <div id="mobileStatusGroup" class="md:hidden inline-flex bg-slate-100/90 p-0.5 rounded-lg border border-slate-200/80 shrink-0 text-xs mr-1" role="group" aria-label="销售状态">
+          <button type="button" class="status-capsule py-1 px-2.5 rounded-md" data-status="active">在售</button>
+          <button type="button" class="status-capsule py-1 px-2.5 rounded-md" data-status="all">含停售</button>
+        </div>
         <span class="text-xs font-bold text-slate-400 mr-1 shrink-0 flex items-center gap-1">
           <i class="fa-solid fa-wand-magic-sparkles text-sky-500"></i>
           <span>场景:</span>
@@ -375,11 +379,12 @@
         <div class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
           <span class="text-xs font-bold text-slate-500 mr-1 shrink-0">车型:</span>
           <div id="typeCapsuleGroup" class="inline-flex bg-slate-100/90 p-0.5 rounded-lg border border-slate-200/80 shrink-0 text-xs">
-            <button class="type-capsule active py-1 px-2.5 rounded-md font-semibold bg-white text-slate-900 shadow-xs" data-type="all">全部</button>
+            <button class="type-capsule active py-1 px-2.5 rounded-md font-semibold bg-white text-slate-900 shadow-xs" data-type="all">全部乘用车</button>
             <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="sedan">轿车</button>
             <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="suv">SUV</button>
             <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="mpv">MPV</button>
             <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="sports">跑车</button>
+            <button class="type-capsule py-1 px-2.5 rounded-md font-medium text-slate-600 hover:text-slate-900" data-type="commercial">商用车</button>
           </div>
         </div>
 
@@ -1057,22 +1062,41 @@
     }
 
     // 辅助函数：寻找同级别相近价位与尺寸的核心竞品 (找替代横评)
+    // 车型大类：按级别字段划分；筛选胶囊和竞品匹配共用这一份规则
+    const COMMERCIAL_LEVELS = ['微卡', '轻卡', '轻客', '皮卡', '微面', '客车'];
+    function bodyClass(s) {
+      const lvl = s.level || s.clean_level || '';
+      if (COMMERCIAL_LEVELS.some(k => lvl.includes(k))) return 'commercial';
+      if (lvl.includes('SUV')) return 'suv';
+      if (lvl.includes('MPV')) return 'mpv';
+      if (lvl.includes('跑车')) return 'sports';
+      return 'sedan';
+    }
+    // 级别档位（微型→大型），竞品只在相邻档位内找
+    function levelRank(s) {
+      const lvl = s.level || '';
+      if (lvl.includes('中大型')) return 4;
+      if (lvl.includes('大型')) return 5;
+      if (lvl.includes('中型')) return 3;
+      if (lvl.includes('紧凑型')) return 2;
+      if (lvl.includes('小型')) return 1;
+      if (lvl.includes('微型')) return 0;
+      return -1;
+    }
+
     function findSimilarCompetitors(targetSeries) {
       if (!targetSeries) return [];
       const tPrice = parseCarPrice(targetSeries);
       const tWb = targetSeries.wheelbase_max || targetSeries.wheelbase_min || 2800;
-      const tLvl = (targetSeries.level || targetSeries.clean_level || '').toLowerCase();
-      const isSuv = tLvl.includes('suv');
-      const isMpv = tLvl.includes('mpv');
+      const tClass = bodyClass(targetSeries);
+      const tRank = levelRank(targetSeries);
 
       const candidates = state.series.filter(s => {
         if (s.is_stopped) return false;
         if (s.series_id === targetSeries.series_id) return false;
-
-        const sLvl = (s.level || s.clean_level || '').toLowerCase();
-        if (isSuv && !sLvl.includes('suv')) return false;
-        if (isMpv && !sLvl.includes('mpv')) return false;
-        if (!isSuv && !isMpv && (sLvl.includes('suv') || sLvl.includes('mpv'))) return false;
+        if (bodyClass(s) !== tClass) return false;
+        const sRank = levelRank(s);
+        if (tRank >= 0 && sRank >= 0 && Math.abs(sRank - tRank) > 1) return false;
 
         const sPrice = parseCarPrice(s);
         if (tPrice.avg > 0 && sPrice.avg > 0) {
@@ -1126,243 +1150,148 @@
       return `<span class="text-slate-500 font-medium mr-1.5">${b}</span><span class="font-bold text-slate-900">${s}</span>`;
     }
 
-    // 辅助函数：绘制高精 2D 底盘俯视透视 SVG (汽车之家/懂车帝同款现代商业级白底工程线框图)
-    // 辅助函数：绘制高精 2D 底盘俯视透视 SVG（集成真实主流商场 2.5m×5.3m 标准车位线框与开门余量体检）
-    function renderChassisSvg(length_mm, width_mm, wheelbase_mm, drive_type, pwr_ratio, max_hp, weight_kg) {
+    // 车位俯视图：标准商场车位 2.5m×5.3m 内倒车入位（车尾朝墙、挡车器顶住后轮、车头朝外）
+    // 版式分区：上方两行标注 / 中间车位与车身 / 下方两行标尺，标签按行排布，互不遮挡
+    let chassisSeq = 0;
+    function svgTextWidth(str, size) {
+      let n = 0;
+      for (const ch of String(str)) n += /[\x00-\xff]/.test(ch) ? 0.58 : 1;
+      return n * size;
+    }
+    function renderChassisSvg(length_mm, width_mm, wheelbase_mm, drive_type) {
       const l = length_mm || 4800;
       const w = width_mm || 1900;
-      const wb = wheelbase_mm || 2900;
-      const drv = drive_type || "四驱";
-      
-      const svg_w = 480;
-      const svg_h = 260;
-      
-      const scale = 0.056; // 1mm = 0.056px
-      const body_l = l * scale; // 约 240～310px
-      const body_w = w * scale; // 约 95～125px
-      const wb_l = wb * scale;   // 约 150～200px
-      
-      const center_x = svg_w / 2 - 10;
-      const center_y = svg_h / 2;
-      
-      // 主流商场标准垂直车位：长 5300mm，宽 2500mm (国标 JGJ 100-2015 商业车位规范)
-      const slot_l = 5300 * scale; // ~296.8px
-      const slot_w = 2500 * scale; // ~140.0px
-      const slot_x = center_x - slot_l / 2;
-      const slot_y = center_y - slot_w / 2;
-      
-      // 车身框位置（居中停入车位）
-      const box_x = center_x - body_l / 2;
-      const box_y = center_y - body_w / 2;
-      
-      // 单侧车门开启余量（mm）
-      const door_clearance = Math.round((2500 - w) / 2);
-      // 前后总余量（mm）
-      const length_clearance = Math.max(0, 5300 - l);
-      
-      // 空间得房率 (轴长比)
-      const space_ratio = ((wb / l) * 100).toFixed(1);
-      
-      // 机械车位体检结论 (国标限长5000mm, 限宽1850mm/宽体1900mm)
-      let mech_badge_text = "机械车位通行";
-      let mech_badge_color = "#5c8b51"; // 绿
-      let mech_bg = "rgba(16, 185, 129, 0.1)";
-      if (l > 5000 || w > 1900) {
-        mech_badge_text = "机械位超长/超宽慎选";
-        mech_badge_color = "#a84232"; // 红
-        mech_bg = "rgba(244, 63, 94, 0.1)";
-      } else if (w > 1850) {
-        mech_badge_text = "需1.9m宽体机械位";
-        mech_badge_color = "#ad8148"; // 黄
-        mech_bg = "rgba(173, 129, 72, 0.1)";
-      }
-      
-      // 开门舒适度评级
-      let door_badge_color = "#5c8b51";
-      let door_desc = "开门充裕";
-      if (door_clearance < 280) {
-        door_badge_color = "#a84232";
-        door_desc = "开门极窄易磕";
-      } else if (door_clearance < 320) {
-        door_badge_color = "#68714a";
-        door_desc = "正常开门";
-      }
+      const wb = Math.min(wheelbase_mm || 2900, l);
+      const drv = drive_type || '';
+      const uid = 'ch' + (++chassisSeq);
+      const park = getParkingFitMeta(w, l);
+      const ratio = ((wb / l) * 100).toFixed(1);
 
-      const front_overhang = (body_l - wb_l) * 0.45;
-      const front_axle_x = box_x + front_overhang;
-      const rear_axle_x = front_axle_x + wb_l;
-      
-      const wheel_l = 28;
-      const wheel_w = 12;
-      
-      const fl_x = front_axle_x - wheel_l / 2;
-      const fl_y = box_y - wheel_w / 2;
-      const fr_x = front_axle_x - wheel_l / 2;
-      const fr_y = box_y + body_w - wheel_w / 2;
-      
-      const rl_x = rear_axle_x - wheel_l / 2;
-      const rl_y = box_y - wheel_w / 2;
-      const rr_x = rear_axle_x - wheel_l / 2;
-      const rr_y = box_y + body_w - wheel_w / 2;
-      
-      const is_fwd = drv.includes("前驱");
-      const is_rwd = drv.includes("后驱");
-      const is_awd = drv.includes("四驱") || (!is_fwd && !is_rwd);
-      
-      const front_glow = is_fwd || is_awd;
-      const rear_glow = is_rwd || is_awd;
-      
-      const fw_style = front_glow 
-        ? 'fill="#68714a" stroke="#596343" stroke-width="2" class="wheel-glow-awd"' 
-        : 'fill="#cfc9b6" stroke="#a5a291" stroke-width="1.5"';
-      const rw_style = rear_glow 
-        ? 'fill="#ad8148" stroke="#93693a" stroke-width="2" class="wheel-glow-amber"' 
-        : 'fill="#cfc9b6" stroke="#a5a291" stroke-width="1.5"';
-      
+      const W = 480, H = 252;
+      const SLOT_L = 5300, SLOT_W = 2500;
+      const FONT = "-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif";
+      const C = { ink: '#393d33', muted: '#7a7c6d', rule: '#cfc9b6', line: '#c49a62', olive: '#68714a', gold: '#ad8148', seal: '#a84232', moss: '#467340', paper: '#fdfcf7' };
+
+      // 比例尺：车身或车位取较长者铺满中间区域；超长、超宽车型自动缩小
+      const scale = Math.min(0.056, 372 / Math.max(l + 220, SLOT_L), 138 / Math.max(w, SLOT_W));
+      const slotX = 70, cy = 122;
+      const slotL = SLOT_L * scale, slotW = SLOT_W * scale;
+      const slotY = cy - slotW / 2;
+      const bodyL = l * scale, bodyW = w * scale, wbL = wb * scale;
+      const boxX = slotX + 2, boxY = cy - bodyW / 2;
+      const overhang = Math.max(0, bodyL - wbL);
+      const rearAxle = boxX + overhang * 0.55;
+      const frontAxle = rearAxle + wbL;
+      const wheelL = Math.max(14, 680 * scale), wheelW = Math.max(7, 230 * scale);
+      const frontEnd = boxX + bodyL;
+      const slotEnd = slotX + slotL;
+
+      const isFwd = drv.includes('前驱');
+      const isRwd = drv.includes('后驱');
+      const isAwd = drv.includes('四驱');
+      const frontOn = isFwd || isAwd, rearOn = isRwd || isAwd;
+
+      const dc = park.doorClearance;
+      const doorTone = dc < 280 ? C.seal : (dc < 320 ? C.ink : C.moss);
+      const mechTone = park.mechColor.includes('rose') ? C.seal : (park.mechColor.includes('amber') ? C.gold : C.moss);
+
+      // 带底色的单行标签，中心点会被夹在画布内
+      const label = (text, cx, y, color, size = 10, weight = 500, border = null) => {
+        const tw = svgTextWidth(text, size) + 14;
+        const x = Math.max(6, Math.min(W - 6 - tw, cx - tw / 2));
+        return `<rect x="${x.toFixed(1)}" y="${y - size - 3}" width="${tw.toFixed(1)}" height="${size + 8}" rx="3" fill="${C.paper}" stroke="${border || 'none'}" stroke-width="0.8"/>`
+          + `<text x="${(x + tw / 2).toFixed(1)}" y="${y}" fill="${color}" font-size="${size}" font-weight="${weight}" text-anchor="middle">${text}</text>`;
+      };
+
+      // 第 1 行：车位说明（左）+ 机械车位结论（右）
+      const mechText = `机械车位：${park.mechText}`;
+      const mechW = svgTextWidth(mechText, 10) + 16;
+      const row1 = `
+        <text x="${slotX}" y="20" fill="${C.muted}" font-size="10">商场标准车位 2.5 × 5.3 m</text>
+        <rect x="${W - 8 - mechW}" y="8" width="${mechW}" height="17" rx="3" fill="${C.paper}" stroke="${mechTone}" stroke-width="0.9"/>
+        <text x="${W - 8 - mechW / 2}" y="20" fill="${mechTone}" font-size="10" font-weight="600" text-anchor="middle">${mechText}</text>`;
+
+      // 第 2 行：开门余量，引线落在前门位置的车身与车位线之间
+      const doorX = boxX + bodyL * 0.6;
+      const doorText = dc >= 0 ? `单侧开门余量 ${dc} mm · ${park.doorTag}` : `车身比车位宽 ${-dc * 2} mm`;
+      const gap = boxY - slotY;
+      const row2 = `
+        ${label(doorText, doorX, 43, doorTone, 10, 600)}
+        <line x1="${doorX}" y1="47" x2="${doorX}" y2="${Math.min(slotY, boxY) - 1}" stroke="${doorTone}" stroke-width="0.8" stroke-dasharray="2 2"/>
+        ${gap > 4 ? `
+          <line x1="${doorX}" y1="${slotY + 1}" x2="${doorX}" y2="${boxY - 1}" stroke="${doorTone}" stroke-width="1.2"/>
+          <path d="M${doorX - 2.5},${slotY + 4} L${doorX},${slotY + 1} L${doorX + 2.5},${slotY + 4} M${doorX - 2.5},${boxY - 4} L${doorX},${boxY - 1} L${doorX + 2.5},${boxY - 4}" fill="none" stroke="${doorTone}" stroke-width="1"/>` : ''}`;
+
+      // 车位：两侧黄线、尾墙虚线、挡车器（顶住后轮）
+      const stopperX = rearAxle - wheelL / 2 - 5;
+      const slot = `
+        <rect x="${slotX}" y="${slotY}" width="${slotL}" height="${slotW}" fill="#f2efe4"/>
+        <line x1="${slotX}" y1="${slotY}" x2="${slotEnd}" y2="${slotY}" stroke="${C.line}" stroke-width="2.4" stroke-linecap="round"/>
+        <line x1="${slotX}" y1="${slotY + slotW}" x2="${slotEnd}" y2="${slotY + slotW}" stroke="${C.line}" stroke-width="2.4" stroke-linecap="round"/>
+        <line x1="${slotX}" y1="${slotY}" x2="${slotX}" y2="${slotY + slotW}" stroke="${C.muted}" stroke-width="2" stroke-dasharray="5 3"/>
+        <rect x="${stopperX}" y="${cy - slotW * 0.3}" width="4" height="${slotW * 0.6}" rx="1.5" fill="url(#${uid}-stripe)"/>`;
+
+      // 车身：超出车位的部分用印章红标出
+      const overflow = frontEnd > slotEnd + 0.5
+        ? `<rect x="${slotEnd}" y="${boxY}" width="${frontEnd - slotEnd}" height="${bodyW}" fill="rgba(168,66,50,0.14)" stroke="${C.seal}" stroke-width="1" stroke-dasharray="3 2"/>` : '';
+      const unit = (x, on, text, color) => on
+        ? `<rect x="${x - 13}" y="${cy - 9}" width="26" height="18" rx="3" fill="${color}"/><text x="${x}" y="${cy + 3.5}" fill="#fdfcf7" font-size="9" font-weight="600" text-anchor="middle">${text}</text>`
+        : `<rect x="${x - 9}" y="${cy - 7}" width="18" height="14" rx="2.5" fill="#efece2" stroke="${C.rule}" stroke-width="0.8"/>`;
+      const wheel = (x, y, on, color) => `<rect x="${x - wheelL / 2}" y="${y - wheelW / 2}" width="${wheelL}" height="${wheelW}" rx="2" fill="${on ? color : '#cfc9b6'}" stroke="${on ? color : '#a5a291'}" stroke-width="0.8"/>`;
+      const body = `
+        <line x1="${rearAxle}" y1="${boxY + 2}" x2="${rearAxle}" y2="${boxY + bodyW - 2}" stroke="${rearOn ? C.gold : C.rule}" stroke-width="1.4"/>
+        <line x1="${frontAxle}" y1="${boxY + 2}" x2="${frontAxle}" y2="${boxY + bodyW - 2}" stroke="${frontOn ? C.olive : C.rule}" stroke-width="1.4"/>
+        <rect x="${boxX}" y="${boxY}" width="${bodyL}" height="${bodyW}" rx="${Math.min(14, bodyW * 0.14)}" fill="${C.paper}" stroke="${C.ink}" stroke-width="1.5"/>
+        ${overflow}
+        <rect x="${boxX + bodyL * 0.24}" y="${boxY + bodyW * 0.12}" width="${bodyL * 0.5}" height="${bodyW * 0.76}" rx="6" fill="#efece2" stroke="${C.rule}" stroke-width="0.8"/>
+        ${isAwd ? `<line x1="${rearAxle}" y1="${cy}" x2="${frontAxle}" y2="${cy}" stroke="${C.olive}" stroke-width="2" stroke-dasharray="5 3"/>` : ''}
+        ${unit(rearAxle, rearOn, '后驱', C.gold)}
+        ${unit(frontAxle, frontOn, '前驱', C.olive)}
+        ${wheel(rearAxle, boxY, rearOn, C.gold)}${wheel(rearAxle, boxY + bodyW, rearOn, C.gold)}
+        ${wheel(frontAxle, boxY, frontOn, C.olive)}${wheel(frontAxle, boxY + bodyW, frontOn, C.olive)}
+        <path d="M${frontEnd + 5},${cy - 4} L${frontEnd + 10},${cy} L${frontEnd + 5},${cy + 4}" fill="none" stroke="${C.muted}" stroke-width="1.2"/>`;
+
+      // 左侧：车宽
+      const widthRuler = `
+        <line x1="${slotX - 9}" y1="${boxY}" x2="${slotX - 9}" y2="${boxY + bodyW}" stroke="${C.muted}" stroke-width="1"/>
+        <line x1="${slotX - 12}" y1="${boxY}" x2="${slotX - 6}" y2="${boxY}" stroke="${C.muted}" stroke-width="1"/>
+        <line x1="${slotX - 12}" y1="${boxY + bodyW}" x2="${slotX - 6}" y2="${boxY + bodyW}" stroke="${C.muted}" stroke-width="1"/>
+        <text x="${slotX - 15}" y="${cy - 5}" fill="${C.muted}" font-size="10" text-anchor="end">车宽</text>
+        <text x="${slotX - 15}" y="${cy + 12}" fill="${C.ink}" font-size="10" font-weight="600" text-anchor="end">${w}</text>`;
+
+      // 下方第 1 行：轴距与得房率；第 2 行：车长与车位前方余量
+      const bottom = Math.max(slotY + slotW, boxY + bodyW);
+      const y1 = bottom + 18, y2 = bottom + 42;
+      const tick = (x, y) => `<line x1="${x}" y1="${y - 3}" x2="${x}" y2="${y + 3}" stroke="currentColor" stroke-width="1"/>`;
+      const lc = 5300 - l;
+      const lenText = lc >= 0 ? `车长 ${l} mm · 车头前方还余 ${lc} mm` : `车长 ${l} mm · 超出车位 ${-lc} mm`;
+      const rulers = `
+        <g color="${C.olive}">
+          <line x1="${rearAxle}" y1="${y1 - 4}" x2="${frontAxle}" y2="${y1 - 4}" stroke="currentColor" stroke-width="1.2"/>
+          ${tick(rearAxle, y1 - 4)}${tick(frontAxle, y1 - 4)}
+        </g>
+        ${label(`轴距 ${wb} mm · 得房率 ${ratio}%`, (rearAxle + frontAxle) / 2, y1, C.olive, 10, 600)}
+        <g color="${C.muted}">
+          <line x1="${boxX}" y1="${y2 - 4}" x2="${frontEnd}" y2="${y2 - 4}" stroke="currentColor" stroke-width="1"/>
+          ${tick(boxX, y2 - 4)}${tick(frontEnd, y2 - 4)}
+        </g>
+        ${label(lenText, (boxX + frontEnd) / 2, y2, lc >= 0 ? C.ink : C.seal, 10, 500)}`;
+
       return `
-        <svg viewBox="0 0 ${svg_w} ${svg_h}" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto max-h-[250px] select-none">
+        <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto max-h-[260px] select-none" font-family="${FONT}" role="img"
+             aria-label="车位俯视图：车长 ${l}mm，车宽 ${w}mm，轴距 ${wb}mm，单侧开门余量 ${dc}mm">
           <defs>
-            <pattern id="svg-grid-light" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(0,0,0,0.03)" stroke-width="1"/>
-            </pattern>
-            <linearGradient id="frontPowerLight" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#68714a"/>
-              <stop offset="100%" stop-color="#949d71"/>
-            </linearGradient>
-            <linearGradient id="rearPowerLight" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#93693a"/>
-              <stop offset="100%" stop-color="#c49a62"/>
-            </linearGradient>
-            <pattern id="curbStripe" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <rect width="4" height="8" fill="#ad8148"/>
-              <rect x="4" width="4" height="8" fill="#393d33"/>
+            <pattern id="${uid}-stripe" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="3" height="6" fill="${C.gold}"/><rect x="3" width="3" height="6" fill="${C.ink}"/>
             </pattern>
           </defs>
-
-          <!-- 背景工程微网格 -->
-          <rect width="${svg_w}" height="${svg_h}" fill="transparent" />
-          <rect width="${svg_w}" height="${svg_h}" fill="url(#svg-grid-light)" />
-
-          <!-- ========================================== -->
-          <!-- 1. 主流商场标准地下车位标尺框 (2.5m × 5.3m) -->
-          <!-- ========================================== -->
-          <!-- 车位底坪微阴影与高亮区域 -->
-          <rect x="${slot_x}" y="${slot_y}" width="${slot_l}" height="${slot_w}" rx="2" fill="rgba(241, 245, 249, 0.75)" stroke="#e2ddce" stroke-width="1" />
-          
-          <!-- 车位黄色边界实线（标准商业地下车库反光线） -->
-          <!-- 上侧边线 -->
-          <line x1="${slot_x}" y1="${slot_y}" x2="${slot_x + slot_l}" y2="${slot_y}" stroke="#c49a62" stroke-width="2.5" stroke-linecap="round" />
-          <!-- 下侧边线 -->
-          <line x1="${slot_x}" y1="${slot_y + slot_w}" x2="${slot_x + slot_l}" y2="${slot_y + slot_w}" stroke="#c49a62" stroke-width="2.5" stroke-linecap="round" />
-          <!-- 车位底端挡墙封口实线 -->
-          <line x1="${slot_x}" y1="${slot_y}" x2="${slot_x}" y2="${slot_y + slot_w}" stroke="#c49a62" stroke-width="2.5" stroke-dasharray="8 4" opacity="0.6" />
-
-          <!-- 车位末端防撞倒车橡胶挡车杆 (Wheel Stopper) -->
-          <rect x="${slot_x + 12}" y="${center_y - 28}" width="6" height="56" rx="2" fill="url(#curbStripe)" stroke="#5f6255" stroke-width="0.8" />
-          
-          <!-- 车位标牌文字：标准商场车位与泊车体检 -->
-          <text x="${slot_x + 8}" y="${slot_y + 12}" fill="#a5a291" font-size="8" font-family="monospace" font-weight="bold">商场标准车位 2.5m×5.3m</text>
-
-          <!-- ========================================== -->
-          <!-- 2. 车身两侧开门富余量（Door Clearance）尺寸引线 -->
-          <!-- ========================================== -->
-          <!-- 上侧车门开门间距引线 -->
-          <line x1="${center_x - 10}" y1="${slot_y + 2}" x2="${center_x - 10}" y2="${box_y - 2}" stroke="${door_badge_color}" stroke-width="1.2" stroke-dasharray="3 2" />
-          <polygon points="${center_x - 10},${slot_y + 2} ${center_x - 12},${slot_y + 6} ${center_x - 8},${slot_y + 6}" fill="${door_badge_color}" />
-          <polygon points="${center_x - 10},${box_y - 2} ${center_x - 12},${box_y - 6} ${center_x - 8},${box_y - 6}" fill="${door_badge_color}" />
-          
-          <!-- 开门富余量气泡标签 -->
-          <g transform="translate(${center_x - 5}, ${slot_y - 12})">
-            <rect x="0" y="0" width="138" height="16" rx="4" fill="#FFFFFF" stroke="${door_badge_color}" stroke-width="1" />
-            <text x="69" y="11" fill="${door_badge_color}" font-size="9" font-family="monospace" font-weight="bold" text-anchor="middle">开门余量 ${door_clearance}mm (${door_desc})</text>
-          </g>
-
-          <!-- 前后进深富余量引线 (车头侧) -->
-          <line x1="${box_x + body_l + 2}" y1="${center_y}" x2="${slot_x + slot_l - 2}" y2="${center_y}" stroke="#7a7c6d" stroke-width="1" stroke-dasharray="2 2" />
-          <rect x="${box_x + body_l + 4}" y="${center_y - 7}" width="48" height="14" rx="3" fill="#FFFFFF" stroke="#cfc9b6" stroke-width="0.8" />
-          <text x="${box_x + body_l + 28}" y="${center_y + 3}" fill="#7a7c6d" font-size="8" font-family="monospace" text-anchor="middle">余${length_clearance}mm</text>
-
-          <!-- ========================================== -->
-          <!-- 3. 底盘机械结构与车身投影 -->
-          <!-- ========================================== -->
-          <!-- 中轴线 -->
-          <line x1="${box_x - 15}" y1="${center_y}" x2="${box_x + body_l + 15}" y2="${center_y}" stroke="rgba(100,116,139,0.25)" stroke-dasharray="4 4" stroke-width="1" />
-
-          <!-- 前后车轴 -->
-          <line x1="${front_axle_x}" y1="${box_y - 8}" x2="${front_axle_x}" y2="${box_y + body_w + 8}" stroke="${front_glow ? 'rgba(104, 113, 74,0.6)' : 'rgba(148,163,184,0.4)'}" stroke-width="${front_glow ? '2' : '1.5'}" />
-          <line x1="${rear_axle_x}" y1="${box_y - 8}" x2="${rear_axle_x}" y2="${box_y + body_w + 8}" stroke="${rear_glow ? 'rgba(217,119,6,0.6)' : 'rgba(148,163,184,0.4)'}" stroke-width="${rear_glow ? '2' : '1.5'}" />
-
-          <!-- 中央传动/动力连接轴 (四驱全贯通) -->
-          ${is_awd ? `
-            <line x1="${front_axle_x}" y1="${center_y}" x2="${rear_axle_x}" y2="${center_y}" stroke="#68714a" stroke-width="3" stroke-dasharray="6 3" opacity="0.9" />
-          ` : ''}
-
-          <!-- 车身外壳工程透视投影 -->
-          <rect x="${box_x}" y="${box_y}" width="${body_l}" height="${body_w}" rx="14" fill="#FFFFFF" stroke="#4b4f43" stroke-width="1.8" />
-          
-          <!-- 座舱透明投影 (乘员舱) -->
-          <rect x="${box_x + body_l * 0.22}" y="${box_y + 10}" width="${body_l * 0.52}" height="${body_w - 20}" rx="8" fill="rgba(241, 245, 249, 0.85)" stroke="#cfc9b6" stroke-width="1.2" />
-
-          <!-- 前动力总成图标 -->
-          ${front_glow ? `
-            <rect x="${front_axle_x - 14}" y="${center_y - 10}" width="28" height="20" rx="4" fill="url(#frontPowerLight)" stroke="#68714a" stroke-width="1.5" />
-            <text x="${front_axle_x}" y="${center_y + 3}" fill="#ffffff" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">前驱</text>
-          ` : `
-            <rect x="${front_axle_x - 10}" y="${center_y - 8}" width="20" height="16" rx="3" fill="#efece2" stroke="#cfc9b6" stroke-width="1" />
-          `}
-
-          <!-- 后动力总成图标 -->
-          ${rear_glow ? `
-            <rect x="${rear_axle_x - 14}" y="${center_y - 10}" width="28" height="20" rx="4" fill="url(#rearPowerLight)" stroke="#93693a" stroke-width="1.5" />
-            <text x="${rear_axle_x}" y="${center_y + 3}" fill="#ffffff" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">后驱</text>
-          ` : `
-            <rect x="${rear_axle_x - 10}" y="${center_y - 8}" width="20" height="16" rx="3" fill="#efece2" stroke="#cfc9b6" stroke-width="1" />
-          `}
-
-          <!-- 四个车轮渲染 -->
-          <rect x="${fl_x}" y="${fl_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${fw_style} />
-          <rect x="${fr_x}" y="${fr_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${fw_style} />
-          <rect x="${rl_x}" y="${rl_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${rw_style} />
-          <rect x="${rr_x}" y="${rr_y}" width="${wheel_l}" height="${wheel_w}" rx="3" ${rw_style} />
-
-          <!-- ========================================== -->
-          <!-- 4. 尺寸与空间得房率引线 -->
-          <!-- ========================================== -->
-          <!-- 轴距标尺 (上方，科技蓝标尺) -->
-          <g transform="translate(0, ${box_y - 10})">
-            <line x1="${front_axle_x}" y1="0" x2="${rear_axle_x}" y2="0" stroke="#68714a" stroke-width="1.5" />
-            <line x1="${front_axle_x}" y1="-4" x2="${front_axle_x}" y2="4" stroke="#68714a" stroke-width="1.2" />
-            <line x1="${rear_axle_x}" y1="-4" x2="${rear_axle_x}" y2="4" stroke="#68714a" stroke-width="1.2" />
-            <!-- 轴距与得房率气泡 -->
-            <rect x="${(front_axle_x + rear_axle_x)/2 - 58}" y="-9" width="116" height="18" rx="4" fill="#ffffff" stroke="#68714a" stroke-width="1" />
-            <text x="${(front_axle_x + rear_axle_x)/2}" y="3" fill="#68714a" font-size="9" font-family="monospace" font-weight="bold" text-anchor="middle">轴距 ${wb}mm · 得房率 ${space_ratio}%</text>
-          </g>
-
-          <!-- 车长标尺 (下方) -->
-          <g transform="translate(0, ${box_y + body_w + 14})">
-            <line x1="${box_x}" y1="0" x2="${box_x + body_l}" y2="0" stroke="#7a7c6d" stroke-width="1.2" />
-            <line x1="${box_x}" y1="-3" x2="${box_x}" y2="3" stroke="#7a7c6d" stroke-width="1" />
-            <line x1="${box_x + body_l}" y1="-3" x2="${box_x + body_l}" y2="3" stroke="#7a7c6d" stroke-width="1" />
-            <rect x="${box_x + body_l/2 - 40}" y="-8" width="80" height="16" rx="3" fill="#ffffff" stroke="#a5a291" stroke-width="1" />
-            <text x="${box_x + body_l/2}" y="3" fill="#4b4f43" font-size="9" font-family="monospace" font-weight="semibold" text-anchor="middle">长 ${l}mm</text>
-          </g>
-
-          <!-- 车宽标尺 (左侧) -->
-          <g transform="translate(${box_x - 18}, 0)">
-            <line x1="0" y1="${box_y}" x2="0" y2="${box_y + body_w}" stroke="#7a7c6d" stroke-width="1.2" />
-            <line x1="-3" y1="${box_y}" x2="3" y2="${box_y}" stroke="#7a7c6d" stroke-width="1" />
-            <line x1="-3" y1="${box_y + body_w}" x2="3" y2="${box_y + body_w}" stroke="#7a7c6d" stroke-width="1" />
-            <text x="-5" y="${center_y + 3}" fill="#4b4f43" font-size="9" font-family="monospace" font-weight="semibold" text-anchor="end">宽 ${w}mm</text>
-          </g>
-
-          <!-- 右下角：机械立体车位体检徽章 -->
-          <g transform="translate(${svg_w - 145}, ${svg_h - 24})">
-            <rect x="0" y="0" width="135" height="18" rx="4" fill="${mech_bg}" stroke="${mech_badge_color}" stroke-width="1" />
-            <text x="67" y="12" fill="${mech_badge_color}" font-size="9" font-family="monospace" font-weight="bold" text-anchor="middle">${mech_badge_text}</text>
-          </g>
-
-        </svg>
-      `;
+          ${slot}
+          ${body}
+          ${widthRuler}
+          ${row1}
+          ${row2}
+          ${rulers}
+        </svg>`;
     }
 
     // 初始化应用程序
@@ -1390,6 +1319,14 @@
         setStatusButtons();
         applyFilters();
       });
+      document.querySelectorAll('.status-capsule').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.activeStatusOnly = btn.dataset.status === 'active';
+          setStatusButtons();
+          applyFilters();
+        });
+      });
+      setStatusButtons();
       document.getElementById('navStatusAllBtn').addEventListener('click', () => {
         state.activeStatusOnly = false;
         setStatusButtons();
@@ -1693,13 +1630,9 @@
         }
 
         // 3. 车型大类过滤
-        if (type !== 'all') {
-          const lvl = (s.level || '') + (s.body_type || '');
-          if (type === 'sedan' && !lvl.includes('轿车') && !lvl.includes('微型车') && !lvl.includes('小型车') && !lvl.includes('紧凑型车') && !lvl.includes('中型车') && !lvl.includes('中大型车') && !lvl.includes('大型车')) return false;
-          if (type === 'suv' && !lvl.includes('SUV')) return false;
-          if (type === 'mpv' && !lvl.includes('MPV')) return false;
-          if (type === 'sports' && !lvl.includes('跑车')) return false;
-        }
+        // “全部”只含乘用车；微卡、轻客、皮卡、微面等在“商用车”里单独看
+        const cls = bodyClass(s);
+        if (type === 'all' ? cls === 'commercial' : cls !== type) return false;
 
         // 4. 动力能源过滤
         if (energy !== 'all') {
@@ -1932,7 +1865,9 @@
       if (pwrBar) pwrBar.style.width = `${pwrMeta.pct}%`;
 
       document.getElementById('boardDriveType').textContent = drv;
-      document.getElementById('boardDriveDesc').textContent = drv === '四驱' ? '双电机动力协同' : (drv === '后驱' ? '后轴主驱动/精准操控' : '前轴经济动力驱动');
+      // 驱动说明：只描述驱动轮，不再推断电机数量（燃油四驱车并没有“双电机”）
+      document.getElementById('boardDriveDesc').textContent = { '四驱': '前后轴都有驱动', '后驱': '后轮驱动', '前驱': '前轮驱动' }[drv] || '数据缺失';
+      document.getElementById('boardDriveDesc').textContent = { '四驱': '前后轴都有驱动', '后驱': '后轮驱动', '前驱': '前轮驱动' }[drv] || '数据缺失';
       document.getElementById('boardHpVal').textContent = hp || '--';
       
       // 整备质量
@@ -2270,7 +2205,7 @@
         const v = p.get(name);
         if (v && allowed.includes(v)) { state[field] = v; setCapsule(selector, attr, v); }
       };
-      pick('type', ['sedan', 'suv', 'mpv', 'sports'], 'currentType', '.type-capsule', 'type');
+      pick('type', ['sedan', 'suv', 'mpv', 'sports', 'commercial'], 'currentType', '.type-capsule', 'type');
       pick('energy', ['bev', 'phev', 'ice'], 'currentEnergy', '.energy-capsule', 'energy');
       pick('drive', ['四驱', '后驱', '前驱'], 'currentDrive', '.drive-capsule', 'drive');
       const sortOpt = [...document.getElementById('sortSelect').options].map(o => o.value);
@@ -2305,6 +2240,8 @@
       document.getElementById('navStatusAllBtn').className = state.activeStatusOnly ? off : on;
       document.getElementById('navStatusActiveBtn').setAttribute('aria-pressed', String(state.activeStatusOnly));
       document.getElementById('navStatusAllBtn').setAttribute('aria-pressed', String(!state.activeStatusOnly));
+      setCapsule('.status-capsule', 'status', state.activeStatusOnly ? 'active' : 'all');
+      document.querySelectorAll('.status-capsule').forEach(b => b.setAttribute('aria-pressed', String(b.classList.contains('active'))));
     }
 
     // 重置所有条件
