@@ -1,6 +1,15 @@
-# 🚗 Car Dimension Compass (汽车多维尺寸与底盘工程透视选车系统)
+# 一车之地 · Footprint
 
-> 纯前端零依赖、现代清爽白灰工程美学的乘用车全维度参数筛选、商场地下车位体检、空间得房率测算与同级竞品对比工具。收录国内 **1693 款车系、12550 款具体配置** 的官方真实参配与真实车友口碑评分。
+> 一辆车要占多大地方：按尺寸选车，看商场车位停不停得下、开门够不够，比座舱的轴距与车长之比，再找同级的替代车型。收录国内 **1693 款车系、12550 款具体配置** 的官方参配与车主口碑评分。界面沿用 [3901646.xyz](https://3901646.xyz) 的日间纸风格。
+
+## 重新构建
+
+```bash
+npm install          # 只用于构建期编译 Tailwind CSS
+npm run build        # 编译 CSS，再由 build_html.py 内嵌数据和样式，生成 index.html
+```
+
+页面不再依赖 Tailwind Play CDN 和 FontAwesome CDN：样式在构建时编译并内嵌，图标是内嵌 SVG。筛选条件、选中车型和对比列表会写进网址，可以直接分享。
 
 [![GitHub Pages](https://img.shields.io/badge/Live%20Demo-Online%20Web-2563eb?style=flat-square&logo=github)](https://cf3901646.github.io/car-dimension-filter/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
