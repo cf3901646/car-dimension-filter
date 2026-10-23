@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import re
@@ -118,6 +119,20 @@ stopped_series_count = len(series_data) - active_series_count
 
 print(f"Loaded {cover_count} covers, {enriched_count} enriched series from cache.")
 
+# 同一品牌下车系重名（清洗名字时出错，例如方程S 被写成了豹5）：改用配置数据里的车系名。
+# 必须放在封面注入之后，因为那一步会用原始字段重写 series_name。
+from collections import Counter
+name_count = Counter((s.get("brand_name"), s.get("series_name")) for s in series_data)
+for s in series_data:
+    if name_count[(s.get("brand_name"), s.get("series_name"))] < 2:
+        continue
+    v_names = {v.get("series") for v in s.get("versions", []) if v.get("series")}
+    if len(v_names) == 1:
+        real = v_names.pop()
+        if real != s.get("series_name"):
+            print(f"Renamed duplicate series {s['series_id']}: {s.get('series_name')} -> {real}")
+            s["series_name"] = s["display_series_name"] = real
+
 with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
     template_content = f.read()
 
@@ -138,19 +153,36 @@ html_content = html_content.replace("__ACTIVE_SERIES__", str(active_series_count
 html_content = html_content.replace("__STOPPED_SERIES__", str(stopped_series_count))
 html_content = html_content.replace("__TOTAL_VERSIONS__", str(total_versions))
 
-series_json_str = json.dumps(series_data, ensure_ascii=False)
-html_content = html_content.replace("/* __ALL_SERIES_JSON__ */ []", series_json_str)
+# 车型数据单独输出为 series-data.js：页面先显示骨架，再用 <script defer> 加载数据。
+# 用 script 而不用 fetch，是为了本地双击打开 index.html（file://）时仍然可用。
+# 只保留页面实际读取的字段，体积约为完整数据的一半。
+SERIES_KEYS = (
+    "series_id", "brand_name", "series_name", "display_series_name", "level", "energy_types",
+    "drive_types", "main_drive_type", "price_str", "price_min", "price_max", "score", "is_stopped",
+    "cover_url", "length_min", "length_max", "width_min", "width_max", "height_min", "height_max",
+    "wheelbase_min", "wheelbase_max", "pwr_ratio_min", "pwr_ratio_max", "pwr_ratio_str",
+    "range_min", "range_max", "range_str", "max_horsepower",
+)
+VERSION_KEYS = ("model_name", "price", "length", "width", "height", "wheelbase", "weight",
+                "drive_type", "horsepower", "pwr_ratio", "ev_range")
 
-with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-    f.write(html_content)
+def slim(s):
+    out = {k: s[k] for k in SERIES_KEYS if s.get(k) not in (None, "", [])}
+    out["is_stopped"] = bool(s.get("is_stopped"))
+    out["versions"] = [{k: v[k] for k in VERSION_KEYS if v.get(k) not in (None, "")} for v in s.get("versions", [])]
+    return out
 
-# 同时同步到根目录 index.html
-ROOT_OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "index.html")
-try:
-    with open(ROOT_OUTPUT_PATH, "w", encoding="utf-8") as f:
+data_js = "window.ALL_SERIES=" + json.dumps([slim(s) for s in series_data], ensure_ascii=False, separators=(",", ":")) + ";\n"
+data_hash = hashlib.sha256(data_js.encode("utf-8")).hexdigest()[:10]
+html_content = html_content.replace("__SERIES_DATA_SRC__", f"series-data.js?v={data_hash}")
+
+ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
+for out_dir in (os.path.dirname(__file__), ROOT_DIR):
+    with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("已同步更新根目录 index.html")
-except Exception as e:
-    print(f"Warning: could not sync to root index.html: {e}")
+    with open(os.path.join(out_dir, "series-data.js"), "w", encoding="utf-8") as f:
+        f.write(data_js)
 
-print(f"index.html 页面已成功更新！共内嵌 {len(series_data)} 个车系（在售 {active_series_count} / 历史 {stopped_series_count}），{total_versions} 款具体配置。")
+kb = lambda n: f"{n / 1024:.0f} KB"
+print(f"index.html {kb(len(html_content.encode('utf-8')))} + series-data.js {kb(len(data_js.encode('utf-8')))}（v={data_hash}），已写入 car_dimension_filter/ 与仓库根目录")
+print(f"共 {len(series_data)} 个车系（在售 {active_series_count} / 历史 {stopped_series_count}），{total_versions} 款具体配置。")
