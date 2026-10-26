@@ -18,7 +18,8 @@ npm run build        # 编译 CSS，再由 build_html.py 内嵌数据和样式�
 - **场景预设**：每个场景只改自己负责的条件，你拖好的尺寸范围不会被清掉；再点一次取消。
 - **已生效条件**：列表上方列出所有生效的条件，可单独去掉。
 
-[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-Online%20Web-2563eb?style=flat-square&logo=github)](https://cf3901646.github.io/car-dimension-filter/)
+[![Official Domain](https://img.shields.io/badge/Live-car.3901646.xyz-0284c7?style=flat-square)](https://car.3901646.xyz)
+[![GitHub Pages](https://img.shields.io/badge/Mirror-GitHub%20Pages-2563eb?style=flat-square&logo=github)](https://cf3901646.github.io/car-dimension-filter/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Zero Dependency](https://img.shields.io/badge/Architecture-Single%20HTML%20SPA-10b981?style=flat-square)](#)
 [![Data Count](https://img.shields.io/badge/Database-1693%20Series%20%2F%2012550%20Specs-6366f1?style=flat-square)](#)
@@ -61,7 +62,7 @@ npm run build        # 编译 CSS，再由 build_html.py 内嵌数据和样式�
 
 ### 方式一：在线免安装体验（推荐）
 直接访问托管于 GitHub Pages 的在线静态网页：
-👉 **[在线直达体验](https://cf3901646.github.io/car-dimension-filter/)**
+👉 **[在线直达体验（官网）](https://car.3901646.xyz)** · [备用镜像（GitHub Pages）](https://cf3901646.github.io/car-dimension-filter/)
 
 ### 方式二：本地离线运行
 整个应用打包为自包含的单文件 HTML，**零后端、零 node_modules、零网络依赖**：

@@ -1,0 +1,22 @@
+# 1. Global Security Headers & CORS
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Access-Control-Allow-Origin: *
+
+# 2. HTML Zero Cache for instant updates
+/
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+# 3. Static Data Asset Immutable Cache
+/series-data.js*
+  Cache-Control: public, max-age=31536000, immutable
