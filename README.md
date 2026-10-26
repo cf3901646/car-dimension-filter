@@ -11,6 +11,13 @@ npm run build        # 编译 CSS，再由 build_html.py 内嵌数据和样式�
 
 页面不再依赖 Tailwind Play CDN 和 FontAwesome CDN：样式在构建时编译并内嵌，图标是内嵌 SVG。筛选条件、选中车型和对比列表会写进网址，可以直接分享。
 
+## 主要功能
+
+- **我的车位**：填入自家车位的长、宽和限高（或选常见预设），每张卡片标出“停得下 / 偏紧 / 超长 / 超宽 / 超高 / 开门难”，可以只看停得下的车。车位尺寸保存在本机。
+- **尺寸对比**：最多 4 款车按同一比例叠在一起（俯视看长和宽，侧视看高），直接标出车长差、车宽差、车高差；下方差距表以基准车为零点，每项给出差值和差距条，可切换基准、只看有差别的项、复制对比链接。
+- **场景预设**：每个场景只改自己负责的条件，你拖好的尺寸范围不会被清掉；再点一次取消。
+- **已生效条件**：列表上方列出所有生效的条件，可单独去掉。
+
 [![GitHub Pages](https://img.shields.io/badge/Live%20Demo-Online%20Web-2563eb?style=flat-square&logo=github)](https://cf3901646.github.io/car-dimension-filter/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Zero Dependency](https://img.shields.io/badge/Architecture-Single%20HTML%20SPA-10b981?style=flat-square)](#)

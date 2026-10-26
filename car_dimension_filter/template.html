@@ -266,6 +266,58 @@
     .dual-range-input:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.08); }
 
     /* ============================================================
+       性能：屏幕外的卡片跳过排版和绘制
+       ============================================================ */
+    .car-card { content-visibility: auto; contain-intrinsic-size: auto 104px; }
+
+    /* 卡片封面上的“我的车位”结论 */
+    .fit-tag {
+      position: absolute; left: 4px; bottom: 4px;
+      font-size: 10px; line-height: 1; padding: 3px 5px; border-radius: 3px;
+      background: rgba(253, 252, 247, 0.92);
+    }
+    .fit-ok { color: #365b32; }
+    .fit-tight { color: #77542f; }
+    .fit-no { color: #fdfcf7; background: rgba(168, 66, 50, 0.92); }
+    .fit-unknown { display: none; }
+
+    .spot-input {
+      width: 64px; padding: 3px 6px; border: 1px solid #e2ddce; border-radius: 6px;
+      background: #fdfcf7; color: #393d33; font-variant-numeric: tabular-nums;
+    }
+    .spot-input:focus { outline: none; border-color: #7d865c; box-shadow: 0 0 0 2px rgba(125, 134, 92, 0.2); }
+    .spot-preset {
+      padding: 3px 8px; border: 1px solid #e2ddce; border-radius: 9999px; background: #fdfcf7; color: #5f6255;
+      white-space: nowrap;
+    }
+    .spot-preset:hover { border-color: #b1ba91; color: #393d33; }
+    .spot-preset.active { background: #68714a; border-color: #68714a; color: #fdfcf7; }
+
+    .chip {
+      display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 8px;
+      border: 1px solid #e2ddce; border-radius: 9999px; background: #fdfcf7; color: #4b4f43; font-size: 11px;
+    }
+    .chip button { width: 16px; height: 16px; border-radius: 9999px; color: #7a7c6d; line-height: 1; }
+    .chip button:hover { background: #efece2; color: #393d33; }
+
+    /* 对比：差距条以基准车为中线，向右更大、向左更小 */
+    .cmp-delta { position: relative; height: 6px; margin-top: 5px; background: #efece2; border-radius: 3px; }
+    .cmp-delta::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: #a5a291; }
+    .cmp-delta i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+    .cmp-table th:first-child, .cmp-table td:first-child { position: sticky; left: 0; z-index: 1; background: #fdfcf7; }
+    .cmp-best { color: #467340; font-size: 10px; margin-left: 4px; }
+
+    #compareTray { display: none; }
+    @media (min-width: 1024px) { #compareTray.has { display: flex; } }
+
+    #toast {
+      position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%) translateY(8px); z-index: 70;
+      padding: 8px 14px; border-radius: 8px; background: #393d33; color: #fdfcf7; font-size: 12px;
+      opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ============================================================
        图标：用内嵌 SVG 遮罩替代 FontAwesome，沿用原有 fa- 类名，颜色跟随文字
        路径改写自 Lucide（ISC License）
        ============================================================ */
@@ -296,7 +348,7 @@
 <body class="bg-[#f3f0e7] text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-sky-100 selection:text-sky-900 pb-20 lg:pb-10">
 
   <!-- 顶部主导航栏（纯白微阴影，彻底防止按钮文字挤压折行） -->
-  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-0 z-40 shadow-xs">
+  <header class="bg-white border-b border-slate-200/90 sticky top-0 z-40 shadow-xs">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
       
       <!-- 品牌标识 -->
@@ -365,7 +417,7 @@
           <i class="fa-solid fa-wand-magic-sparkles text-sky-500"></i>
           <span>场景:</span>
         </span>
-        <button class="scenario-pill active" data-scenario="all">全部车型</button>
+        <button class="scenario-pill active" data-scenario="all" title="不套用场景；其他条件保持不变">不限场景</button>
         <button class="scenario-pill" data-scenario="large_sedan">5米C级大车</button>
         <button class="scenario-pill" data-scenario="super_pwr">超跑推重比(≥200)</button>
         <button class="scenario-pill" data-scenario="long_range">700km+长续航</button>
@@ -426,6 +478,10 @@
             <option value="ev_range_desc">纯电续航最长优先</option>
             <option value="price_asc">价格从低到高</option>
             <option value="price_desc">价格从高到低</option>
+            <option value="space_desc">得房率最高 (座舱占比大)</option>
+            <option value="door_desc">开门余量最大 (车身最窄)</option>
+            <option value="length_asc">车身最短优先</option>
+            <option value="height_asc">车身最矮优先</option>
           </select>
         </div>
 
@@ -485,6 +541,22 @@
           </button>
         </div>
 
+      </div>
+
+      <!-- 我的车位：开门余量、前方余量、停不停得下都按这里的尺寸算（保存在本机） -->
+      <div id="spotRow" class="flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-slate-600 bg-slate-50/80 rounded-xl border border-slate-200/90 px-3 py-2">
+        <span class="font-bold text-slate-700 shrink-0">我的车位</span>
+        <label class="inline-flex items-center gap-1 shrink-0">长 <input id="spotL" class="spot-input" type="number" inputmode="numeric" min="3500" max="9000" step="10" aria-label="车位长度 mm"> mm</label>
+        <label class="inline-flex items-center gap-1 shrink-0">宽 <input id="spotW" class="spot-input" type="number" inputmode="numeric" min="1800" max="4000" step="10" aria-label="车位宽度 mm"> mm</label>
+        <label class="inline-flex items-center gap-1 shrink-0">限高 <input id="spotH" class="spot-input" type="number" inputmode="numeric" min="1300" max="4500" step="10" placeholder="不限" aria-label="限高 mm，留空表示不限"> mm</label>
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar">
+          <button type="button" class="spot-preset" data-spot="5300,2500,0">商场标准 5.3×2.5</button>
+          <button type="button" class="spot-preset" data-spot="5000,2300,0">老小区 5.0×2.3</button>
+          <button type="button" class="spot-preset" data-spot="4800,2200,2000">窄车位 4.8×2.2 限高2.0</button>
+        </div>
+        <label class="inline-flex items-center gap-1.5 ml-auto cursor-pointer shrink-0 text-slate-700">
+          <input id="fitOnly" type="checkbox" class="accent-[#68714a] w-3.5 h-3.5"> 只看停得下
+        </label>
       </div>
 
       <!-- 高级筛选折叠区（第二级渐进式暴露：微卡片设计语言） -->
@@ -570,6 +642,9 @@
             点击车型，右侧查看车位与尺寸
           </div>
         </div>
+
+        <!-- 已生效的筛选条件：一眼看到、单独去掉 -->
+        <div id="activeChips" class="hidden flex flex-wrap items-center gap-1.5 px-1" aria-label="已生效的筛选条件"></div>
 
         <!-- 卡片容器 -->
         <div id="cardListContainer" class="space-y-2.5" aria-live="polite">
@@ -706,7 +781,7 @@
             <div class="flex items-center justify-between text-xs">
               <div class="flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-                <span class="font-bold text-slate-800">空间得房率与商场车位体检</span>
+                <span class="font-bold text-slate-800">空间得房率与车位体检</span>
               </div>
               <span id="boardSpaceGrade" class="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">—</span>
             </div>
@@ -726,7 +801,7 @@
 
               <!-- 商场车位开门余量 -->
               <div class="px-2">
-                <div class="text-[10px] text-slate-500">商场标准位开门</div>
+                <div class="text-[10px] text-slate-500">我的车位开门余量</div>
                 <div class="flex items-baseline gap-1 mt-0.5">
                   <span id="boardDoorClearanceVal" class="text-base font-bold font-mono text-slate-800">-- mm</span>
                 </div>
@@ -845,7 +920,7 @@
       <!-- 手机端空间得房率与车位体检 -->
       <div class="bg-[#f7f5ee] p-3 rounded-xl border border-slate-200/90 space-y-2 text-xs">
         <div class="flex items-center justify-between">
-          <span class="font-bold text-slate-800">空间得房率与商场车位体检</span>
+          <span class="font-bold text-slate-800">空间得房率与车位体检</span>
           <span id="mDrawerSpaceGrade" class="text-[10px] font-mono px-1.5 py-0.2 rounded font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">—</span>
         </div>
         <div class="grid grid-cols-3 divide-x divide-slate-200 text-center">
@@ -855,7 +930,7 @@
             <div id="mDrawerSpaceOverhang" class="text-[9px] text-slate-400 font-mono mt-0.5">公摊 --mm</div>
           </div>
           <div>
-            <div class="text-[10px] text-slate-500">商场位开门</div>
+            <div class="text-[10px] text-slate-500">车位开门余量</div>
             <div id="mDrawerDoorClearanceVal" class="font-mono font-bold text-slate-800 mt-0.5">-- mm</div>
           </div>
           <div>
@@ -883,7 +958,7 @@
   </div>
 
   <!-- 移动端常驻底部控制栏 (大拇指热区：当前筛选数量 + 呼出高级筛选 + 呼出对比) -->
-  <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-2 px-4 flex items-center justify-between z-30 lg:hidden shadow-lg">
+  <div class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200/90 py-2 px-4 flex items-center justify-between z-30 lg:hidden shadow-lg">
     <div class="flex items-center gap-1.5 text-xs text-slate-600">
       <span>已筛选:</span>
       <strong id="mobileBottomCount" class="text-sky-700 font-bold font-mono text-sm">0</strong>
@@ -902,8 +977,8 @@
   </div>
 
   <!-- 对比模态弹窗 (两车尺寸与底盘叠层透视 PK) -->
-  <div id="compareModal" role="dialog" aria-modal="true" aria-label="车型对比" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 sm:p-6">
-    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+  <div id="compareModal" role="dialog" aria-modal="true" aria-label="车型对比" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-0 sm:p-6">
+    <div class="bg-white sm:rounded-2xl max-w-6xl w-full h-full sm:h-auto sm:max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       <div class="p-4 border-b border-slate-200 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <i class="fa-solid fa-code-compare text-sky-600"></i>
@@ -913,11 +988,20 @@
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
-      <div id="compareModalBody" class="p-4 overflow-y-auto space-y-4 custom-scrollbar text-xs">
-        <!-- 动态对比表格与底盘叠层 -->
+      <div id="compareModalBody" class="p-3 sm:p-4 overflow-y-auto space-y-4 custom-scrollbar text-xs">
+        <!-- 动态对比：尺寸叠图 + 差距表 -->
       </div>
     </div>
   </div>
+
+  <!-- 对比托盘：选了车就出现在底部，随时看到选了哪几款、一键开始对比（桌面端；手机用底栏按钮） -->
+  <div id="compareTray" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 items-center gap-2 bg-white border border-slate-200 rounded-xl shadow-lg px-3 py-2 text-xs" aria-label="已加入对比的车型">
+    <span class="text-slate-500 shrink-0">对比</span>
+    <div id="compareTrayChips" class="flex items-center gap-1.5"></div>
+    <button type="button" id="compareTrayGo" class="ml-1 px-3 py-1.5 rounded-lg bg-sky-600 text-white hover:bg-sky-700 shrink-0">开始对比</button>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
 
   <!-- 默认车辆矢量剪影底图 (SVG Data-URI，彻底杜绝无图片破版) -->
   <script>
@@ -963,8 +1047,46 @@
       },
       page: 1,
       pageSize: 25,
-      compareList: []
+      compareList: [],
+      scenario: null, // 当前生效的场景预设（null = 不限场景）
+      spot: { L: 5300, W: 2500, H: 0 }, // 我的车位（mm），initApp 里从本机读取
+      fitOnly: false,  // 只看停得下我的车位的车
+      cmpBase: null,   // 对比基准车
+      cmpDiffOnly: false,
+      byId: new Map()
     };
+
+    // ---- 图片：列表和竞品用汽车之家的缩略图（240×180，约 16 KB），不再加载约 1 MB 的原图 ----
+    function thumbUrl(url, size = '240x180') {
+      return url ? url.replace(/\/(autohomecar__[^/?#]+)$/, `/${size}_0_q95_c42_$1`) : url;
+    }
+    // 缩略图失败先退回原图，原图也失败再用占位图
+    function imgFallback(img) {
+      const full = img.dataset.full;
+      if (full) { img.dataset.full = ''; img.src = full; }
+      else { img.onerror = null; img.src = DEFAULT_CAR_SVG; }
+    }
+    function coverImg(s, cls, size = '240x180') {
+      if (!s.cover_url) return `<img src="${DEFAULT_CAR_SVG}" alt="" class="${cls}">`;
+      return `<img src="${escapeHtml(thumbUrl(s.cover_url, size))}" data-full="${escapeHtml(s.cover_url)}" alt="" class="${cls}"
+                   loading="lazy" decoding="async" width="240" height="180" onerror="imgFallback(this)">`;
+    }
+
+    // ---- 每个车系只算一次的派生值（筛选、排序、竞品都直接读，避免每次都解析价格、匹配级别） ----
+    function prepareSeries(list) {
+      list.forEach(s => {
+        s._cls = bodyClass(s);
+        s._rank = levelRank(s);
+        s._price = parseCarPrice(s);
+        s._L = s.length_max || s.length_min || 0;
+        s._W = s.width_max || s.width_min || 0;
+        s._H = s.height_max || s.height_min || 0;
+        s._WB = s.wheelbase_max || s.wheelbase_min || 0;
+        // 搜索文本：品牌、车系、级别和全部配置名，去空格小写（“小米 su7 ultra”也能搜到）
+        s._q = [s.brand_name, s.series_name, s.display_series_name, s.level, ...(s.versions || []).map(v => v.model_name)]
+          .filter(Boolean).join('|').toLowerCase().replace(/\s+/g, '');
+      });
+    }
 
     // 辅助函数：格式化推重比等级与游标百分比
     // 辅助函数：解析价格均值与区间
@@ -1013,11 +1135,48 @@
     }
 
     // 辅助函数：计算商场标准车位 (2.5m×5.3m) 开门余量与机械车位兼容度
+    // ---- 我的车位：默认商场标准 5.3 × 2.5 m，可改成自家车位，保存在本机 ----
+    const SPOT_DEFAULT = { L: 5300, W: 2500, H: 0 };
+    function loadSpot() {
+      try {
+        const v = JSON.parse(localStorage.getItem('footprint.spot') || 'null');
+        if (v && v.L >= 3500 && v.W >= 1800) return { L: +v.L, W: +v.W, H: +v.H || 0 };
+      } catch (e) {}
+      return { ...SPOT_DEFAULT };
+    }
+    function isDefaultSpot() {
+      return state.spot.L === SPOT_DEFAULT.L && state.spot.W === SPOT_DEFAULT.W && !state.spot.H;
+    }
+    function spotLabel() {
+      const sp = state.spot;
+      const base = `${isDefaultSpot() ? '商场标准车位' : '我的车位'} ${(sp.L / 1000).toFixed(2)} × ${(sp.W / 1000).toFixed(2)} m`;
+      return sp.H ? `${base} · 限高 ${(sp.H / 1000).toFixed(2)} m` : base;
+    }
+
+    // 这台车停进“我的车位”：ok 停得下 / tight 偏紧 / no 停不下
+    function getMySpotFit(w, l, h) {
+      if (!w || !l) return { level: 'unknown', short: '', detail: '尺寸数据缺失' };
+      const sp = state.spot;
+      const door = Math.round((sp.W - w) / 2);
+      const front = sp.L - l;
+      const headroom = sp.H && h ? sp.H - h : null;
+      const parts = [`单侧开门余量 ${door} mm`, front >= 0 ? `车头前方余 ${front} mm` : `超出车位 ${-front} mm`];
+      if (headroom !== null) parts.push(headroom >= 0 ? `距限高 ${headroom} mm` : `超出限高 ${-headroom} mm`);
+      // 停不下的原因分开写：超长、超宽、超高是进不去，开门难是进得去但人下不了车
+      let level = 'ok', short = '停得下';
+      if (front < 0) { level = 'no'; short = '超长'; }
+      else if (door < 0) { level = 'no'; short = '超宽'; }
+      else if (headroom !== null && headroom < 0) { level = 'no'; short = '超高'; }
+      else if (door < 150) { level = 'no'; short = '开门难'; }
+      else if (door < 280 || front < 200 || (headroom !== null && headroom < 50)) { level = 'tight'; short = '偏紧'; }
+      return { level, short, detail: parts.join('，'), door, front, headroom };
+    }
+
     function getParkingFitMeta(width, length) {
       const w = width || 1900;
       const l = length || 4800;
-      const doorClearance = Math.round((2500 - w) / 2);
-      const lengthClearance = Math.max(0, 5300 - l);
+      const doorClearance = Math.round((state.spot.W - w) / 2);
+      const lengthClearance = Math.max(0, state.spot.L - l);
       
       let doorTag = "开门充裕";
       let doorColor = "text-emerald-600";
@@ -1074,19 +1233,19 @@
 
     function findSimilarCompetitors(targetSeries) {
       if (!targetSeries) return [];
-      const tPrice = parseCarPrice(targetSeries);
+      const tPrice = targetSeries._price || parseCarPrice(targetSeries);
       const tWb = targetSeries.wheelbase_max || targetSeries.wheelbase_min || 2800;
-      const tClass = bodyClass(targetSeries);
-      const tRank = levelRank(targetSeries);
+      const tClass = targetSeries._cls || bodyClass(targetSeries);
+      const tRank = targetSeries._rank ?? levelRank(targetSeries);
 
       const candidates = state.series.filter(s => {
         if (s.is_stopped) return false;
         if (s.series_id === targetSeries.series_id) return false;
-        if (bodyClass(s) !== tClass) return false;
-        const sRank = levelRank(s);
+        if (s._cls !== tClass) return false;
+        const sRank = s._rank;
         if (tRank >= 0 && sRank >= 0 && Math.abs(sRank - tRank) > 1) return false;
 
-        const sPrice = parseCarPrice(s);
+        const sPrice = s._price;
         if (tPrice.avg > 0 && sPrice.avg > 0) {
           const diff = Math.abs(sPrice.avg - tPrice.avg);
           if (diff > Math.max(tPrice.avg * 0.35, 6)) return false;
@@ -1157,7 +1316,7 @@
       const ratio = ((wb / l) * 100).toFixed(1);
 
       const W = 480, H = 252;
-      const SLOT_L = 5300, SLOT_W = 2500;
+      const SLOT_L = state.spot.L, SLOT_W = state.spot.W;
       const FONT = "-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif";
       const C = { ink: '#393d33', muted: '#7a7c6d', rule: '#cfc9b6', line: '#c49a62', olive: '#68714a', gold: '#ad8148', seal: '#a84232', moss: '#467340', paper: '#fdfcf7' };
 
@@ -1196,7 +1355,7 @@
       const mechText = `机械车位：${park.mechText}`;
       const mechW = svgTextWidth(mechText, 10) + 16;
       const row1 = `
-        <text x="${slotX}" y="20" fill="${C.muted}" font-size="10">商场标准车位 2.5 × 5.3 m</text>
+        <text x="${slotX}" y="20" fill="${C.muted}" font-size="10">${isDefaultSpot() ? '商场标准车位' : '我的车位'} ${(SLOT_L / 1000).toFixed(2)} × ${(SLOT_W / 1000).toFixed(2)} m</text>
         <rect x="${W - 8 - mechW}" y="8" width="${mechW}" height="17" rx="3" fill="${C.paper}" stroke="${mechTone}" stroke-width="0.9"/>
         <text x="${W - 8 - mechW / 2}" y="20" fill="${mechTone}" font-size="10" font-weight="600" text-anchor="middle">${mechText}</text>`;
 
@@ -1252,7 +1411,7 @@
       const bottom = Math.max(slotY + slotW, boxY + bodyW);
       const y1 = bottom + 18, y2 = bottom + 42;
       const tick = (x, y) => `<line x1="${x}" y1="${y - 3}" x2="${x}" y2="${y + 3}" stroke="currentColor" stroke-width="1"/>`;
-      const lc = 5300 - l;
+      const lc = SLOT_L - l;
       const lenText = lc >= 0 ? `车长 ${l} mm · 车头前方还余 ${lc} mm` : `车长 ${l} mm · 超出车位 ${-lc} mm`;
       const rulers = `
         <g color="${C.olive}">
@@ -1286,6 +1445,13 @@
     // 初始化应用程序
     function initApp() {
       state.series = Array.isArray(window.ALL_SERIES) ? window.ALL_SERIES : [];
+      prepareSeries(state.series);
+      state.byId = new Map(state.series.map(s => [s.series_id, s]));
+      state.spot = loadSpot();
+      try {
+        const saved = JSON.parse(localStorage.getItem('footprint.compare') || '[]');
+        if (Array.isArray(saved)) state.compareList = saved.filter(id => state.byId.has(id)).slice(0, 4);
+      } catch (e) {}
       if (!state.series.length) {
         document.getElementById('cardListContainer').innerHTML =
           '<div class="bg-white rounded-xl p-6 text-center border border-slate-200 text-sm text-slate-600">车型数据没有加载成功，请刷新页面重试。</div>';
@@ -1299,7 +1465,7 @@
 
       // 网址里带了筛选条件就先还原（applyFilters 会在选中车型不在结果里时自动选第一项）
       const restored = hashToState();
-      if (restored) updateCompareCountUI();
+      updateCompareCountUI();
       applyFilters();
       if (restored && state.filtered.some(s => s.series_id === state.selectedSeriesId)) {
         selectSeries(state.selectedSeriesId, false);
@@ -1340,7 +1506,7 @@
             if (e.target === minEl) max = min; else min = max;
           }
           setDimRange(key, min, max);
-          markScenario('');
+          touch(key);
           scheduleFilters();
         };
         minEl.addEventListener('input', onInput);
@@ -1356,12 +1522,11 @@
       // 高级滑块与价格
       document.getElementById('filterPwrMin').addEventListener('input', (e) => {
         setPwrMin(parseInt(e.target.value, 10));
-        markScenario('');
+        touch('pwr');
         scheduleFilters();
       });
       document.getElementById('priceSelect').addEventListener('change', (e) => {
         state.priceRange = e.target.value;
-        markScenario('');
         applyFilters();
       });
 
@@ -1371,7 +1536,57 @@
       // 加载更多
       document.getElementById('loadMoreBtn').addEventListener('click', () => {
         state.page += 1;
-        renderCards(true);
+        renderCards();
+      });
+
+      // 我的车位
+      const spotInputs = { L: document.getElementById('spotL'), W: document.getElementById('spotW'), H: document.getElementById('spotH') };
+      const showSpot = () => {
+        spotInputs.L.value = state.spot.L;
+        spotInputs.W.value = state.spot.W;
+        spotInputs.H.value = state.spot.H || '';
+        document.querySelectorAll('.spot-preset').forEach(b => b.classList.toggle('active', b.dataset.spot === `${state.spot.L},${state.spot.W},${state.spot.H || 0}`));
+      };
+      const commitSpot = (next) => {
+        const L = Math.round(Number(next.L)), W = Math.round(Number(next.W)), H = Math.round(Number(next.H) || 0);
+        if (!(L >= 3500 && L <= 9000 && W >= 1800 && W <= 4000) || (H && (H < 1300 || H > 4500))) {
+          toast('车位尺寸不在合理范围：长 3500～9000 mm，宽 1800～4000 mm，限高 1300～4500 mm');
+          showSpot();
+          return;
+        }
+        state.spot = { L, W, H };
+        try { localStorage.setItem('footprint.spot', JSON.stringify(state.spot)); } catch (e) {}
+        cardCache.clear(); // 卡片上的“停得下”标签要按新车位重算
+        showSpot();
+        applyFilters();
+        if (state.selectedSeriesId) selectSeries(state.selectedSeriesId, false);
+        if (!document.getElementById('compareModal').classList.contains('hidden')) renderCompareModal();
+      };
+      Object.values(spotInputs).forEach(el => el.addEventListener('change', () =>
+        commitSpot({ L: spotInputs.L.value, W: spotInputs.W.value, H: spotInputs.H.value })));
+      document.querySelectorAll('.spot-preset').forEach(b => b.addEventListener('click', () => {
+        const [L, W, H] = b.dataset.spot.split(',').map(Number);
+        commitSpot({ L, W, H });
+      }));
+      showSpot();
+      document.getElementById('fitOnly').addEventListener('change', (e) => {
+        state.fitOnly = e.target.checked;
+        applyFilters();
+      });
+
+      // 对比托盘
+      document.getElementById('compareTrayGo').addEventListener('click', openCompareModal);
+      document.getElementById('compareTrayChips').addEventListener('click', (e) => {
+        const x = e.target.closest('[data-uncompare]');
+        if (x) toggleCompare(Number(x.dataset.uncompare));
+      });
+
+      // 已生效条件：点 × 去掉这一项
+      document.getElementById('activeChips').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-clear]');
+        if (!b) return;
+        clearFilterKey(b.dataset.clear);
+        applyFilters();
       });
 
       // 对比弹窗
@@ -1389,7 +1604,7 @@
 
     function exportCSV() {
       if (!state.filtered || state.filtered.length === 0) {
-        alert("当前无筛选结果可导出");
+        toast('当前没有筛选结果可导出');
         return;
       }
       const headers = ["品牌", "车系名称", "级别", "指导价区间", "车主综合评分", "驱动形式", "推重比(Ps/吨)", "车长(mm)", "车宽(mm)", "车高(mm)", "轴距(mm)", "纯电续航(km)", "销售状态"];
@@ -1413,7 +1628,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `汽车多维规格选车导出_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `一车之地_筛选结果_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1514,35 +1729,51 @@
       if (filterFrame) return;
       filterFrame = requestAnimationFrame(() => {
         filterFrame = 0;
-        applyFilters();
+        applyFilters({ deferBoard: true });
       });
     }
 
-    // 初始化一键场景化快捷预设胶囊：每个场景都从干净状态开始，不残留上一个场景的条件
+    // ---- 场景预设：每个场景只管自己那几项条件，其余条件（包括你拖好的尺寸）保持不动 ----
+    // 切换场景时只撤销上一个场景设置过的项；再次点击当前场景即取消。
+    const SCENARIOS = {
+      large_sedan: { keys: ['length'], apply() { setDimRange('length', 4950, null); } },          // 车长 ≥ 4.95m
+      super_pwr:   { keys: ['pwr'], apply() { setPwrMin(200); setAdvancedOpen(true); } },          // 推重比 ≥ 200
+      long_range:  { keys: ['energy', 'range', 'sort'], apply() {                                  // 纯电 ≥ 700km
+        state.currentEnergy = 'bev'; setCapsule('.energy-capsule', 'energy', 'bev');
+        state.minRange = 700; setSort('ev_range_desc');
+      } },
+      rwd_fun:     { keys: ['drive'], apply() { state.currentDrive = '后驱'; setCapsule('.drive-capsule', 'drive', '后驱'); } },
+      city_small:  { keys: ['length'], apply() { setDimRange('length', null, 4400); } }           // 车长 ≤ 4.40m
+    };
+    const KEY_RESET = {
+      length: () => setDimRange('length', null, null),
+      pwr: () => setPwrMin(0),
+      energy: () => { state.currentEnergy = 'all'; setCapsule('.energy-capsule', 'energy', 'all'); },
+      range: () => { state.minRange = 0; },
+      sort: () => setSort('score_desc'),
+      drive: () => { state.currentDrive = 'all'; setCapsule('.drive-capsule', 'drive', 'all'); }
+    };
+
+    function setScenario(name) {
+      const prev = state.scenario;
+      if (prev && SCENARIOS[prev]) SCENARIOS[prev].keys.forEach(k => KEY_RESET[k]());
+      state.scenario = (name && SCENARIOS[name] && name !== prev) ? name : null;
+      if (state.scenario) SCENARIOS[state.scenario].apply();
+      markScenario(state.scenario || 'all');
+    }
+
+    // 用户手动改了某一项：如果这一项归当前场景管，就把场景交还给用户（条件保留，场景高亮取消）
+    function touch(key) {
+      if (state.scenario && SCENARIOS[state.scenario].keys.includes(key)) {
+        state.scenario = null;
+        markScenario('all');
+      }
+    }
+
     function initScenarios() {
       document.querySelectorAll('.scenario-pill').forEach(btn => {
         btn.addEventListener('click', () => {
-          const scenario = btn.dataset.scenario;
-          resetAllFilters({ silent: true });
-          markScenario(scenario);
-
-          if (scenario === 'large_sedan') {
-            setDimRange('length', 4950, null); // 车长 ≥ 4.95m
-          } else if (scenario === 'super_pwr') {
-            setPwrMin(200); // 推重比 ≥ 200 Ps/吨
-            setAdvancedOpen(true);
-          } else if (scenario === 'long_range') {
-            state.currentEnergy = 'bev';
-            setCapsule('.energy-capsule', 'energy', 'bev');
-            state.minRange = 700; // 纯电续航 ≥ 700km
-            setSort('ev_range_desc');
-          } else if (scenario === 'rwd_fun') {
-            state.currentDrive = '后驱';
-            setCapsule('.drive-capsule', 'drive', '后驱');
-          } else if (scenario === 'city_small') {
-            setDimRange('length', null, 4400); // 车长 ≤ 4.40m
-          }
-
+          setScenario(btn.dataset.scenario === 'all' ? null : btn.dataset.scenario);
           applyFilters();
         });
       });
@@ -1558,7 +1789,7 @@
           btn.addEventListener('click', () => {
             state[field] = btn.dataset[attr];
             setCapsule(selector, attr, state[field]);
-            markScenario('');
+            touch(attr);
             applyFilters();
           });
         });
@@ -1584,18 +1815,20 @@
       const sSelect = document.getElementById('sortSelect');
       sSelect.addEventListener('change', (e) => {
         setSort(e.target.value);
+        touch('sort');
         applyFilters();
       });
     }
 
     // 核心过滤算法
-    function applyFilters() {
+    let boardTimer = 0;
+    function applyFilters(opts = {}) {
       // 若当前在小屏下抽屉弹窗开着，当用户主动调整筛选条件时，自动关闭抽屉以免遮挡筛选结果
       if (typeof closeMobileDrawer === 'function' && window.innerWidth < 1024) {
         closeMobileDrawer();
       }
 
-      const q = state.searchQuery;
+      const q = state.searchQuery.replace(/\s+/g, '');
       const type = state.currentType;
       const energy = state.currentEnergy;
       const drive = state.currentDrive;
@@ -1604,6 +1837,7 @@
       const dim = state.dimRange;
       const pr = state.priceRange;
       const minRange = state.minRange;
+      const fitOnly = state.fitOnly;
 
       // 尺寸条件：滑块拉到两端视为“不限”，只保留真正生效的维度
       const dimChecks = Object.keys(DIM_FIELDS).map(key => {
@@ -1617,17 +1851,12 @@
         // 1. 销售状态
         if (activeOnly && s.is_stopped) return false;
 
-        // 2. 搜索关键字
-        if (q) {
-          const matchName = s.series_name && s.series_name.toLowerCase().includes(q);
-          const matchBrand = s.brand_name && s.brand_name.toLowerCase().includes(q);
-          if (!matchName && !matchBrand) return false;
-        }
+        // 2. 搜索关键字（品牌、车系、级别、配置名，忽略空格和大小写）
+        if (q && !s._q.includes(q)) return false;
 
         // 3. 车型大类过滤
         // “全部”只含乘用车；微卡、轻客、皮卡、微面等在“商用车”里单独看
-        const cls = bodyClass(s);
-        if (type === 'all' ? cls === 'commercial' : cls !== type) return false;
+        if (type === 'all' ? s._cls === 'commercial' : s._cls !== type) return false;
 
         // 4. 动力能源过滤
         if (energy !== 'all') {
@@ -1667,6 +1896,9 @@
           if (pMax < minP || s.price_min > maxP) return false;
         }
 
+        // 9. 只看停得下我的车位（偏紧的也算停得下）
+        if (fitOnly && getMySpotFit(s._W, s._L, s._H).level === 'no') return false;
+
         return true;
       });
 
@@ -1696,6 +1928,13 @@
         if (state.currentSort === 'price_desc') {
           return (b.price_max || 0) - (a.price_max || 0);
         }
+        if (state.currentSort === 'space_desc') {
+          return (b._L ? b._WB / b._L : 0) - (a._L ? a._WB / a._L : 0);
+        }
+        // 以下三种“越小越好”的排序，缺数据的排到最后
+        if (state.currentSort === 'door_desc') return (a._W || 1e9) - (b._W || 1e9);
+        if (state.currentSort === 'length_asc') return (a._L || 1e9) - (b._L || 1e9);
+        if (state.currentSort === 'height_asc') return (a._H || 1e9) - (b._H || 1e9);
         return 0;
       });
 
@@ -1705,16 +1944,19 @@
       if (countEl) countEl.textContent = state.filtered.length;
       const mCountEl = document.getElementById('mobileBottomCount');
       if (mCountEl) mCountEl.textContent = state.filtered.length;
-      renderCards(false);
+      renderCards();
+      renderActiveChips();
       scheduleHashSync();
 
       // 若之前选中的车还在筛选结果中则保持，否则自动选中第一项 (静默切换，严禁在调整参数时主动弹出详情弹窗)
+      // 拖滑块、打字时右侧看板等停下来 150ms 再刷新，避免每一帧都重画看板
+      clearTimeout(boardTimer);
       if (state.filtered.length > 0) {
-        const stillIn = state.filtered.find(s => s.series_id === state.selectedSeriesId);
+        const stillIn = state.filtered.some(s => s.series_id === state.selectedSeriesId);
         if (!stillIn) {
-          selectSeries(state.filtered[0].series_id, false);
-        } else {
-          highlightCard(state.selectedSeriesId);
+          const first = state.filtered[0].series_id;
+          if (opts.deferBoard) boardTimer = setTimeout(() => selectSeries(first, false), 150);
+          else selectSeries(first, false);
         }
       } else {
         document.getElementById('cardListContainer').innerHTML = `
@@ -1726,17 +1968,56 @@
       }
     }
 
-    // 渲染卡片列表 (第一层浏览)
-    function renderCards(append = false) {
+    // 渲染卡片列表：每个车系的卡片只生成一次并缓存，筛选时只调整顺序和选中/对比状态，
+    // 不再整页重建（原来每拖一下滑块就重建全部卡片、重新解码图片）。
+    const cardCache = new Map();
+    function renderCards() {
       const container = document.getElementById('cardListContainer');
-      const start = 0;
       const end = state.page * state.pageSize;
-      const slice = state.filtered.slice(start, end);
+      const nodes = state.filtered.slice(0, end).map(s => {
+        let node = cardCache.get(s.series_id);
+        if (!node) {
+          const tpl = document.createElement('template');
+          tpl.innerHTML = cardHtml(s).trim();
+          node = tpl.content.firstElementChild;
+          cardCache.set(s.series_id, node);
+        }
+        syncCard(node, s.series_id);
+        return node;
+      });
+      // 只移动顺序变了的卡片，没变的留在原处（不触发它们重新排版）
+      const want = new Set(nodes);
+      for (const ch of [...container.children]) if (!want.has(ch)) ch.remove();
+      let ref = container.firstElementChild;
+      for (const n of nodes) {
+        if (n === ref) { ref = ref.nextElementSibling; continue; }
+        container.insertBefore(n, ref);
+      }
+      const rest = state.filtered.length - end;
+      const more = document.getElementById('loadMoreBtn');
+      more.classList.toggle('hidden', rest <= 0);
+      if (rest > 0) more.textContent = `再显示 ${Math.min(rest, state.pageSize)} 款（还有 ${rest} 款）`;
+    }
 
-      const html = slice.map(s => {
-        const isActive = s.series_id === state.selectedSeriesId;
-        const inCompare = state.compareList.includes(s.series_id);
-        const cover = s.cover_url || DEFAULT_CAR_SVG;
+    // 选中、对比两种状态直接改在已有卡片上
+    function syncCard(node, id) {
+      const isActive = id === state.selectedSeriesId;
+      if (node.classList.contains('active-card') !== isActive) {
+        node.classList.toggle('active-card', isActive);
+        node.classList.toggle('border-slate-200', !isActive);
+        node.setAttribute('aria-pressed', String(isActive));
+      }
+      const inCompare = state.compareList.includes(id);
+      const btn = node.querySelector('[data-compare]');
+      if (btn && btn.dataset.on !== String(inCompare)) {
+        btn.dataset.on = String(inCompare);
+        btn.setAttribute('aria-pressed', String(inCompare));
+        btn.className = `ml-auto inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-sans border transition-colors ${inCompare ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-slate-600 border-slate-200 hover:border-sky-400 hover:text-sky-700'}`;
+        btn.innerHTML = `<i class="fa-solid ${inCompare ? 'fa-check' : 'fa-plus'} text-[9px]"></i>${inCompare ? '已加入' : '对比'}`;
+      }
+    }
+
+    function cardHtml(s) {
         const driveStr = (s.drive_types && s.drive_types.length) ? s.drive_types.join(' / ') : '驱动未知';
         const isEv = s.range_str && s.range_str.trim() !== '';
         const pwrMeta = getPwrRatioMeta(s.pwr_ratio_max || s.pwr_ratio_min);
@@ -1746,16 +2027,17 @@
         const space = getSpaceMeta(s.wheelbase_max || s.wheelbase_min, s.length_max || s.length_min);
         const dims = `${s.length_min || s.length_max}×${s.width_min || s.width_max}×${s.height_min || s.height_max}`;
 
+        const fit = getMySpotFit(s._W, s._L, s._H);
         // 卡片三行：名称与价格 / 级别·口碑·驱动 / 尺寸参数 + 对比按钮；整张卡可点击、可键盘操作
         return `
-          <article class="car-card bg-white border ${isActive ? 'active-card' : 'border-slate-200'} rounded-xl p-3 transition-colors cursor-pointer hover:border-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
-                   data-id="${s.series_id}" role="button" tabindex="0" aria-pressed="${isActive}"
+          <article class="car-card bg-white border border-slate-200 rounded-xl p-3 transition-colors cursor-pointer hover:border-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+                   data-id="${s.series_id}" role="button" tabindex="0" aria-pressed="false"
                    aria-label="${escapeHtml((s.brand_name || '') + ' ' + name)}">
             <div class="flex gap-3">
               <div class="w-24 sm:w-28 aspect-[16/10] self-start rounded-lg overflow-hidden bg-slate-100 shrink-0 relative">
-                <img src="${escapeHtml(cover)}" alt="" class="w-full h-full object-cover" loading="lazy"
-                     onerror="this.onerror=null; this.src=DEFAULT_CAR_SVG;" />
+                ${coverImg(s, 'w-full h-full object-cover')}
                 ${s.is_stopped ? '<span class="absolute top-1 left-1 bg-slate-900/70 text-white text-[10px] px-1 rounded">停售</span>' : ''}
+                <span class="fit-tag fit-${fit.level}" title="${escapeHtml(fit.detail)}">${fit.short}</span>
               </div>
 
               <div class="flex-1 min-w-0">
@@ -1779,21 +2061,12 @@
                   <span class="text-indigo-600">得房率 ${space.ratio}%</span>
                   ${s.pwr_ratio_str ? `<span class="${pwrMeta.color}">推重比 ${escapeHtml(s.pwr_ratio_str)}</span>` : ''}
                   ${isEv ? `<span class="text-emerald-700">纯电续航 ${escapeHtml(s.range_str)}</span>` : ''}
-                  <button type="button" data-compare="${s.series_id}" aria-pressed="${inCompare}"
-                          class="ml-auto inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-sans border transition-colors ${inCompare ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-slate-600 border-slate-200 hover:border-sky-400 hover:text-sky-700'}">
-                    <i class="fa-solid ${inCompare ? 'fa-check' : 'fa-plus'} text-[9px]"></i>${inCompare ? '已加入' : '对比'}
-                  </button>
+                  <button type="button" data-compare="${s.series_id}" data-on="" aria-pressed="false"></button>
                 </div>
               </div>
             </div>
           </article>
         `;
-      }).join('');
-
-      container.innerHTML = html;
-      
-      // 控制“加载更多”显示隐藏
-      document.getElementById('loadMoreBtn').classList.toggle('hidden', end >= state.filtered.length);
     }
 
     // 车辆卡片交互（事件委托）：点击或回车/空格选车；点“对比”按钮只切换对比，不选车
@@ -1827,7 +2100,7 @@
       highlightCard(seriesId);
       updateCompareCountUI(); // 看板上“加入对比”按钮跟着当前车型更新（也会同步网址）
 
-      const s = state.series.find(item => item.series_id === seriesId);
+      const s = state.byId.get(seriesId);
       if (!s) return;
 
       const l = s.length_max || s.length_min || 4800;
@@ -1893,7 +2166,7 @@
         dClearEl.className = `text-base font-bold font-mono ${parkMeta.doorColor}`;
       }
       const dDescEl = document.getElementById('boardDoorDesc');
-      if (dDescEl) dDescEl.textContent = `${parkMeta.doorTag} · 2.5m车位`;
+      if (dDescEl) dDescEl.textContent = `${parkMeta.doorTag} · ${(state.spot.W / 1000).toFixed(2)}m宽车位`;
 
       const mTagEl = document.getElementById('boardMechTag');
       if (mTagEl) {
@@ -1968,13 +2241,12 @@
       }
 
       const deskHtml = comps.map(c => {
-        const cCover = c.cover_url || DEFAULT_CAR_SVG;
         const cScore = c.score ? `${c.score.toFixed(2)}` : '暂无分';
         return `
-          <div class="bg-white p-2 rounded-lg border border-slate-200/90 hover:border-sky-300 transition-all cursor-pointer shadow-2xs group"
+          <div class="bg-white p-2 rounded-lg border border-slate-200/90 hover:border-sky-300 transition-colors cursor-pointer group"
                onclick="selectSeries(${c.series_id}, true)">
-            <div class="w-full h-14 rounded-md overflow-hidden bg-slate-900 border border-slate-100 relative mb-1.5">
-              <img src="${cCover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" onerror="this.onerror=null; this.src=DEFAULT_CAR_SVG;" loading="lazy">
+            <div class="w-full h-14 rounded-md overflow-hidden bg-slate-100 border border-slate-100 relative mb-1.5">
+              ${coverImg(c, 'w-full h-full object-cover')}
               <span class="absolute top-0.5 right-0.5 bg-black/60 text-amber-400 font-mono text-[9px] px-1 rounded">${cScore}</span>
             </div>
             <div class="text-xs font-bold text-slate-900 truncate">${c.display_series_name || c.series_name || c.series}</div>
@@ -1996,8 +2268,9 @@
         // 将当前车与推荐竞品一起加入对比
         const allIds = [s.series_id, ...comps.map(c => c.series_id)].slice(0, 4);
         state.compareList = allIds;
+        state.cmpBase = s.series_id; // 以当前车为基准，看竞品比它大多少、小多少
         updateCompareCountUI();
-        renderCards(false);
+        highlightCard();
         openCompareModal();
       };
       if (compBtn) compBtn.onclick = doBatchCompare;
@@ -2005,7 +2278,7 @@
     }
 
     function switchSpecificVersion(seriesId, versionIndex) {
-      const s = state.series.find(item => item.series_id === seriesId);
+      const s = state.byId.get(seriesId);
       if (!s || !s.versions || !s.versions[versionIndex]) return;
       const v = s.versions[versionIndex];
 
@@ -2048,17 +2321,8 @@
     }
 
     // 高亮当前选中的卡片
-    function highlightCard(seriesId) {
-      document.querySelectorAll('.car-card').forEach(card => {
-        const id = parseInt(card.getAttribute('data-id'));
-        if (id === seriesId) {
-          card.classList.add('active-card');
-          card.classList.remove('border-slate-200');
-        } else {
-          card.classList.remove('active-card');
-          card.classList.add('border-slate-200');
-        }
-      });
+    function highlightCard() {
+      document.querySelectorAll('#cardListContainer .car-card').forEach(card => syncCard(card, Number(card.dataset.id)));
     }
 
     // 手机端滑出底部抽屉
@@ -2175,6 +2439,9 @@
         const a = state.dimRange[key + 'Min'], b = state.dimRange[key + 'Max'];
         if (a > lo || b < hi) p.set(key, `${a > lo ? a : ''}-${b < hi ? b : ''}`);
       });
+      if (!isDefaultSpot()) p.set('spot', `${state.spot.L}x${state.spot.W}x${state.spot.H || 0}`);
+      if (state.fitOnly) p.set('fit', '1');
+      if (state.scenario) p.set('scene', state.scenario);
       if (state.selectedSeriesId) p.set('car', state.selectedSeriesId);
       if (state.compareList.length) p.set('cmp', state.compareList.join(','));
       const hash = p.toString();
@@ -2226,7 +2493,18 @@
       if (p.get('cmp')) state.compareList = p.get('cmp').split(',').map(Number).filter(id => ids.has(id)).slice(0, 4);
       const car = num(p.get('car'));
       if (car && ids.has(car)) state.selectedSeriesId = car;
-      markScenario('');
+      // 分享链接里的车位尺寸只用于这次查看，不覆盖本机保存的车位
+      const spot = (p.get('spot') || '').split('x').map(Number);
+      if (spot.length === 3 && spot[0] >= 3500 && spot[0] <= 9000 && spot[1] >= 1800 && spot[1] <= 4000) {
+        state.spot = { L: spot[0], W: spot[1], H: spot[2] || 0 };
+        document.getElementById('spotL').value = state.spot.L;
+        document.getElementById('spotW').value = state.spot.W;
+        document.getElementById('spotH').value = state.spot.H || '';
+        document.querySelectorAll('.spot-preset').forEach(b => b.classList.toggle('active', b.dataset.spot === `${state.spot.L},${state.spot.W},${state.spot.H || 0}`));
+      }
+      if (p.get('fit') === '1') { state.fitOnly = true; document.getElementById('fitOnly').checked = true; }
+      state.scenario = SCENARIOS[p.get('scene')] ? p.get('scene') : null;
+      markScenario(state.scenario || 'all');
       return true;
     }
 
@@ -2262,6 +2540,9 @@
       state.priceRange = 'all';
       document.getElementById('priceSelect').value = 'all';
 
+      state.fitOnly = false;
+      document.getElementById('fitOnly').checked = false;
+      state.scenario = null;
       markScenario('all');
       if (!opts.silent) applyFilters();
     }
@@ -2274,17 +2555,20 @@
         state.compareList.splice(idx, 1);
       } else {
         if (state.compareList.length >= 4) {
-          alert("最多同时对比 4 款车型");
+          toast('最多同时对比 4 款，先去掉一款再加');
           return;
         }
         state.compareList.push(seriesId);
+        if (state.compareList.length === 1) toast('已加入对比，再选一款就能并排看尺寸差距');
       }
       updateCompareCountUI();
-      renderCards(false);
+      highlightCard();
     }
 
     function updateCompareCountUI() {
       scheduleHashSync();
+      try { localStorage.setItem('footprint.compare', JSON.stringify(state.compareList)); } catch (e) {}
+      renderCompareTray();
       const el = document.getElementById('compareCountTop');
       if (el) el.textContent = state.compareList.length;
       const mCompEl = document.getElementById('mobileBottomCompareCount');
@@ -2309,166 +2593,326 @@
     // 对比弹窗逻辑
     function openCompareModal() {
       document.getElementById('compareModal').classList.remove('hidden');
+      document.getElementById('compareTray').style.visibility = 'hidden'; // 对比窗口打开时收起底部托盘
+      document.body.style.overflow = 'hidden';
       renderCompareModal();
     }
     function closeCompareModal() {
       document.getElementById('compareModal').classList.add('hidden');
+      document.getElementById('compareTray').style.visibility = '';
+      document.body.style.overflow = '';
     }
+    // ---- 对比：尺寸叠图（俯视 + 侧视，同一比例尺）+ 差距表（以基准车为零点） ----
+    // 四款车：墨、印章红、泥金、灰蓝，再配四种线型，叠在一起也分得清
+    const CMP_COLORS = ['#2b2e26', '#a84232', '#b9822f', '#4f6f8f'];
+    const CMP_DASH = ['', '7 3', '2 2.5', '9 3 2 3'];
+    const CMP_FONT = "-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif";
+
+    function cmpCars() {
+      return state.compareList.map(id => state.byId.get(id)).filter(Boolean);
+    }
+    function carName(c) {
+      const n = c.display_series_name || c.series_name || '';
+      return (c.brand_name && c.brand_name !== c.series_name && !n.startsWith(c.brand_name)) ? `${c.brand_name} ${n}` : n;
+    }
+    function minWeight(c) {
+      const ws = (c.versions || []).map(v => v.weight).filter(Boolean);
+      return ws.length ? Math.min(...ws) : null;
+    }
+
+    // 俯视叠图：车尾都靠在车位尾墙上，车身居中；标出最长与最短、最宽与最窄之间的差
+    function renderTopOverlay(cars) {
+      const W = 480, H = 190, x0 = 26, cy = 92;
+      const sp = state.spot;
+      const maxL = Math.max(sp.L, ...cars.map(c => c._L || 0));
+      const maxW = Math.max(sp.W, ...cars.map(c => c._W || 0));
+      const s = Math.min((W - x0 - 96) / maxL, 132 / maxW);
+      let g = `<rect x="${x0}" y="${cy - sp.W * s / 2}" width="${sp.L * s}" height="${sp.W * s}" fill="#f2efe4" stroke="#c49a62" stroke-width="1.4" stroke-dasharray="5 3"/>
+        <text x="${x0 + 4}" y="${cy - sp.W * s / 2 - 6}" font-size="10" fill="#7a7c6d">${spotLabel()}</text>
+        <line x1="${x0}" y1="${cy - sp.W * s / 2}" x2="${x0}" y2="${cy + sp.W * s / 2}" stroke="#7a7c6d" stroke-width="2"/>`;
+      cars.forEach((c, i) => {
+        if (!c._L || !c._W) return;
+        const k = state.compareList.indexOf(c.series_id);
+        const l = c._L * s, w = c._W * s;
+        g += `<rect x="${x0}" y="${cy - w / 2}" width="${l}" height="${w}" rx="${Math.min(10, w * 0.14)}" fill="none" stroke="${CMP_COLORS[k]}" stroke-width="1.8" stroke-dasharray="${CMP_DASH[k]}"/>
+          <line x1="${x0 + l}" y1="${cy - 7}" x2="${x0 + l}" y2="${cy + 7}" stroke="${CMP_COLORS[k]}" stroke-width="2.4"/>`;
+      });
+      const withL = cars.filter(c => c._L), withW = cars.filter(c => c._W);
+      const tick = (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#393d33" stroke-width="1"/>`;
+      if (withL.length > 1) {
+        // 车长差：标在车身下方，从最短车头量到最长车头
+        const lo = Math.min(...withL.map(c => c._L)), hi = Math.max(...withL.map(c => c._L));
+        const xa = x0 + lo * s, xb = x0 + hi * s, y = cy + maxW * s / 2 + 18;
+        g += `${tick(xa, y, xb, y)}${tick(xa, y - 4, xa, y + 4)}${tick(xb, y - 4, xb, y + 4)}
+          <text x="${Math.max(xb, xa + 10) + 6}" y="${y + 4}" font-size="11" font-weight="600" fill="#393d33">车长差 ${hi - lo} mm</text>`;
+      }
+      if (withW.length > 1) {
+        // 车宽差：在车身上沿，从最窄的边量到最宽的边，文字紧挨着标在右侧
+        const lo = Math.min(...withW.map(c => c._W)), hi = Math.max(...withW.map(c => c._W));
+        const x = x0 + Math.max(...withL.map(c => c._L), 0) * s + 10;
+        const ya = cy - hi * s / 2, yb = cy - lo * s / 2;
+        g += `${tick(x, ya, x, Math.max(yb, ya + 1))}${tick(x - 4, ya, x + 4, ya)}${tick(x - 4, yb, x + 4, yb)}
+          <line x1="${x + 4}" y1="${ya}" x2="${x0 + Math.max(...withL.map(c => c._L)) * s}" y2="${ya}" stroke="#a5a291" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <text x="${x + 8}" y="${(ya + yb) / 2 + 4}" font-size="11" font-weight="600" fill="#393d33">车宽差 ${hi - lo} mm</text>`;
+      }
+      return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" font-family="${CMP_FONT}" role="img" aria-label="俯视尺寸叠图">${g}</svg>`;
+    }
+
+    // 侧视叠图：车尾对齐、车轮落地，看车长、车高和轴距；设置了限高时画出限高线
+    function renderSideOverlay(cars) {
+      const W = 480, H = 150, x0 = 26, ground = 122;
+      const sp = state.spot;
+      const maxL = Math.max(...cars.map(c => c._L || 0), 1);
+      const maxH = Math.max(sp.H || 0, ...cars.map(c => c._H || 0), 1);
+      const s = Math.min((W - x0 - 96) / maxL, 100 / maxH);
+      let g = `<line x1="8" y1="${ground}" x2="${W - 8}" y2="${ground}" stroke="#a5a291" stroke-width="1"/>`;
+      if (sp.H) {
+        const y = ground - sp.H * s;
+        g += `<line x1="8" y1="${y}" x2="${W - 8}" y2="${y}" stroke="#a84232" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="${W - 10}" y="${y - 4}" font-size="10" fill="#a84232" text-anchor="end">限高 ${(sp.H / 1000).toFixed(2)} m</text>`;
+      }
+      cars.forEach(c => {
+        if (!c._L || !c._H) return;
+        const k = state.compareList.indexOf(c.series_id);
+        const l = c._L * s, h = c._H * s, r = 330 * s;
+        const wb = (c._WB || c._L * 0.6) * s, rear = x0 + (l - wb) * 0.45;
+        const body = ground - r * 0.9;
+        // 车身：下半截方正，上半截收窄成车厢；不填色，几款车叠在一起时轮廓都看得见
+        g += `<path d="M${x0},${body} L${x0},${ground - h * 0.52} Q${x0 + l * 0.06},${ground - h * 0.6} ${x0 + l * 0.2},${ground - h} L${x0 + l * 0.72},${ground - h} Q${x0 + l * 0.82},${ground - h * 0.66} ${x0 + l},${ground - h * 0.5} L${x0 + l},${body} Z"
+            fill="none" stroke="${CMP_COLORS[k]}" stroke-width="1.8" stroke-dasharray="${CMP_DASH[k]}" stroke-linejoin="round"/>
+          <circle cx="${rear}" cy="${ground - r}" r="${r}" fill="none" stroke="${CMP_COLORS[k]}" stroke-width="1.2" stroke-dasharray="${CMP_DASH[k]}"/>
+          <circle cx="${rear + wb}" cy="${ground - r}" r="${r}" fill="none" stroke="${CMP_COLORS[k]}" stroke-width="1.2" stroke-dasharray="${CMP_DASH[k]}"/>`;
+      });
+      const withH = cars.filter(c => c._H);
+      if (withH.length > 1) {
+        // 车高差：从最矮的车顶量到最高的车顶，虚线引到车顶，文字紧挨在右侧
+        const lo = Math.min(...withH.map(c => c._H)), hi = Math.max(...withH.map(c => c._H));
+        const x = x0 + maxL * s + 10;
+        const ya = ground - hi * s, yb = ground - lo * s;
+        g += `<line x1="${x}" y1="${ya}" x2="${x}" y2="${Math.max(yb, ya + 1)}" stroke="#393d33" stroke-width="1"/>
+          <line x1="${x - 4}" y1="${ya}" x2="${x + 4}" y2="${ya}" stroke="#393d33"/><line x1="${x - 4}" y1="${yb}" x2="${x + 4}" y2="${yb}" stroke="#393d33"/>
+          <line x1="${x0 + maxL * s * 0.2}" y1="${ya}" x2="${x - 4}" y2="${ya}" stroke="#a5a291" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <line x1="${x0 + maxL * s * 0.2}" y1="${yb}" x2="${x - 4}" y2="${yb}" stroke="#a5a291" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <text x="${x + 8}" y="${(ya + yb) / 2 + 4}" font-size="11" font-weight="600" fill="#393d33">车高差 ${hi - lo} mm</text>`;
+      }
+      return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" font-family="${CMP_FONT}" role="img" aria-label="侧视尺寸叠图">${g}</svg>`;
+    }
+
+    // 差距表的每一行：取值函数、单位、小数位、哪边更好（high / low / 不比较）
+    function cmpRows() {
+      const sp = state.spot;
+      return [
+        { group: '外形尺寸' },
+        { label: '车长', unit: 'mm', get: c => c._L || null },
+        { label: '车宽', unit: 'mm', get: c => c._W || null },
+        { label: '车高', unit: 'mm', get: c => c._H || null },
+        { label: '轴距', unit: 'mm', get: c => c._WB || null, better: 'high' },
+        { group: `空间与停车（${spotLabel()}）` },
+        { label: '得房率', unit: '%', dp: 1, get: c => (c._L && c._WB) ? c._WB / c._L * 100 : null, better: 'high', hint: '轴距 ÷ 车长；1% 约等于后排多一拳' },
+        { label: '前后悬合计', unit: 'mm', get: c => (c._L && c._WB) ? c._L - c._WB : null, better: 'low' },
+        { label: '单侧开门余量', unit: 'mm', get: c => c._W ? Math.round((sp.W - c._W) / 2) : null, better: 'high' },
+        { label: '车头前方余量', unit: 'mm', get: c => c._L ? sp.L - c._L : null, better: 'high' },
+        sp.H ? { label: '距限高', unit: 'mm', get: c => c._H ? sp.H - c._H : null, better: 'high' } : null,
+        { label: '我的车位', text: c => { const f = getMySpotFit(c._W, c._L, c._H); return f.short || '—'; } },
+        { label: '机械车位', text: c => getParkingFitMeta(c._W, c._L).mechText },
+        { group: '动力与能耗' },
+        { label: '最大马力', unit: 'Ps', get: c => c.max_horsepower || null, better: 'high' },
+        { label: '推重比', unit: 'Ps/t', dp: 1, get: c => c.pwr_ratio_max || c.pwr_ratio_min || null, better: 'high' },
+        { label: '整备质量（最轻）', unit: 'kg', get: minWeight },
+        { label: '驱动', text: c => (c.drive_types && c.drive_types.length) ? c.drive_types.join(' / ') : '未知' },
+        { label: '纯电续航（最长）', unit: 'km', get: c => c.range_max || null, better: 'high' },
+        { group: '价格与口碑' },
+        { label: '最低指导价', unit: '万', dp: 2, get: c => c.price_min || null, better: 'low', sub: c => c.price_str || '' },
+        { label: '车主口碑', unit: '分', dp: 2, get: c => c.score || null, better: 'high', hint: '数据里没有评分人数，人少的车型分数可能偏高' }
+      ].filter(Boolean);
+    }
+
+    function fmtNum(v, dp = 0) {
+      return v === null || v === undefined ? '—' : Number(v).toFixed(dp);
+    }
+
     function renderCompareModal() {
       const body = document.getElementById('compareModalBody');
-      const list = state.compareList;
-      if (list.length === 0) {
+      const cars = cmpCars();
+      if (cars.length === 0) {
         body.innerHTML = `
-          <div class="text-center py-12 text-slate-400">
+          <div class="text-center py-12 text-slate-500">
             <i class="fa-solid fa-code-compare text-4xl mb-3 text-slate-300"></i>
-            <p class="text-sm font-medium text-slate-600">暂无对比车型</p>
-            <p class="text-xs text-slate-400 mt-1">请在车型卡片中点击【+对比】或在右侧看板中加入对比</p>
-          </div>
-        `;
+            <p class="text-sm text-slate-700">还没有加入对比的车型</p>
+            <p class="text-xs mt-1">在车型卡片上点“对比”，或在右侧看板点“加入对比”，最多 4 款</p>
+          </div>`;
         return;
       }
+      if (!cars.some(c => c.series_id === state.cmpBase)) state.cmpBase = cars[0].series_id;
+      const base = state.byId.get(state.cmpBase);
+      const colIdx = c => state.compareList.indexOf(c.series_id);
 
-      const cars = list.map(id => state.series.find(s => s.series_id === id)).filter(Boolean);
+      // 表格
+      const rows = cmpRows();
+      let tbody = '';
+      for (const r of rows) {
+        if (r.group) {
+          tbody += `<tr><td colspan="${cars.length + 1}" class="pt-4 pb-1.5 text-[11px] tracking-wider text-slate-500 cf-serif" style="position:static;background:none">${escapeHtml(r.group)}</td></tr>`;
+          continue;
+        }
+        if (r.text) {
+          const vals = cars.map(r.text);
+          if (state.cmpDiffOnly && new Set(vals).size === 1) continue;
+          tbody += `<tr class="border-t border-slate-200"><td class="py-2 pr-2 text-slate-600 sm:whitespace-nowrap">${r.label}</td>${vals.map(v => `<td class="py-2 px-2 text-slate-800">${escapeHtml(v)}</td>`).join('')}</tr>`;
+          continue;
+        }
+        const vals = cars.map(r.get);
+        const nums = vals.filter(v => v !== null);
+        if (state.cmpDiffOnly && (nums.length < 2 || new Set(nums.map(v => v.toFixed(r.dp || 0))).size === 1)) continue;
+        const bv = r.get(base);
+        const deltas = vals.map(v => (v === null || bv === null) ? null : v - bv);
+        const maxAbs = Math.max(...deltas.filter(d => d !== null).map(Math.abs), 0);
+        const best = r.better && nums.length > 1 ? (r.better === 'high' ? Math.max(...nums) : Math.min(...nums)) : null;
+        const cells = cars.map((c, i) => {
+          const v = vals[i], d = deltas[i];
+          if (v === null) return `<td class="py-2 px-2 text-slate-400">—</td>`;
+          const isBase = c.series_id === base.series_id;
+          const isBest = best !== null && Math.abs(v - best) < 1e-9 && new Set(nums).size > 1;
+          let deltaTxt = '', bar = '';
+          if (isBase) deltaTxt = '<span class="text-slate-400">基准</span>';
+          else if (d !== null) {
+            const good = r.better ? (r.better === 'high' ? d > 0 : d < 0) : null;
+            const tone = Math.abs(d) < 1e-9 ? '#7a7c6d' : (good === null ? '#393d33' : (good ? '#467340' : '#a84232'));
+            deltaTxt = `<span style="color:${tone}">${d > 0 ? '+' : (d < 0 ? '−' : '±')}${fmtNum(Math.abs(d), r.dp)}</span>`;
+            if (maxAbs > 0 && Math.abs(d) > 1e-9) {
+              const w = Math.abs(d) / maxAbs * 50;
+              bar = `<i style="background:${tone};${d > 0 ? `left:50%;width:${w}%` : `right:50%;width:${w}%`}"></i>`;
+            }
+          }
+          return `<td class="py-2 px-2 align-top">
+              <div class="flex items-baseline justify-between gap-2">
+                <span class="font-mono ${isBest ? 'font-semibold text-slate-900' : 'text-slate-800'}">${fmtNum(v, r.dp)}<span class="text-[10px] text-slate-500 ml-0.5">${r.unit}</span>${isBest ? '<span class="cmp-best">最优</span>' : ''}</span>
+                <span class="font-mono text-[11px]">${deltaTxt}</span>
+              </div>
+              ${r.sub ? `<div class="text-[10px] text-slate-500 mt-0.5">${escapeHtml(r.sub(c))}</div>` : ''}
+              <div class="cmp-delta" aria-hidden="true">${bar}</div>
+            </td>`;
+        }).join('');
+        tbody += `<tr class="border-t border-slate-200"><td class="py-2 pr-2 text-slate-600 sm:whitespace-nowrap align-top" ${r.hint ? `title="${escapeHtml(r.hint)}"` : ''}>${r.label}${r.hint ? ' <span class="text-slate-400">ⓘ</span>' : ''}</td>${cells}</tr>`;
+      }
+
+      const head = cars.map((c, i) => {
+        const isBase = c.series_id === base.series_id;
+        return `<th class="py-2 px-2 text-left align-top font-normal min-w-[128px] sm:min-w-[150px]">
+            <div class="flex items-start gap-1.5">
+              <span class="mt-1 w-2.5 h-2.5 rounded-sm shrink-0" style="background:${CMP_COLORS[colIdx(c)]}"></span>
+              <span class="min-w-0 flex-1">
+                <span class="block text-[13px] text-slate-900 leading-snug">${escapeHtml(carName(c))}</span>
+                <span class="block text-[11px] text-slate-500">${escapeHtml(c.level || '')}</span>
+              </span>
+              <button type="button" data-cmp-remove="${c.series_id}" class="text-slate-400 hover:text-rose-600 p-0.5 shrink-0" aria-label="从对比中移除 ${escapeHtml(carName(c))}"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <button type="button" data-cmp-base="${c.series_id}" aria-pressed="${isBase}"
+                    class="mt-1.5 text-[11px] px-2 py-0.5 rounded-full border ${isBase ? 'bg-sky-600 border-sky-600 text-white' : 'border-slate-200 text-slate-600 hover:border-sky-400'}">${isBase ? '基准车' : '设为基准'}</button>
+          </th>`;
+      }).join('');
+
+      const legend = cars.map(c => `<span class="inline-flex items-center gap-1.5"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="${CMP_COLORS[colIdx(c)]}" stroke-width="2" stroke-dasharray="${CMP_DASH[colIdx(c)]}"/></svg>${escapeHtml(carName(c))}</span>`).join('');
 
       body.innerHTML = `
-        <div class="space-y-4">
-          <div class="flex justify-between items-center text-xs text-slate-500 pb-2 border-b border-slate-100">
-            <span>正在对比 <strong class="text-slate-800 font-bold">${cars.length}</strong> 款车型</span>
-            <button onclick="state.compareList=[]; updateCompareCountUI(); renderCompareModal(); renderCards(false);" class="text-red-500 hover:text-red-700">清空全部对比</button>
-          </div>
-
-          <!-- 横向对比表格 -->
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200">
-                  <th class="p-2 bg-slate-50 w-24 text-slate-500">对比维度</th>
-                  ${cars.map(c => `
-                    <th class="p-2 min-w-[200px] bg-slate-50">
-                      <div class="flex items-center justify-between">
-                        <div class="truncate mr-1">${formatCarTitle(c.brand_name || c.brand, c.display_series_name || c.series_name || c.series)}</div>
-                        <button type="button" onclick="toggleCompare(${c.series_id}); renderCompareModal();" class="text-slate-400 hover:text-red-500 p-0.5" aria-label="从对比中移除"><i class="fa-solid fa-xmark"></i></button>
-                      </div>
-                      <div class="text-[11px] text-sky-700 font-mono font-bold mt-0.5">${c.price_str || '暂无报价'}</div>
-                    </th>
-                  `).join('')}
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                <!-- 2D 底盘透视图行 -->
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">底盘俯视透视</td>
-                  ${cars.map(c => `
-                    <td class="p-2 bg-slate-50 rounded-lg border border-slate-100">
-                      <div class="w-full flex items-center justify-center p-1">
-                        ${renderChassisSvg(c.length_max || c.length_min, c.width_max || c.width_min, c.wheelbase_max || c.wheelbase_min, c.main_drive_type || '四驱', c.pwr_ratio_max || c.pwr_ratio_min, c.max_horsepower, c.weight_min)}
-                      </div>
-                    </td>
-                  `).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">口碑评分</td>
-                  ${cars.map(c => `
-                    <td class="p-2 font-bold text-amber-500 font-mono">
-                      <i class="fa-solid fa-star text-xs"></i> ${c.score ? c.score.toFixed(2) : '暂无'}
-                    </td>
-                  `).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">驱动形式</td>
-                  ${cars.map(c => `
-                    <td class="p-2 font-bold text-slate-800">
-                      ${(c.drive_types && c.drive_types.length) ? c.drive_types.join(' / ') : '未知'}
-                    </td>
-                  `).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">推重比</td>
-                  ${cars.map(c => `
-                    <td class="p-2 font-mono font-bold text-amber-600">
-                      ${c.pwr_ratio_str || '待完善'}
-                    </td>
-                  `).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">轴距 (mm)</td>
-                  ${cars.map(c => `
-                    <td class="p-2 font-mono font-bold text-sky-700 text-sm">
-                      ${c.wheelbase_min || c.wheelbase_max} mm
-                    </td>
-                  `).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">空间得房率 (轴长比)</td>
-                  ${cars.map(c => {
-                    const l = c.length_max || c.length_min || 4800;
-                    const wb = c.wheelbase_max || c.wheelbase_min || 2800;
-                    const r = ((wb / l) * 100).toFixed(1);
-                    return `
-                      <td class="p-2 font-mono font-bold text-indigo-600">
-                        ${r}% <span class="text-[10px] font-normal text-slate-500">${r >= 61.5 ? '(短悬大座舱)' : (r >= 59 ? '(均衡)' : '(运动长机舱)')}</span>
-                        <div class="text-[10px] font-normal text-slate-400 font-mono">公摊 ${l - wb}mm · 1%≈1拳</div>
-                      </td>
-                    `;
-                  }).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">商场标准车位开门余量</td>
-                  ${cars.map(c => {
-                    const w = c.width_max || c.width_min || 1900;
-                    const gap = Math.round((2500 - w) / 2);
-                    const color = gap < 280 ? 'text-rose-600 font-bold' : (gap < 320 ? 'text-slate-800' : 'text-emerald-600 font-bold');
-                    return `
-                      <td class="p-2 font-mono ${color}">
-                        ${gap} mm ${gap < 280 ? '(偏窄易磕门)' : (gap < 320 ? '(正常)' : '(充裕)')}
-                      </td>
-                    `;
-                  }).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">机械立体车位兼容度</td>
-                  ${cars.map(c => {
-                    const l = c.length_max || c.length_min || 4800;
-                    const w = c.width_max || c.width_min || 1900;
-                    let tag = '机械位通行';
-                    if (l > 5000 || w > 1900) tag = '超标慎选(超长/超宽)';
-                    else if (w > 1850) tag = '需1.9m宽体机械位';
-                    return `
-                      <td class="p-2 font-bold text-xs">
-                        ${tag}
-                      </td>
-                    `;
-                  }).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">长宽高 (mm)</td>
-                  ${cars.map(c => `
-                    <td class="p-2 font-mono text-slate-700">
-                      ${c.length_min || c.length_max} × ${c.width_min || c.width_max} × ${c.height_min || c.height_max}
-                    </td>
-                  `).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">纯电续航</td>
-                  ${cars.map(c => `
-                    <td class="p-2 font-mono text-emerald-600 font-bold">
-                      ${c.range_str || '非纯电 / 暂无'}
-                    </td>
-                  `).join('')}
-                </tr>
-                <tr>
-                  <td class="p-2 font-medium text-slate-500 bg-slate-50/50">最大马力</td>
-                  ${cars.map(c => `
-                    <td class="p-2 font-mono text-slate-800">
-                      ${c.max_horsepower ? `${c.max_horsepower} Ps` : '待完善'}
-                    </td>
-                  `).join('')}
-                </tr>
-              </tbody>
-            </table>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <p class="text-slate-600">${cars.length} 款车 · 差值都相对<strong class="text-slate-900 font-medium">基准车</strong>，绿色更好、红色更差，黑色只是不同</p>
+          <div class="flex items-center gap-3">
+            <label class="inline-flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="cmpDiffOnly" class="accent-[#68714a]" ${state.cmpDiffOnly ? 'checked' : ''}> 只看有差别的项</label>
+            <button type="button" id="cmpCopyLink" class="text-sky-700 hover:underline">复制对比链接</button>
+            <button type="button" id="cmpClear" class="text-rose-600 hover:underline">清空</button>
           </div>
         </div>
-      `;
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <figure class="bg-[#f7f5ee] border border-slate-200 rounded-xl p-2">
+            <figcaption class="text-[11px] text-slate-500 px-1">俯视 · 车尾对齐停进车位</figcaption>
+            ${renderTopOverlay(cars)}
+          </figure>
+          <figure class="bg-[#f7f5ee] border border-slate-200 rounded-xl p-2">
+            <figcaption class="text-[11px] text-slate-500 px-1">侧视 · 车尾对齐</figcaption>
+            ${renderSideOverlay(cars)}
+          </figure>
+        </div>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-600">${legend}</div>
+        <div class="overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0">
+          <table class="cmp-table w-full text-xs border-collapse">
+            <thead><tr><th class="py-2 pr-2 text-left font-normal text-slate-500 w-[68px] sm:w-auto sm:min-w-[96px]">项目</th>${head}</tr></thead>
+            <tbody>${tbody}</tbody>
+          </table>
+        </div>`;
+
+      body.querySelector('#cmpDiffOnly').onchange = (e) => { state.cmpDiffOnly = e.target.checked; renderCompareModal(); };
+      body.querySelector('#cmpClear').onclick = () => { state.compareList = []; updateCompareCountUI(); renderCards(); renderCompareModal(); };
+      body.querySelector('#cmpCopyLink').onclick = async () => {
+        stateToHash();
+        try { await navigator.clipboard.writeText(location.href); toast('对比链接已复制'); }
+        catch (e) { toast('复制失败，请手动复制地址栏'); }
+      };
+      body.querySelectorAll('[data-cmp-base]').forEach(b => b.onclick = () => { state.cmpBase = Number(b.dataset.cmpBase); renderCompareModal(); });
+      body.querySelectorAll('[data-cmp-remove]').forEach(b => b.onclick = () => { toggleCompare(Number(b.dataset.cmpRemove)); renderCompareModal(); });
+    }
+
+    // ---- 对比托盘、提示条、已生效条件 ----
+    let toastTimer = 0;
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    function renderCompareTray() {
+      const tray = document.getElementById('compareTray');
+      const cars = cmpCars();
+      tray.classList.toggle('has', cars.length > 0);
+      document.getElementById('compareTrayChips').innerHTML = cars.map(c => `
+        <span class="chip"><span class="w-2 h-2 rounded-sm" style="background:${CMP_COLORS[state.compareList.indexOf(c.series_id)]}"></span>${escapeHtml(carName(c))}<button type="button" data-uncompare="${c.series_id}" aria-label="移除 ${escapeHtml(carName(c))}">×</button></span>`).join('');
+      document.getElementById('compareTrayGo').textContent = cars.length > 1 ? `对比这 ${cars.length} 款` : '再选一款';
+      document.getElementById('compareTrayGo').disabled = cars.length < 2;
+      document.getElementById('compareTrayGo').classList.toggle('opacity-50', cars.length < 2);
+    }
+
+    const DIM_NAMES = { length: '车长', wb: '轴距', width: '车宽', height: '车高' };
+    const SCENARIO_NAMES = { large_sedan: '5米C级大车', super_pwr: '超跑推重比', long_range: '700km+长续航', rwd_fun: '后驱操控派', city_small: '城市灵巧代步' };
+    function capsuleText(selector, attr, value) {
+      const b = [...document.querySelectorAll(selector)].find(x => x.dataset[attr] === value);
+      return b ? b.textContent.trim() : value;
+    }
+
+    function renderActiveChips() {
+      const chips = [];
+      if (state.scenario) chips.push(['scenario', `场景：${SCENARIO_NAMES[state.scenario]}`]);
+      if (!state.activeStatusOnly) chips.push(['status', '含停售']);
+      if (state.searchQuery) chips.push(['q', `搜索“${state.searchQuery}”`]);
+      if (state.currentType !== 'all') chips.push(['type', capsuleText('.type-capsule', 'type', state.currentType)]);
+      if (state.currentEnergy !== 'all') chips.push(['energy', capsuleText('.energy-capsule', 'energy', state.currentEnergy)]);
+      if (state.currentDrive !== 'all') chips.push(['drive', state.currentDrive]);
+      Object.keys(DIM_FIELDS).forEach(k => { const t = formatDimLabel(k); if (t !== '不限') chips.push([k, `${DIM_NAMES[k]} ${t}`]); });
+      if (state.pwrMin > 0) chips.push(['pwr', `推重比 ≥${state.pwrMin}`]);
+      if (state.minRange > 0) chips.push(['range', `纯电续航 ≥${state.minRange}km`]);
+      if (state.priceRange !== 'all') {
+        const sel = document.getElementById('priceSelect');
+        chips.push(['price', sel.options[sel.selectedIndex].text.replace(/\s*\(.*\)$/, '')]);
+      }
+      if (state.fitOnly) chips.push(['fit', '停得下我的车位']);
+      const box = document.getElementById('activeChips');
+      box.classList.toggle('hidden', chips.length === 0);
+      box.innerHTML = chips.map(([k, t]) => `<span class="chip">${escapeHtml(t)}<button type="button" data-clear="${k}" aria-label="去掉条件：${escapeHtml(t)}">×</button></span>`).join('')
+        + (chips.length > 1 ? '<button type="button" data-clear="all" class="text-[11px] text-slate-500 hover:text-slate-800 underline underline-offset-2 ml-1">全部清除</button>' : '');
+    }
+
+    function clearFilterKey(k) {
+      if (k === 'all') { resetAllFilters({ silent: true }); return; }
+      if (k === 'scenario') { setScenario(null); return; }
+      touch(k);
+      if (DIM_FIELDS[k]) setDimRange(k, null, null);
+      else if (k === 'status') { state.activeStatusOnly = true; setStatusButtons(); }
+      else if (k === 'q') { state.searchQuery = ''; document.getElementById('searchInput').value = ''; document.getElementById('searchClearBtn').classList.add('hidden'); }
+      else if (k === 'type') { state.currentType = 'all'; setCapsule('.type-capsule', 'type', 'all'); }
+      else if (k === 'price') { state.priceRange = 'all'; document.getElementById('priceSelect').value = 'all'; }
+      else if (k === 'fit') { state.fitOnly = false; document.getElementById('fitOnly').checked = false; }
+      else if (KEY_RESET[k]) KEY_RESET[k]();
     }
 
     // 页面加载完毕自启动
