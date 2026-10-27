@@ -71815,9 +71815,10 @@
         "weight": 2255,
         "price": "53.86万",
         "drive_type": "后驱",
-        "horsepower": 129,
-        "pwr_ratio": 57.2,
-        "ev_range": 106
+        "horsepower": 313,
+        "pwr_ratio": 138.8,
+        "ev_range": 106,
+        "seats": 5
       },
       {
         "spec_id": 68559,
@@ -71835,9 +71836,10 @@
         "weight": 2255,
         "price": "53.86万",
         "drive_type": "后驱",
-        "horsepower": 129,
-        "pwr_ratio": 57.2,
-        "ev_range": 106
+        "horsepower": 313,
+        "pwr_ratio": 138.8,
+        "ev_range": 106,
+        "seats": 5
       }
     ],
     "is_stopped": false,
@@ -71851,18 +71853,21 @@
       "后驱"
     ],
     "main_drive_type": "后驱",
-    "pwr_ratio_min": 57.2,
-    "pwr_ratio_max": 57.2,
-    "pwr_ratio_str": "57.2 Ps/吨",
+    "pwr_ratio_min": 138.8,
+    "pwr_ratio_max": 138.8,
+    "pwr_ratio_str": "138.8 Ps/吨",
     "range_min": 106,
     "range_max": 106,
     "range_str": "106km",
-    "max_horsepower": 129,
+    "max_horsepower": 313,
     "brand_name": "奔驰",
     "series_name": "奔驰E级新能源",
     "display_series_name": "E级新能源",
     "cover_url": "https://car3.autoimg.cn/cardfs/product/g32/M02/16/85/autohomecar__ChxkPmZZRhuAWgWxAENuKbkHWGU396.jpg",
-    "score_count": 6
+    "score_count": 6,
+    "seats_min": 5,
+    "seats_max": 5,
+    "seats_str": "5座"
   },
   {
     "series_id": 7512,
@@ -155334,8 +155339,8 @@
         "weight": 2280,
         "price": "36.18万",
         "drive_type": "四驱",
-        "horsepower": 73,
-        "pwr_ratio": 32.0,
+        "horsepower": 334,
+        "pwr_ratio": 146.5,
         "ev_range": null,
         "seats": 6
       },
@@ -155355,8 +155360,8 @@
         "weight": 2125,
         "price": "28.88万",
         "drive_type": "前驱",
-        "horsepower": 73,
-        "pwr_ratio": 34.4,
+        "horsepower": 334,
+        "pwr_ratio": 157.2,
         "ev_range": null,
         "seats": 7
       },
@@ -155376,8 +155381,8 @@
         "weight": 2240,
         "price": "31.68万",
         "drive_type": "四驱",
-        "horsepower": 73,
-        "pwr_ratio": 32.6,
+        "horsepower": 334,
+        "pwr_ratio": 149.1,
         "ev_range": null,
         "seats": 7
       },
@@ -155397,8 +155402,8 @@
         "weight": 2240,
         "price": "32.13万",
         "drive_type": "四驱",
-        "horsepower": 73,
-        "pwr_ratio": 32.6,
+        "horsepower": 334,
+        "pwr_ratio": 149.1,
         "ev_range": null,
         "seats": 6
       }
@@ -155415,13 +155420,13 @@
       "四驱"
     ],
     "main_drive_type": "四驱",
-    "pwr_ratio_min": 32.0,
-    "pwr_ratio_max": 34.4,
-    "pwr_ratio_str": "32.0～34.4 Ps/吨",
+    "pwr_ratio_min": 146.5,
+    "pwr_ratio_max": 157.2,
+    "pwr_ratio_str": "146.5～157.2 Ps/吨",
     "range_min": null,
     "range_max": null,
     "range_str": "",
-    "max_horsepower": 73,
+    "max_horsepower": 334,
     "brand_name": "现代",
     "series_name": "帕里斯帝",
     "display_series_name": "帕里斯帝",
