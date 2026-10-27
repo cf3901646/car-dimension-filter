@@ -337,12 +337,15 @@ def fetch_single_series_koubei(sid, session=None):
             score = base.get("seriesAverage") or base.get("average")
             averagenum = base.get("averagenum") or 0
             rowcount = base.get("rowcount") or 0
-            # 真实性检验：如果 averagenum == 0 且 rowcount == 0，说明无真实评分样本
-            if averagenum == 0 and rowcount == 0:
-                return sid, None, 0
+            # 真实性检验：如果 averagenum < 5 或无样本，说明无统计学公信力样本
+            if averagenum < 5:
+                return sid, None, averagenum
             if score is not None:
                 try:
                     s_float = round(float(score), 2)
+                    # 4.86 为汽车之家系统默认占位或维度凑整特殊值，直接滤除
+                    if s_float == 4.86:
+                        return sid, None, averagenum
                     return sid, s_float, averagenum
                 except Exception:
                     pass
@@ -556,12 +559,12 @@ def run_full_enrichment():
             score = c_item.get("score")
             score_count = c_item.get("score_count", 0)
             
-            # 若有效评分人数为 0，无论原分数是什么，均标为无有效评分（彻底修复 4.86 虚假高分）
-            if score_count == 0 or score == 4.86:
-                if score_count == 0:
-                    score = None
-                    score_fixed_count += 1
-
+            # 彻底过滤4.86占位分以及有效评分人数不足5人的小样本虚高分
+            if score == 4.86 or (score_count is None or score_count < 5):
+                score = None
+                score_fixed_count += 1
+            
+            c_item["score"] = score
             s["score"] = score
             s["score_count"] = score_count
 

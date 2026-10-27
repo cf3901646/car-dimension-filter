@@ -3291,7 +3291,7 @@
       "燃油车"
     ],
     "clean_level": "中大型SUV",
-    "score": 3.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -10654,7 +10654,7 @@
       "油电混动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -18676,7 +18676,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.42,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -20301,7 +20301,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型MPV",
-    "score": 4.0,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -23636,7 +23636,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.24,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -27798,7 +27798,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.27,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -30032,7 +30032,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -34450,7 +34450,7 @@
       "纯电动"
     ],
     "clean_level": "小型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -35781,7 +35781,7 @@
       "纯电动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.38,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -36295,7 +36295,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -39410,7 +39410,7 @@
       "燃油车"
     ],
     "clean_level": "大型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -40375,7 +40375,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -40762,7 +40762,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.14,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -42873,7 +42873,7 @@
       "纯电动"
     ],
     "clean_level": "大型车",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -43337,7 +43337,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -49400,7 +49400,7 @@
       "纯电动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -49912,7 +49912,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.0,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -50664,7 +50664,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -53823,7 +53823,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型MPV",
-    "score": 3.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -54487,7 +54487,7 @@
       "油电混动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -54559,7 +54559,7 @@
       "油电混动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -55932,7 +55932,7 @@
       "燃油车"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -58779,7 +58779,7 @@
       "纯电动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.14,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -60536,7 +60536,7 @@
       "插混/增程"
     ],
     "clean_level": "中型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -65252,7 +65252,7 @@
       "油电混动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.65,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -68275,7 +68275,7 @@
       "燃油车"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -72063,7 +72063,7 @@
       "插混/增程"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -73903,7 +73903,7 @@
       "燃油车"
     ],
     "clean_level": "中型车",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -76406,7 +76406,7 @@
       "油电混动"
     ],
     "clean_level": "中型车",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -78396,7 +78396,7 @@
       "插混/增程"
     ],
     "clean_level": "中型SUV",
-    "score": 3.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -79150,7 +79150,7 @@
       "纯电动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.64,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -79739,7 +79739,7 @@
       "纯电动"
     ],
     "clean_level": "中大型车",
-    "score": 3.86,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -85009,7 +85009,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.45,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -85669,7 +85669,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.53,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -85785,7 +85785,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.14,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -89021,7 +89021,7 @@
       "燃油车"
     ],
     "clean_level": "中型车",
-    "score": 3.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -96580,7 +96580,7 @@
       "纯电动"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.64,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -97798,7 +97798,7 @@
       "燃油车"
     ],
     "clean_level": "中型车",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -99638,7 +99638,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -100444,7 +100444,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.48,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -101445,7 +101445,7 @@
       "纯电动"
     ],
     "clean_level": "中型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -101817,7 +101817,7 @@
       "纯电动"
     ],
     "clean_level": "中型SUV",
-    "score": 3.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -102743,7 +102743,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 3.97,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -103656,7 +103656,7 @@
       "燃油车"
     ],
     "clean_level": "大型SUV",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -109002,7 +109002,7 @@
       "插混/增程"
     ],
     "clean_level": "中型车",
-    "score": 4.14,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -109326,7 +109326,7 @@
       "插混/增程"
     ],
     "clean_level": "小型SUV",
-    "score": 4.14,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -112610,7 +112610,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -112685,7 +112685,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -114063,7 +114063,7 @@
       "插混/增程"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -115347,7 +115347,7 @@
       "油电混动"
     ],
     "clean_level": "大型SUV",
-    "score": 3.91,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -117185,7 +117185,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -119599,7 +119599,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型MPV",
-    "score": 4.36,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -120652,7 +120652,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.53,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -124882,7 +124882,7 @@
       "插混/增程"
     ],
     "clean_level": "中型SUV",
-    "score": 4.34,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -127101,7 +127101,7 @@
       "纯电动"
     ],
     "clean_level": "小型SUV",
-    "score": 4.39,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -129153,7 +129153,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -130123,7 +130123,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -131664,7 +131664,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -132377,7 +132377,7 @@
       "插混/增程"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -133876,7 +133876,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 3.29,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -134123,7 +134123,7 @@
       "纯电动"
     ],
     "clean_level": "小型SUV",
-    "score": 4.07,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -134672,7 +134672,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -139990,7 +139990,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型车",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -140273,7 +140273,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -140568,7 +140568,7 @@
       "纯电动"
     ],
     "clean_level": "中型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -141343,7 +141343,7 @@
       "燃油车"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.62,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -142514,7 +142514,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型车",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -143713,7 +143713,7 @@
       "插混/增程"
     ],
     "clean_level": "中型MPV",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -144158,7 +144158,7 @@
       "燃油车"
     ],
     "clean_level": "中大型车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -147082,7 +147082,7 @@
       "插混/增程"
     ],
     "clean_level": "中型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -147790,7 +147790,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.41,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -148815,7 +148815,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.34,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -152358,7 +152358,7 @@
       "纯电动"
     ],
     "clean_level": "中大型车",
-    "score": 4.07,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -153163,7 +153163,7 @@
       "燃油车"
     ],
     "clean_level": "小型SUV",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -154380,7 +154380,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.0,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -155703,7 +155703,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.38,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -157303,7 +157303,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型MPV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -159025,7 +159025,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.01,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -160480,7 +160480,7 @@
       "油电混动"
     ],
     "clean_level": "中型MPV",
-    "score": 3.78,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -166335,7 +166335,7 @@
       "燃油车"
     ],
     "clean_level": "中型SUV",
-    "score": 4.48,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -167388,7 +167388,7 @@
       "油电混动"
     ],
     "clean_level": "中型SUV",
-    "score": 4.1,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -168915,7 +168915,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.62,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -172620,7 +172620,7 @@
       "油电混动"
     ],
     "clean_level": "大型车",
-    "score": 4.36,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -174233,7 +174233,7 @@
       "纯电动"
     ],
     "clean_level": "中型SUV",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -175204,7 +175204,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.54,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -175601,7 +175601,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -178421,7 +178421,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.14,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -179289,7 +179289,7 @@
       "油电混动"
     ],
     "clean_level": "中型SUV",
-    "score": 4.0,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -179818,7 +179818,7 @@
       "油电混动"
     ],
     "clean_level": "大型车",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -180999,7 +180999,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -181903,7 +181903,7 @@
       "纯电动"
     ],
     "clean_level": "小型车",
-    "score": 4.32,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -182594,7 +182594,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型MPV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -183642,7 +183642,7 @@
       "油电混动"
     ],
     "clean_level": "大型SUV",
-    "score": 4.14,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -185005,7 +185005,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -187512,7 +187512,7 @@
       "燃油车"
     ],
     "clean_level": "中型车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -191053,7 +191053,7 @@
       "插混/增程"
     ],
     "clean_level": "MPV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -191205,7 +191205,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -193229,7 +193229,7 @@
       "纯电动"
     ],
     "clean_level": "中型车",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -195303,7 +195303,7 @@
       "燃油车"
     ],
     "clean_level": "紧凑型车",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -196316,7 +196316,7 @@
       "油电混动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -197581,7 +197581,7 @@
       "纯电动"
     ],
     "clean_level": "中型SUV",
-    "score": 4.0,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -197816,7 +197816,7 @@
       "纯电动"
     ],
     "clean_level": "中型车",
-    "score": 4.36,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -199107,7 +199107,7 @@
       "插混/增程"
     ],
     "clean_level": "中型SUV",
-    "score": 4.38,
+    "score": null,
     "drive_types": [
       "前驱",
       "四驱"
@@ -199927,7 +199927,7 @@
       "纯电动"
     ],
     "clean_level": "中大型车",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -200709,7 +200709,7 @@
       "燃油车"
     ],
     "clean_level": "中型车",
-    "score": 4.0,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -202021,7 +202021,7 @@
       "纯电动"
     ],
     "clean_level": "中型车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -202985,7 +202985,7 @@
       "插混/增程"
     ],
     "clean_level": "中大型SUV",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -203595,7 +203595,7 @@
       "插混/增程"
     ],
     "clean_level": "中型SUV",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -203828,7 +203828,7 @@
       "纯电动"
     ],
     "clean_level": "紧凑型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -208700,7 +208700,7 @@
       "纯电动"
     ],
     "clean_level": "大型SUV",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "四驱"
     ],
@@ -209555,7 +209555,7 @@
       "纯电动"
     ],
     "clean_level": "中型MPV",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -215349,7 +215349,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 4.5,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -216003,7 +216003,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 4.38,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -218416,7 +218416,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 2.5,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -219127,7 +219127,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.75,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -220016,7 +220016,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.13,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -220762,7 +220762,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 3.63,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -222320,7 +222320,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.51,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -222480,7 +222480,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -225008,7 +225008,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 3.97,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -227596,7 +227596,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 3.14,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -232075,7 +232075,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱",
       "后驱"
@@ -233823,7 +233823,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 3.57,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -235163,7 +235163,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -236652,7 +236652,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.75,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -240403,7 +240403,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.38,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -241754,7 +241754,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.38,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -242894,7 +242894,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.57,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -246088,7 +246088,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.71,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -265624,7 +265624,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.65,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -272913,7 +272913,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 3.29,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -276899,7 +276899,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 4.48,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -284047,7 +284047,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -288628,7 +288628,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 3.86,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -289720,7 +289720,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -291456,7 +291456,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.67,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -292001,7 +292001,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -300473,7 +300473,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -306200,7 +306200,7 @@
       "纯电动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.29,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -313338,7 +313338,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -322161,7 +322161,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 4.38,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"
@@ -324884,7 +324884,7 @@
       "油电混动"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "前驱"
     ],
@@ -329779,7 +329779,7 @@
       "燃油车"
     ],
     "clean_level": "商用车/货车",
-    "score": 4.43,
+    "score": null,
     "drive_types": [
       "后驱"
     ],
@@ -338232,7 +338232,7 @@
       "燃油车"
     ],
     "clean_level": "皮卡",
-    "score": 4.86,
+    "score": null,
     "drive_types": [
       "后驱",
       "四驱"

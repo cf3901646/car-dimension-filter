@@ -54,8 +54,13 @@ if os.path.exists(ENRICH_PATH):
             if sid_str in enrich_cache:
                 enriched_count += 1
                 c_item = enrich_cache[sid_str]
-                s["score"] = c_item.get("score")
-                s["score_count"] = c_item.get("score_count")
+                sc = c_item.get("score")
+                cnt = c_item.get("score_count") or 0
+                # 过滤异常的4.86占位分以及评分人数小于5人的不具公信力小样本分
+                if sc == 4.86 or cnt < 5:
+                    sc = None
+                s["score"] = sc
+                s["score_count"] = cnt
                 
                 v_cache = c_item.get("versions", {})
                 drives_set = set()
