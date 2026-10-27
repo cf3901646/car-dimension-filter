@@ -55,12 +55,15 @@ if os.path.exists(ENRICH_PATH):
                 enriched_count += 1
                 c_item = enrich_cache[sid_str]
                 s["score"] = c_item.get("score")
+                s["score_count"] = c_item.get("score_count")
                 
                 v_cache = c_item.get("versions", {})
                 drives_set = set()
                 ratios_list = []
                 ranges_list = []
                 hp_list = []
+                radii_list = []
+                seats_list = []
                 
                 for v in s.get("versions", []):
                     v_key = str(v.get("spec_id"))
@@ -75,6 +78,12 @@ if os.path.exists(ENRICH_PATH):
                         v["weight"] = v_info.get("weight")
                     v["pwr_ratio"] = v_info.get("pwr_ratio")
                     v["ev_range"] = v_info.get("ev_range")
+                    if v_info.get("turn_radius"):
+                        v["turn_radius"] = v_info.get("turn_radius")
+                        radii_list.append(v_info.get("turn_radius"))
+                    if v_info.get("seats"):
+                        v["seats"] = v_info.get("seats")
+                        seats_list.append(v_info.get("seats"))
                     
                     if drv: drives_set.add(drv)
                     if v.get("pwr_ratio"): ratios_list.append(v["pwr_ratio"])
@@ -109,6 +118,16 @@ if os.path.exists(ENRICH_PATH):
                     s["range_str"] = ""
                 
                 s["max_horsepower"] = max(hp_list) if hp_list else None
+                if radii_list:
+                    s["turn_radius_min"] = min(radii_list)
+                    s["turn_radius_max"] = max(radii_list)
+                if seats_list:
+                    s["seats_min"] = min(seats_list)
+                    s["seats_max"] = max(seats_list)
+                    if s["seats_min"] == s["seats_max"]:
+                        s["seats_str"] = f"{s['seats_min']}座"
+                    else:
+                        s["seats_str"] = f"{s['seats_min']}～{s['seats_max']}座"
     except Exception as e:
         print(f"Warning: could not inject enriched specs: {e}")
 
@@ -169,13 +188,14 @@ html_content = html_content.replace("__TOTAL_VERSIONS__", str(total_versions))
 # 只保留页面实际读取的字段，体积约为完整数据的一半。
 SERIES_KEYS = (
     "series_id", "brand_name", "series_name", "display_series_name", "level", "energy_types",
-    "drive_types", "main_drive_type", "price_str", "price_min", "price_max", "score", "is_stopped",
+    "drive_types", "main_drive_type", "price_str", "price_min", "price_max", "score", "score_count", "is_stopped",
     "cover_url", "length_min", "length_max", "width_min", "width_max", "height_min", "height_max",
     "wheelbase_min", "wheelbase_max", "pwr_ratio_min", "pwr_ratio_max", "pwr_ratio_str",
     "range_min", "range_max", "range_str", "max_horsepower",
+    "turn_radius_min", "turn_radius_max", "seats_str",
 )
 VERSION_KEYS = ("model_name", "price", "length", "width", "height", "wheelbase", "weight",
-                "drive_type", "horsepower", "pwr_ratio", "ev_range")
+                "drive_type", "horsepower", "pwr_ratio", "ev_range", "turn_radius", "seats")
 
 def slim(s):
     out = {k: s[k] for k in SERIES_KEYS if s.get(k) not in (None, "", [])}
