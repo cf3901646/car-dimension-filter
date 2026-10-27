@@ -7218,7 +7218,7 @@
   {
     "spec_id": 56386,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 408km 神兽版 三元锂",
     "level": "微型车",
@@ -8050,7 +8050,7 @@
   {
     "spec_id": 57166,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 408km 魔兽版 三元锂",
     "level": "微型车",
@@ -12066,7 +12066,7 @@
   {
     "spec_id": 60497,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 301km 魔兽版 磷酸铁锂",
     "level": "微型车",
@@ -12082,7 +12082,7 @@
   {
     "spec_id": 60498,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 301km 灵兽版 磷酸铁锂",
     "level": "微型车",
@@ -12098,7 +12098,7 @@
   {
     "spec_id": 60499,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 301km 神兽版 磷酸铁锂",
     "level": "微型车",
@@ -12114,7 +12114,7 @@
   {
     "spec_id": 60500,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 301km 魔兽版 三元锂",
     "level": "微型车",
@@ -12130,7 +12130,7 @@
   {
     "spec_id": 60501,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 301km 灵兽版 三元锂",
     "level": "微型车",
@@ -12146,7 +12146,7 @@
   {
     "spec_id": 60502,
     "series_id": 6703,
-    "brand": "标致",
+    "brand": "奇瑞",
     "series": "奇瑞无界Pro",
     "model_name": "奇瑞无界Pro 2022款 301km 神兽版 三元锂",
     "level": "微型车",
@@ -13090,7 +13090,7 @@
   {
     "spec_id": 60948,
     "series_id": 4662,
-    "brand": "哈弗",
+    "brand": "广汽传祺",
     "series": "传祺M6",
     "model_name": "传祺M6 2023款 PRO 270T DCT豪华版",
     "level": "紧凑型MPV",
@@ -24546,7 +24546,7 @@
   {
     "spec_id": 65441,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2024款 第三代 215km 进阶版",
     "level": "微型车",
@@ -25906,7 +25906,7 @@
   {
     "spec_id": 66044,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2024款 第三代 120km",
     "level": "微型车",
@@ -25922,7 +25922,7 @@
   {
     "spec_id": 66045,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2024款 第三代 170km",
     "level": "微型车",
@@ -32578,7 +32578,7 @@
   {
     "spec_id": 68092,
     "series_id": 7723,
-    "brand": "别克",
+    "brand": "五菱",
     "series": "五菱E5",
     "model_name": "五菱E5 2024款 410km 标准版",
     "level": "中型车",
@@ -32594,7 +32594,7 @@
   {
     "spec_id": 68093,
     "series_id": 7723,
-    "brand": "别克",
+    "brand": "五菱",
     "series": "五菱E5",
     "model_name": "五菱E5 2024款 510km 标准版",
     "level": "中型车",
@@ -34530,7 +34530,7 @@
   {
     "spec_id": 68715,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2024款 2.0T 致臻版",
     "level": "中型车",
@@ -34546,7 +34546,7 @@
   {
     "spec_id": 68716,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2024款 2.0T 致行版",
     "level": "中型车",
@@ -34562,7 +34562,7 @@
   {
     "spec_id": 68717,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2024款 2.0T 致美版",
     "level": "中型车",
@@ -34578,7 +34578,7 @@
   {
     "spec_id": 68718,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2024款 2.0T 致逸版",
     "level": "中型车",
@@ -34594,7 +34594,7 @@
   {
     "spec_id": 68719,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2024款 2.0T 致尚版",
     "level": "中型车",
@@ -35538,7 +35538,7 @@
   {
     "spec_id": 68994,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2024款 第三代 215km 青春版",
     "level": "微型车",
@@ -39554,7 +39554,7 @@
   {
     "spec_id": 69932,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2026款 第五代 301km 进阶款",
     "level": "微型车",
@@ -39570,7 +39570,7 @@
   {
     "spec_id": 69939,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2025款 第四代 四门版 臻享+款",
     "level": "微型车",
@@ -44722,7 +44722,7 @@
   {
     "spec_id": 71113,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2025款 第四代 四门版 进阶款",
     "level": "微型车",
@@ -45282,7 +45282,7 @@
   {
     "spec_id": 71238,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max版 37kWh 5座版 (192线激光雷达）",
     "level": "大型SUV",
@@ -46018,7 +46018,7 @@
   {
     "spec_id": 71397,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max+版 53.4kWh 5座版 (192线激光雷达）",
     "level": "大型SUV",
@@ -48338,7 +48338,7 @@
   {
     "spec_id": 71854,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2025款 第四代 四门版 臻享款",
     "level": "微型车",
@@ -49090,7 +49090,7 @@
   {
     "spec_id": 72005,
     "series_id": 6388,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M5",
     "model_name": "问界M5 2025款 增程 Ultra 后驱版",
     "level": "中型SUV",
@@ -49106,7 +49106,7 @@
   {
     "spec_id": 72006,
     "series_id": 6388,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M5",
     "model_name": "问界M5 2025款 增程   Ultra 四驱版",
     "level": "中型SUV",
@@ -49122,7 +49122,7 @@
   {
     "spec_id": 72007,
     "series_id": 6388,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M5",
     "model_name": "问界M5 2025款 纯电  Ultra 后驱版",
     "level": "中型SUV",
@@ -49778,7 +49778,7 @@
   {
     "spec_id": 72085,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Ultra版 53.4kWh 5座版 (192线激光雷达）",
     "level": "大型SUV",
@@ -49794,7 +49794,7 @@
   {
     "spec_id": 72086,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max版 37kWh 6座版 (192线激光雷达）",
     "level": "大型SUV",
@@ -49810,7 +49810,7 @@
   {
     "spec_id": 72087,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max+版 53.4kWh 6座版 (192线激光雷达）",
     "level": "大型SUV",
@@ -49826,7 +49826,7 @@
   {
     "spec_id": 72088,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Ultra版 53.4kWh 6座版 (192线激光雷达）",
     "level": "大型SUV",
@@ -58258,7 +58258,7 @@
   {
     "spec_id": 73290,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2025款 2.0T 致行版",
     "level": "中型车",
@@ -58274,7 +58274,7 @@
   {
     "spec_id": 73291,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2025款 2.0T 致美版",
     "level": "中型车",
@@ -58290,7 +58290,7 @@
   {
     "spec_id": 73292,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2025款 2.0T 致远版",
     "level": "中型车",
@@ -58306,7 +58306,7 @@
   {
     "spec_id": 73293,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2025款 2.0T 致尚版",
     "level": "中型车",
@@ -58322,7 +58322,7 @@
   {
     "spec_id": 73294,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2025款 2.0T 致臻版",
     "level": "中型车",
@@ -61810,7 +61810,7 @@
   {
     "spec_id": 73805,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 六座四驱版 (192线激光雷达）",
     "level": "大型SUV",
@@ -62258,7 +62258,7 @@
   {
     "spec_id": 73842,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 六座长续航版 (192线激光雷达）",
     "level": "大型SUV",
@@ -62290,7 +62290,7 @@
   {
     "spec_id": 73844,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 五座长续航版 (192线激光雷达）",
     "level": "大型SUV",
@@ -62306,7 +62306,7 @@
   {
     "spec_id": 73845,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 五座四驱版 (192线激光雷达）",
     "level": "大型SUV",
@@ -63746,7 +63746,7 @@
   {
     "spec_id": 73980,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Ultra 五座四驱版 (192线激光雷达）",
     "level": "大型SUV",
@@ -63762,7 +63762,7 @@
   {
     "spec_id": 73981,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Ultra 六座四驱版 (192线激光雷达）",
     "level": "大型SUV",
@@ -63938,7 +63938,7 @@
   {
     "spec_id": 73993,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Ultra四驱版 5座（192线激光雷达）",
     "level": "中大型SUV",
@@ -64690,7 +64690,7 @@
   {
     "spec_id": 74093,
     "series_id": 7355,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界S7",
     "model_name": "智界S7 2026款 Ultra (192线激光雷达）",
     "level": "中大型车",
@@ -65106,7 +65106,7 @@
   {
     "spec_id": 74143,
     "series_id": 7355,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界S7",
     "model_name": "智界S7 2026款 Max (192线激光雷达）",
     "level": "中大型车",
@@ -65122,7 +65122,7 @@
   {
     "spec_id": 74144,
     "series_id": 7355,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界S7",
     "model_name": "智界S7 2026款 Max+ (192线激光雷达）",
     "level": "中大型车",
@@ -65330,7 +65330,7 @@
   {
     "spec_id": 74161,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Ultra四驱版 5座（192线激光雷达）",
     "level": "中大型SUV",
@@ -65346,7 +65346,7 @@
   {
     "spec_id": 74162,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Ultra四驱版 6座（192线激光雷达）",
     "level": "中大型SUV",
@@ -65362,7 +65362,7 @@
   {
     "spec_id": 74163,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max长续航版 6座（192线激光雷达）",
     "level": "中大型SUV",
@@ -66402,7 +66402,7 @@
   {
     "spec_id": 74290,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2025款 改款 2.0T 两驱旗享豪华商务版 5座",
     "level": "中大型车",
@@ -66418,7 +66418,7 @@
   {
     "spec_id": 74291,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2025款 改款 2.0T 两驱旗享私享风尚版 5座",
     "level": "中大型车",
@@ -66434,7 +66434,7 @@
   {
     "spec_id": 74292,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2025款 改款 2.0T 两驱旗畅豪华商务版 5座",
     "level": "中大型车",
@@ -66450,7 +66450,7 @@
   {
     "spec_id": 74293,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2025款 改款 2.0T 两驱旗畅私享风尚版 5座",
     "level": "中大型车",
@@ -66466,7 +66466,7 @@
   {
     "spec_id": 74294,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2025款 改款 3.0T 四驱旗畅豪华商务版 5座",
     "level": "中大型车",
@@ -66482,7 +66482,7 @@
   {
     "spec_id": 74295,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2025款 改款 3.0T 四驱旗领豪华商务版 4座",
     "level": "中大型车",
@@ -66498,7 +66498,7 @@
   {
     "spec_id": 74296,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2025款 改款 3.0T 四驱旗领私享风尚版 4座",
     "level": "中大型车",
@@ -67282,7 +67282,7 @@
   {
     "spec_id": 74367,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Ultra四驱版 6座（192线激光雷达）",
     "level": "中大型SUV",
@@ -67986,7 +67986,7 @@
   {
     "spec_id": 74454,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2025款 2.0T 200万辆纪念版",
     "level": "中型车",
@@ -68802,7 +68802,7 @@
   {
     "spec_id": 74565,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max四驱版 5座（192线激光雷达）",
     "level": "中大型SUV",
@@ -68818,7 +68818,7 @@
   {
     "spec_id": 74566,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max长续航版 5座（192线激光雷达）",
     "level": "中大型SUV",
@@ -68834,7 +68834,7 @@
   {
     "spec_id": 74567,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max四驱版 6座（192线激光雷达）",
     "level": "中大型SUV",
@@ -68850,7 +68850,7 @@
   {
     "spec_id": 74568,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max四驱版 6座（192线激光雷达）",
     "level": "中大型SUV",
@@ -68866,7 +68866,7 @@
   {
     "spec_id": 74569,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Pro+四驱版 6座",
     "level": "中大型SUV",
@@ -68882,7 +68882,7 @@
   {
     "spec_id": 74570,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max四驱版 5座（192线激光雷达）",
     "level": "中大型SUV",
@@ -68898,7 +68898,7 @@
   {
     "spec_id": 74571,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Pro+四驱版 5座",
     "level": "中大型SUV",
@@ -74370,7 +74370,7 @@
   {
     "spec_id": 75166,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 纯电 Ultra 四驱 100kWh (192线激光雷达）",
     "level": "中大型车",
@@ -76738,7 +76738,7 @@
   {
     "spec_id": 75426,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 增程 Ultra 后驱 53kWh (192线激光雷达）",
     "level": "中大型车",
@@ -78690,7 +78690,7 @@
   {
     "spec_id": 75603,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 增程 Max 后驱 37kWh (192线激光雷达）",
     "level": "中大型车",
@@ -78754,7 +78754,7 @@
   {
     "spec_id": 75608,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 纯电 Max 后驱 100kWh (192线激光雷达）",
     "level": "中大型车",
@@ -78770,7 +78770,7 @@
   {
     "spec_id": 75609,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 增程 Max 后驱 53kWh (192线激光雷达）",
     "level": "中大型车",
@@ -78786,7 +78786,7 @@
   {
     "spec_id": 75610,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 纯电 Max 四驱 100kWh (192线激光雷达）",
     "level": "中大型车",
@@ -79234,7 +79234,7 @@
   {
     "spec_id": 75655,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2025款 第四代 四门版 301km 臻享+款",
     "level": "微型车",
@@ -82194,7 +82194,7 @@
   {
     "spec_id": 75966,
     "series_id": 7824,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界V9",
     "model_name": "智界V9 2026款 Max+",
     "level": "中大型MPV",
@@ -84770,7 +84770,7 @@
   {
     "spec_id": 76236,
     "series_id": 7824,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界V9",
     "model_name": "智界V9 2026款 Ultra",
     "level": "中大型MPV",
@@ -84786,7 +84786,7 @@
   {
     "spec_id": 76237,
     "series_id": 7824,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界V9",
     "model_name": "智界V9 2026款 Ultra+",
     "level": "中大型MPV",
@@ -84866,7 +84866,7 @@
   {
     "spec_id": 76251,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max长续航版 5座（192线激光雷达）",
     "level": "中大型SUV",
@@ -84882,7 +84882,7 @@
   {
     "spec_id": 76252,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max长续航版 6座（192线激光雷达）",
     "level": "中大型SUV",
@@ -86386,7 +86386,7 @@
   {
     "spec_id": 76430,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 增程 Max+",
     "level": "中大型SUV",
@@ -87362,7 +87362,7 @@
   {
     "spec_id": 76508,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 纯电 Ultra+ 5座",
     "level": "大型SUV",
@@ -87474,7 +87474,7 @@
   {
     "spec_id": 76519,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2026款 第五代 301km 臻享款",
     "level": "微型车",
@@ -87810,7 +87810,7 @@
   {
     "spec_id": 76548,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 纯电 Ultra",
     "level": "中大型SUV",
@@ -88578,7 +88578,7 @@
   {
     "spec_id": 76624,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2026款 第五代 205km 臻享款",
     "level": "微型车",
@@ -89666,7 +89666,7 @@
   {
     "spec_id": 76733,
     "series_id": 5714,
-    "brand": "宝马",
+    "brand": "五菱",
     "series": "宏光MINIEV",
     "model_name": "宏光MINIEV 2026款 第五代 205km 进阶款",
     "level": "微型车",
@@ -91042,7 +91042,7 @@
   {
     "spec_id": 76900,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 纯电 Max+ 长续航版",
     "level": "中大型SUV",
@@ -91314,7 +91314,7 @@
   {
     "spec_id": 76922,
     "series_id": 8207,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9T",
     "model_name": "享界S9T 2025款 增程 Max (896线激光雷达）",
     "level": "中大型车",
@@ -91330,7 +91330,7 @@
   {
     "spec_id": 76923,
     "series_id": 8207,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9T",
     "model_name": "享界S9T 2025款 增程 Max长续航版 (896线激光雷达）",
     "level": "中大型车",
@@ -91346,7 +91346,7 @@
   {
     "spec_id": 76924,
     "series_id": 8207,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9T",
     "model_name": "享界S9T 2025款 增程 Ultra长续航版 (896线激光雷达）",
     "level": "中大型车",
@@ -91362,7 +91362,7 @@
   {
     "spec_id": 76925,
     "series_id": 8207,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9T",
     "model_name": "享界S9T 2025款 纯电 后驱Max (896线激光雷达）",
     "level": "中大型车",
@@ -91378,7 +91378,7 @@
   {
     "spec_id": 76926,
     "series_id": 8207,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9T",
     "model_name": "享界S9T 2025款 纯电 四驱Max (896线激光雷达）",
     "level": "中大型车",
@@ -91394,7 +91394,7 @@
   {
     "spec_id": 76927,
     "series_id": 8207,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9T",
     "model_name": "享界S9T 2025款 纯电 四驱Ultra (896线激光雷达）",
     "level": "中大型车",
@@ -91410,7 +91410,7 @@
   {
     "spec_id": 76928,
     "series_id": 7355,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界S7",
     "model_name": "智界S7 2026款 Max (896线激光雷达）",
     "level": "中大型车",
@@ -91426,7 +91426,7 @@
   {
     "spec_id": 76929,
     "series_id": 7355,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界S7",
     "model_name": "智界S7 2026款 Max+ (896线激光雷达）",
     "level": "中大型车",
@@ -91442,7 +91442,7 @@
   {
     "spec_id": 76930,
     "series_id": 7355,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界S7",
     "model_name": "智界S7 2026款 Ultra (896线激光雷达）",
     "level": "中大型车",
@@ -91458,7 +91458,7 @@
   {
     "spec_id": 76937,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 增程 Ultra",
     "level": "中大型SUV",
@@ -91474,7 +91474,7 @@
   {
     "spec_id": 76938,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 增程 Max 后驱 37kWh (896线激光雷达）",
     "level": "中大型车",
@@ -91490,7 +91490,7 @@
   {
     "spec_id": 76939,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 增程 Max 后驱 53kWh (896线激光雷达）",
     "level": "中大型车",
@@ -91506,7 +91506,7 @@
   {
     "spec_id": 76940,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 增程 Ultra 后驱 53kWh (896线激光雷达）",
     "level": "中大型车",
@@ -91522,7 +91522,7 @@
   {
     "spec_id": 76941,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 纯电 Max 后驱 100kWh (896线激光雷达）",
     "level": "中大型车",
@@ -91538,7 +91538,7 @@
   {
     "spec_id": 76942,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 纯电 Max 四驱 100kWh (896线激光雷达）",
     "level": "中大型车",
@@ -91554,7 +91554,7 @@
   {
     "spec_id": 76943,
     "series_id": 7630,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界S9",
     "model_name": "享界S9 2026款 纯电 Ultra 四驱 100kWh (896线激光雷达）",
     "level": "中大型车",
@@ -91570,7 +91570,7 @@
   {
     "spec_id": 76944,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max长续航版 6座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91586,7 +91586,7 @@
   {
     "spec_id": 76945,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max四驱版 6座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91602,7 +91602,7 @@
   {
     "spec_id": 76946,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Ultra四驱版 6座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91618,7 +91618,7 @@
   {
     "spec_id": 76947,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max长续航版 6座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91634,7 +91634,7 @@
   {
     "spec_id": 76948,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max四驱版 6座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91650,7 +91650,7 @@
   {
     "spec_id": 76949,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Ultra四驱版 6座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91666,7 +91666,7 @@
   {
     "spec_id": 76950,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max四驱版 5座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91682,7 +91682,7 @@
   {
     "spec_id": 76951,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Max长续航版 5座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91698,7 +91698,7 @@
   {
     "spec_id": 76952,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 增程 Ultra四驱版 5座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91714,7 +91714,7 @@
   {
     "spec_id": 76953,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max长续航版 5座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91730,7 +91730,7 @@
   {
     "spec_id": 76954,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Max四驱版 5座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91746,7 +91746,7 @@
   {
     "spec_id": 76955,
     "series_id": 6643,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M7",
     "model_name": "问界M7 2026款 纯电 Ultra四驱版 5座（896线激光雷达）",
     "level": "中大型SUV",
@@ -91762,7 +91762,7 @@
   {
     "spec_id": 76956,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Ultra版 53.4kWh 6座版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91794,7 +91794,7 @@
   {
     "spec_id": 76958,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max版 53.4kWh 6座版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91810,7 +91810,7 @@
   {
     "spec_id": 76959,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max+版 53.4kWh 6座版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91826,7 +91826,7 @@
   {
     "spec_id": 76961,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max版 53.4kWh 5座版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91842,7 +91842,7 @@
   {
     "spec_id": 76962,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Max+版 53.4kWh 5座版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91858,7 +91858,7 @@
   {
     "spec_id": 76963,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 增程 Ultra版 53.4kWh 5座版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91874,7 +91874,7 @@
   {
     "spec_id": 76964,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 六座长续航版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91890,7 +91890,7 @@
   {
     "spec_id": 76965,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 六座四驱版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91906,7 +91906,7 @@
   {
     "spec_id": 76966,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Ultra 六座四驱版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91922,7 +91922,7 @@
   {
     "spec_id": 76967,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 五座长续航版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91938,7 +91938,7 @@
   {
     "spec_id": 76968,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Max+ 五座四驱版 (896线激光雷达）",
     "level": "大型SUV",
@@ -91954,7 +91954,7 @@
   {
     "spec_id": 76969,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2025款 纯电 Ultra 五座四驱版 (896线激光雷达）",
     "level": "大型SUV",
@@ -93922,7 +93922,7 @@
   {
     "spec_id": 77156,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致美版",
     "level": "中型车",
@@ -93938,7 +93938,7 @@
   {
     "spec_id": 77157,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致远版",
     "level": "中型车",
@@ -95602,7 +95602,7 @@
   {
     "spec_id": 77295,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 纯电 Ultra版 6座",
     "level": "大型SUV",
@@ -95666,7 +95666,7 @@
   {
     "spec_id": 77307,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 纯电 Ultra版 5座",
     "level": "大型SUV",
@@ -96658,7 +96658,7 @@
   {
     "spec_id": 77403,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致尚版",
     "level": "中型车",
@@ -96994,7 +96994,7 @@
   {
     "spec_id": 77438,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 增程 Ultra版 6座",
     "level": "大型SUV",
@@ -97010,7 +97010,7 @@
   {
     "spec_id": 77439,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 增程 Ultra版 5座",
     "level": "大型SUV",
@@ -97490,7 +97490,7 @@
   {
     "spec_id": 77479,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 增程 Ultimate 领世加长版 5座",
     "level": "大型SUV",
@@ -97506,7 +97506,7 @@
   {
     "spec_id": 77480,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 增程 Max+版 5座",
     "level": "大型SUV",
@@ -97522,7 +97522,7 @@
   {
     "spec_id": 77481,
     "series_id": 7824,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界V9",
     "model_name": "智界V9 2026款 Max",
     "level": "中大型MPV",
@@ -99570,7 +99570,7 @@
   {
     "spec_id": 77774,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 增程 Ultimate 领世加长版 6座",
     "level": "大型SUV",
@@ -99842,7 +99842,7 @@
   {
     "spec_id": 77795,
     "series_id": 4662,
-    "brand": "哈弗",
+    "brand": "广汽传祺",
     "series": "传祺M6",
     "model_name": "传祺M6 2026款 MAX 1.5T DCT豪华版",
     "level": "紧凑型MPV",
@@ -100402,7 +100402,7 @@
   {
     "spec_id": 77849,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致行版",
     "level": "中型车",
@@ -100418,7 +100418,7 @@
   {
     "spec_id": 77850,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致美玄影版",
     "level": "中型车",
@@ -100434,7 +100434,7 @@
   {
     "spec_id": 77851,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致远玄影版",
     "level": "中型车",
@@ -100450,7 +100450,7 @@
   {
     "spec_id": 77852,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致尚玄影版",
     "level": "中型车",
@@ -100466,7 +100466,7 @@
   {
     "spec_id": 77853,
     "series_id": 6460,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H6",
     "model_name": "红旗H6 2026款 2.0T 致臻版",
     "level": "中型车",
@@ -100482,7 +100482,7 @@
   {
     "spec_id": 77854,
     "series_id": 4662,
-    "brand": "哈弗",
+    "brand": "广汽传祺",
     "series": "传祺M6",
     "model_name": "传祺M6 2026款 MAX 1.5T DCT精英版",
     "level": "紧凑型MPV",
@@ -100498,7 +100498,7 @@
   {
     "spec_id": 77855,
     "series_id": 4662,
-    "brand": "哈弗",
+    "brand": "广汽传祺",
     "series": "传祺M6",
     "model_name": "传祺M6 2026款 MAX 1.5T DCT尊荣版",
     "level": "紧凑型MPV",
@@ -101570,7 +101570,7 @@
   {
     "spec_id": 77956,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 增程 Max+版 6座",
     "level": "大型SUV",
@@ -101586,7 +101586,7 @@
   {
     "spec_id": 77957,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 纯电 Max+版 5座",
     "level": "大型SUV",
@@ -101602,7 +101602,7 @@
   {
     "spec_id": 77958,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 纯电 Max+版 6座",
     "level": "大型SUV",
@@ -101650,7 +101650,7 @@
   {
     "spec_id": 77962,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 纯电 Ultimate 领世加长版 5座",
     "level": "大型SUV",
@@ -101666,7 +101666,7 @@
   {
     "spec_id": 77963,
     "series_id": 7207,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M9",
     "model_name": "问界M9 2026款 纯电 Ultimate 领世加长版 6座",
     "level": "大型SUV",
@@ -102450,7 +102450,7 @@
   {
     "spec_id": 78055,
     "series_id": 8684,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界RX",
     "model_name": "智界RX 2026款 Ultra 四驱版",
     "level": "中大型SUV",
@@ -103410,7 +103410,7 @@
   {
     "spec_id": 78136,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 增程 Ultra+ 5座",
     "level": "大型SUV",
@@ -103490,7 +103490,7 @@
   {
     "spec_id": 78142,
     "series_id": 5566,
-    "brand": "哈弗",
+    "brand": "红旗",
     "series": "红旗H9",
     "model_name": "红旗H9 2026款 基本型",
     "level": "中大型车",
@@ -103618,7 +103618,7 @@
   {
     "spec_id": 78155,
     "series_id": 8684,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界RX",
     "model_name": "智界RX 2026款 Max 长续航版",
     "level": "中大型SUV",
@@ -104034,7 +104034,7 @@
   {
     "spec_id": 78195,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 纯电 Max",
     "level": "中大型SUV",
@@ -104162,7 +104162,7 @@
   {
     "spec_id": 78209,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 纯电 Max+",
     "level": "中大型SUV",
@@ -106770,7 +106770,7 @@
   {
     "spec_id": 78514,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2027款 增程 基本型 5座",
     "level": "大型SUV",
@@ -106786,7 +106786,7 @@
   {
     "spec_id": 78515,
     "series_id": 8003,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M8",
     "model_name": "问界M8 2027款 增程 基本型 6座",
     "level": "大型SUV",
@@ -108146,7 +108146,7 @@
   {
     "spec_id": 78660,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 增程 Ultra+ 6座",
     "level": "大型SUV",
@@ -108866,7 +108866,7 @@
   {
     "spec_id": 78750,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 纯电 Ultra+ 6座",
     "level": "大型SUV",
@@ -108882,7 +108882,7 @@
   {
     "spec_id": 78751,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 纯电 Ultra 5座",
     "level": "大型SUV",
@@ -108898,7 +108898,7 @@
   {
     "spec_id": 78752,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 纯电 Ultra 6座",
     "level": "大型SUV",
@@ -108914,7 +108914,7 @@
   {
     "spec_id": 78753,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 增程 Ultra 5座",
     "level": "大型SUV",
@@ -108930,7 +108930,7 @@
   {
     "spec_id": 78754,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 增程 Ultra 6座",
     "level": "大型SUV",
@@ -108946,7 +108946,7 @@
   {
     "spec_id": 78755,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 增程 Max+ 5座",
     "level": "大型SUV",
@@ -108962,7 +108962,7 @@
   {
     "spec_id": 78756,
     "series_id": 8537,
-    "brand": "鸿蒙智行",
+    "brand": "享界",
     "series": "享界G9",
     "model_name": "享界G9 2026款 增程 Max+ 6座",
     "level": "大型SUV",
@@ -110530,7 +110530,7 @@
   {
     "spec_id": 78916,
     "series_id": 8684,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界RX",
     "model_name": "智界RX 2026款 Ultra 长续航版",
     "level": "中大型SUV",
@@ -110546,7 +110546,7 @@
   {
     "spec_id": 78917,
     "series_id": 8684,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界RX",
     "model_name": "智界RX 2026款 Ultra+",
     "level": "中大型SUV",
@@ -110626,7 +110626,7 @@
   {
     "spec_id": 78930,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 增程 Max",
     "level": "中大型SUV",
@@ -110642,7 +110642,7 @@
   {
     "spec_id": 78931,
     "series_id": 8529,
-    "brand": "鸿蒙智行",
+    "brand": "问界",
     "series": "问界M6",
     "model_name": "问界M6 2026款 增程 Max+ 长续航",
     "level": "中大型SUV",
@@ -114066,7 +114066,7 @@
   {
     "spec_id": 79263,
     "series_id": 8684,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界RX",
     "model_name": "智界RX 2026款 Ultra",
     "level": "中大型SUV",
@@ -114082,7 +114082,7 @@
   {
     "spec_id": 79264,
     "series_id": 8684,
-    "brand": "鸿蒙智行",
+    "brand": "智界",
     "series": "智界RX",
     "model_name": "智界RX 2026款 Max",
     "level": "中大型SUV",
@@ -126514,7 +126514,7 @@
   {
     "spec_id": 1012034,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车慧视通鹏辉43.2kWh柳机电控",
     "level": "微面",
@@ -126530,7 +126530,7 @@
   {
     "spec_id": 1012035,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车慧视通鹏辉43.2kWh汇川2代电控",
     "level": "微面",
@@ -126546,7 +126546,7 @@
   {
     "spec_id": 1012036,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车慧视通鹏辉43.2kWh通宇电控",
     "level": "微面",
@@ -126562,7 +126562,7 @@
   {
     "spec_id": 1012037,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车博创鹏辉43.2kWh柳机电控",
     "level": "微面",
@@ -126578,7 +126578,7 @@
   {
     "spec_id": 1012038,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车博创鹏辉43.2kWh汇川2代电控",
     "level": "微面",
@@ -126594,7 +126594,7 @@
   {
     "spec_id": 1012039,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车博创宁德41.86kWh柳机电控",
     "level": "微面",
@@ -126610,7 +126610,7 @@
   {
     "spec_id": 1012040,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车力神41.6kWh柳机电控",
     "level": "微面",
@@ -126626,7 +126626,7 @@
   {
     "spec_id": 1012041,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车力神41.6kWh通宇电控",
     "level": "微面",
@@ -126642,7 +126642,7 @@
   {
     "spec_id": 1012042,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车鹏辉36.16kWh柳机电控",
     "level": "微面",
@@ -126658,7 +126658,7 @@
   {
     "spec_id": 1012043,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车鹏辉36.16kWh通宇电控",
     "level": "微面",
@@ -126674,7 +126674,7 @@
   {
     "spec_id": 1012044,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车慧视通宁德41.86kWh汇川2代电控",
     "level": "微面",
@@ -126690,7 +126690,7 @@
   {
     "spec_id": 1012045,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 厢式物流车慧视通宁德41.86kWh柳机电控",
     "level": "微面",
@@ -131778,7 +131778,7 @@
   {
     "spec_id": 1013673,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 5座版宁德41.86kWh",
     "level": "微面",
@@ -131794,7 +131794,7 @@
   {
     "spec_id": 1013674,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2021款 5座版鹏辉43.2kWh",
     "level": "微面",
@@ -134226,7 +134226,7 @@
   {
     "spec_id": 1014238,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2022款 经济适用型安驰35.904kWh",
     "level": "微面",
@@ -134242,7 +134242,7 @@
   {
     "spec_id": 1014239,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2022款 尊享型国轩40.55kWh",
     "level": "微面",
@@ -147826,7 +147826,7 @@
   {
     "spec_id": 1017056,
     "series_id": 5708,
-    "brand": "起亚",
+    "brand": "五菱",
     "series": "五菱EV50",
     "model_name": "五菱EV50 2023款 宁德时代38.64kWh",
     "level": "微面",
@@ -168658,7 +168658,7 @@
   {
     "spec_id": 1020911,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 标箱四驱全域型",
     "level": "皮卡",
@@ -168690,7 +168690,7 @@
   {
     "spec_id": 1020914,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 标箱四驱全能型",
     "level": "皮卡",
@@ -172370,7 +172370,7 @@
   {
     "spec_id": 1021247,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 长箱两驱智享型",
     "level": "皮卡",
@@ -172386,7 +172386,7 @@
   {
     "spec_id": 1021248,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 长箱四驱智享型",
     "level": "皮卡",
@@ -172402,7 +172402,7 @@
   {
     "spec_id": 1021249,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 标箱两驱智享型",
     "level": "皮卡",
@@ -172418,7 +172418,7 @@
   {
     "spec_id": 1021250,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 标箱四驱智享型",
     "level": "皮卡",
@@ -172434,7 +172434,7 @@
   {
     "spec_id": 1021251,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 长箱四驱智领型",
     "level": "皮卡",
@@ -174962,7 +174962,7 @@
   {
     "spec_id": 1021739,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 长箱两驱豪华型",
     "level": "皮卡",
@@ -174978,7 +174978,7 @@
   {
     "spec_id": 1021740,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 长箱四驱豪华型",
     "level": "皮卡",
@@ -174994,7 +174994,7 @@
   {
     "spec_id": 1021741,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 标箱两驱豪华型",
     "level": "皮卡",
@@ -175010,7 +175010,7 @@
   {
     "spec_id": 1021742,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 标箱四驱豪华型",
     "level": "皮卡",
@@ -175026,7 +175026,7 @@
   {
     "spec_id": 1021743,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 标箱四驱旗舰型",
     "level": "皮卡",
@@ -175042,7 +175042,7 @@
   {
     "spec_id": 1021747,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2025款 长箱四驱领航型",
     "level": "皮卡",
@@ -186514,7 +186514,7 @@
   {
     "spec_id": 1023213,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 标箱两驱智享型",
     "level": "皮卡",
@@ -186530,7 +186530,7 @@
   {
     "spec_id": 1023214,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 标箱四驱智享型",
     "level": "皮卡",
@@ -186546,7 +186546,7 @@
   {
     "spec_id": 1023215,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 长箱四驱智享型",
     "level": "皮卡",
@@ -186562,7 +186562,7 @@
   {
     "spec_id": 1023216,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 标箱四驱智领型",
     "level": "皮卡",
@@ -186578,7 +186578,7 @@
   {
     "spec_id": 1023217,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 标箱四驱智驭型",
     "level": "皮卡",
@@ -196370,7 +196370,7 @@
   {
     "spec_id": 1024091,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 长箱四驱豪华型",
     "level": "皮卡",
@@ -196386,7 +196386,7 @@
   {
     "spec_id": 1024092,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 标箱四驱豪华型",
     "level": "皮卡",
@@ -196402,7 +196402,7 @@
   {
     "spec_id": 1024093,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 长箱四驱领航型",
     "level": "皮卡",
@@ -196418,7 +196418,7 @@
   {
     "spec_id": 1024094,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 标箱四驱旗舰型",
     "level": "皮卡",
@@ -196434,7 +196434,7 @@
   {
     "spec_id": 1024095,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 长箱两驱豪华型",
     "level": "皮卡",
@@ -196450,7 +196450,7 @@
   {
     "spec_id": 1024096,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 标箱两驱豪华型",
     "level": "皮卡",
@@ -196466,7 +196466,7 @@
   {
     "spec_id": 1024097,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 长箱四驱豪华型",
     "level": "皮卡",
@@ -196482,7 +196482,7 @@
   {
     "spec_id": 1024098,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 标箱四驱豪华型",
     "level": "皮卡",
@@ -196498,7 +196498,7 @@
   {
     "spec_id": 1024099,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 长箱四驱领航型",
     "level": "皮卡",
@@ -196514,7 +196514,7 @@
   {
     "spec_id": 1024100,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 大电池版 标箱四驱旗舰型",
     "level": "皮卡",
@@ -197682,7 +197682,7 @@
   {
     "spec_id": 1024301,
     "series_id": 8124,
-    "brand": "起亚",
+    "brand": "长安",
     "series": "长安猎手 K50",
     "model_name": "长安猎手 K50 2026款 标箱四驱智尚型",
     "level": "皮卡",
@@ -225506,7 +225506,7 @@
   {
     "spec_id": 55854,
     "series_id": 5372,
-    "brand": "广汽集团",
+    "brand": "丰田",
     "series": "广汽丰田iA5",
     "model_name": "广汽丰田iA5 2022款 领先版",
     "level": "紧凑型车",
@@ -225522,7 +225522,7 @@
   {
     "spec_id": 55855,
     "series_id": 5372,
-    "brand": "广汽集团",
+    "brand": "丰田",
     "series": "广汽丰田iA5",
     "model_name": "广汽丰田iA5 2022款 豪华版",
     "level": "紧凑型车",
@@ -225538,7 +225538,7 @@
   {
     "spec_id": 55856,
     "series_id": 5372,
-    "brand": "广汽集团",
+    "brand": "丰田",
     "series": "广汽丰田iA5",
     "model_name": "广汽丰田iA5 2022款 尊贵版",
     "level": "紧凑型车",
@@ -225554,7 +225554,7 @@
   {
     "spec_id": 55857,
     "series_id": 5372,
-    "brand": "广汽集团",
+    "brand": "丰田",
     "series": "广汽丰田iA5",
     "model_name": "广汽丰田iA5 2022款 尊贵长续航版",
     "level": "紧凑型车",
